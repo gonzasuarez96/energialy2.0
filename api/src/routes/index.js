@@ -4,14 +4,14 @@ const authRouter = require('./auth');
 const refreshRouter = require('./refresh');
 const logoutRouter = require('./logout');
 
-const rootRouter = Router();
+const router = Router();
 
 // Auth Server
-rootRouter.use('/register', registerRouter);
-rootRouter.use('/auth', authRouter);
-// rootRouter.use('/refresh', refreshRouter);
-// rootRouter.use('/logout', logoutRouter);
+router.use('/register', registerRouter);
+router.use('/auth', authRouter);
+router.use('/refresh', refreshRouter);
+router.use('/logout', logoutRouter);
 
 // Resource Server
 
-module.exports = rootRouter;
+module.exports = router;
