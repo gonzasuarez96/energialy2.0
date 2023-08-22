@@ -25,7 +25,7 @@ const userLogin = async (email, password) => {
   const accessToken = jwt.sign(
     { email: foundUser.email },
     ACCESS_TOKEN_SECRET,
-    { expiresIn: 30 } // seconds count
+    { expiresIn: 60 * 60 } // seconds count
   );
   const refreshToken = jwt.sign(
     { email: foundUser.email },

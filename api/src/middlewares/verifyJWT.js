@@ -5,7 +5,6 @@ const { ACCESS_TOKEN_SECRET } = process.env;
 const verifyJWT = (req, res, next) => {
   const authHeader = req.headers.authorization || req.headers.Authorization;
   if (!authHeader?.startsWith('Bearer ')) return res.status(401).json({ error: "Missing access token." });
-  console.log(authHeader); // "Bearer accessToken"
   const accessToken = authHeader.split(' ')[1];
   jwt.verify(
     accessToken,

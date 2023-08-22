@@ -5,11 +5,10 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 const refreshToken = async (cookies) => {
   if (!cookies?.jwt) {
-    const error = new Error("Missing cookies or no jwt.");
+    const error = new Error("Missing cookies or no jwt cookie.");
     error.status = 401;
     throw error;
   };
-  console.log(cookies);
   const refreshToken = cookies.jwt;
   let accessToken;
   const foundUser = await Users.findOne({ where: { refreshToken: refreshToken } });
@@ -35,7 +34,7 @@ const refreshToken = async (cookies) => {
       accessToken = jwt.sign(
         { email: decoded.email },
         ACCESS_TOKEN_SECRET,
-        { expiresIn: 30 }
+        { expiresIn: 60 * 60 }
       );
     }
   );

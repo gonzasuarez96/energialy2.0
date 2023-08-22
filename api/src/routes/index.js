@@ -7,8 +7,8 @@ const verifyJWT = require('../middlewares/verifyJWT');
 const usersRouter = require('./resources/usersRouter');
 const companiesRouter = require('./resources/companiesRouter');
 const locationsRouter = require('./resources/locationsRouter');
-// const organizationTypesRouter = require('./resources/organizationTypesRouter');
 const skillsRouter = require('./resources/skillsRouter');
+// const organizationTypesRouter = require('./resources/organizationTypesRouter');
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.use(verifyJWT);
 router.use('/users', usersRouter);
 router.use('/companies', companiesRouter);
 router.use('/locations', locationsRouter);
-// router.use('/organizationTypes', organizationTypesRouter);
 router.use('/skills', skillsRouter);
+// router.use('/organizationTypes', organizationTypesRouter);
 
 module.exports = router;

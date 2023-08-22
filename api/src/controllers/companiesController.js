@@ -9,7 +9,7 @@ const getAllCompanies = async () => {
 const filterCompaniesByName = async (name) => {
   const filteredCompanies = await Companies.findAll({
     where: {
-      companyName: {
+      name: {
         [Op.iLike]: `%${name}%`,
       },
     },
