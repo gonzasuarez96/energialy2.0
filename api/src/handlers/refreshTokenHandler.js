@@ -5,9 +5,8 @@ const refreshTokenHandler = async (req, res) => {
     const cookies = req.cookies;
     const accessToken = await refreshToken(cookies);
     res.status(200).json({ accessToken });
-  } catch (err) {
-    const status = err.status || 500;
-    res.status(status).json({ error: err.message });
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
   }
 };
 

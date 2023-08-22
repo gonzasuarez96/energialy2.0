@@ -7,7 +7,7 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 const userLogin = async (email, password) => {
   if (!email || !password) {
     const error = new Error("Email and password are required.");
-    error.status = 400;
+    error.status = 400; // Bad request
     throw error;
   };
   const foundUser = await Users.findOne({ where: { email: email } });
