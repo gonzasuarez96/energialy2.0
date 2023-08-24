@@ -10,7 +10,7 @@ git checkout dev
 cd ./api
 npm install
 ```
-Para la base de datos se utiliza [Postgres](https://www.postgresql.org/). Se debe tener instalado Postgres y desde SQL Shell o la GUI de Postgres (pgAdmin) crear una nueva base de datos llamada "energialy" (sin comillas).
+Para la base de datos se utiliza [Postgres](https://www.postgresql.org/). Se debe tener instalado Postgres y desde SQL Shell o la GUI de Postgres (pgAdmin) crear una nueva base de datos llamada energialy.
 ```sql
 CREATE DATABASE energialy;
 ```
@@ -24,13 +24,13 @@ DB_HOST=localhost:5432
 ACCESS_TOKEN_SECRET=your_access_secret
 REFRESH_TOKEN_SECRET=your_refresh_secret
 ```
-Para generar nuestros secrets podemos usar Node. Para eso iniciamos Node desde la terminal y ejecutamos el siguiente comando dos veces.
+Para generar nuestros secrets podemos usar **Node**. Para eso iniciamos Node desde la terminal y ejecutamos el siguiente comando dos veces.
 ```sh
 node
 crypto.randomBytes(32).toString("hex");
 crypto.randomBytes(32).toString("hex");
 ```
-Copiamos el primero para el access secret y el segundo para el refresh token y lo pegamos en el `.env` (sin las comillas).
+Copiamos el primero para el access token secret y el segundo para el refresh token secret y lo pegamos en el `.env` (sin las comillas).
 
 Con las dependencias instaladas, la base de datos creada y las variables de entorno configuradas, ya estamos listos para levantar el servidor.
 ```sh
