@@ -39,3 +39,13 @@ Si todo está bien, deberías ver el siguiente mensaje:
 [nodemon] starting `node index.js`
 %s listening at 3001
 ```
+
+## Levantar Frontend
+
+Una vez clonado el repo:
+
+```sh
+cd client
+npm i
+npm run dev 
+```
