@@ -27,8 +27,8 @@ REFRESH_TOKEN_SECRET=your_refresh_secret
 Para generar nuestros secrets podemos usar **Node**. Para eso iniciamos Node desde la terminal y ejecutamos el siguiente comando dos veces.
 ```sh
 node
-crypto.randomBytes(32).toString("hex");
-crypto.randomBytes(32).toString("hex");
+crypto.randomBytes(64).toString("hex");
+crypto.randomBytes(64).toString("hex");
 ```
 Copiamos el primero para el access token secret y el segundo para el refresh token secret y lo pegamos en el `.env` (sin las comillas).
 
