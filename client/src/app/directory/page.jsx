@@ -1,8 +1,24 @@
-import CompanyCard from "../components/CompanyCard"
+import CompanyCardContainer from "../components/CompanyCardContainer";
 import FilterBar from "../components/FilterBar";
 import PaginationComp from "../components/Pagination";
 
-function page() {
+async function getCompanies(){
+  const res = await fetch("http://localhost:3001/companies");
+  
+  if (!res.ok) {
+    console.log("no se pudo realizar la consulta");
+  }
+
+  return res.json();
+}
+
+//Datos de Base de Datos - Todas las Compañías => companieData
+// Filter => nueva variable que tenga solo las compañías que estan filtradas => filterCompanieData
+
+async function page() {
+
+  const companies = await getCompanies()
+
   return (
     <>
       <div className="mt-8 mb-0 w-full flex">
@@ -10,14 +26,7 @@ function page() {
           <FilterBar />
         </div>
         <div className="flex flex-col justify-center items-center">
-          <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-4 justify-center">
-            <CompanyCard />
-            <CompanyCard />
-            <CompanyCard />
-            <CompanyCard />
-            <CompanyCard />
-            <CompanyCard />
-          </div>
+          <CompanyCardContainer data={companies}/>
           <PaginationComp />
         </div>
       </div>

@@ -1,4 +1,19 @@
-import React from 'react'
+import LocationFilter from "./LocationFilter";
+
+async function getLocations(){
+  const res = await fetch("http://localhost:3001/locations",{
+    headers: {
+      Authentication:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZzcGlyaXRvc2lAZ21haWwuY29tIiwiaWF0IjoxNjkyNzk3MTMxLCJleHAiOjE2OTI4MDA3MzF9.S5gGgE_Cwt2hUm0BFKPLHc4toigmU8nqyRuO2pRfZzI",
+    },
+  });
+  console.log(res.statusText)
+  if (!res.ok) {
+    console.log('no se pudo realizar la consulta')
+  }
+
+  return res.json();
+}
 
 const employerNumber = [
   "Menos de 50 empleados",
@@ -8,7 +23,10 @@ const employerNumber = [
   "Mas de 5000 empleados",
 ];
 
-function FilterBar() {
+async function FilterBar(props) {
+
+  const locations = await getLocations()
+
   return (
     <div className="flex flex-col justify-items-stretch">
       <div className="bg-white p-8 mb-4">
@@ -28,26 +46,7 @@ function FilterBar() {
           <h3 className="text-base">Ubicación</h3>
         </div>
         <div>
-          <div>
-            <input type="checkbox" name="cuenca" id="nqn" />
-            <label>Cuenca Neuquina</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="gsj" />
-            <label>Cuenca Golfo San Jorge</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="austral" />
-            <label>Cuenca Austral</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="cuyo" />
-            <label>Cuenca Cuyana</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="noa" />
-            <label>Cuenca Noroeste</label>
-          </div>
+          <LocationFilter locations={locations}/>
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
@@ -57,7 +56,7 @@ function FilterBar() {
         <div>
           {employerNumber.map((item, index) => (
             <div>
-              <input type="checkbox" className='mr-1' name={index} />
+              <input type="checkbox" className="mr-1" name={index}/>
               <label>{item}</label>
             </div>
           ))}
