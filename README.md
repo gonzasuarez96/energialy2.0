@@ -2,9 +2,11 @@
 
 ## Levantar Back End en entorno local
 
-El servidor de Energialy está desarrollado con [Node.js](https://nodejs.org/) v10+. Es necesario tener instalado Node.js con la versión recomendada
-Una vez clonado el repositorio, pararse en la carpeta `api` en la terminal y ejecutar el siguiente comando para instalar las dependencias.
+El servidor de Energialy está desarrollado con [Node.js](https://nodejs.org/) v10+. Es necesario tener instalado Node.js con la versión recomendada.
+
+Una vez clonado el repositorio, ir a la rama `dev` pararse en la carpeta `api` en la terminal y ejecutar `npm install` para instalar las dependencias.
 ```sh
+git checkout dev
 cd ./api
 npm install
 ```
