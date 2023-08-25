@@ -5,12 +5,12 @@ const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
 const refreshToken = async (cookies) => {
   if (!cookies?.jwt) {
-    const error = new Error("Missing cookies or no jwt cookie.");
+    const error = new Error("Missing refresh token.");
     error.status = 401;
     throw error;
   };
   const refreshToken = cookies.jwt;
-  let accessToken;
+  let newAccessToken;
   const foundUser = await Users.findOne({ where: { refreshToken: refreshToken } });
   if (!foundUser) {
     const error = new Error("No user found with that refresh token.");
@@ -27,18 +27,18 @@ const refreshToken = async (cookies) => {
         throw error;
       };
       if (foundUser.email !== decoded.email) {
-        const error = new Error("Payload doesn't match.");
+        const error = new Error("User with a refresh token from other user.");
         error.status = 403;
         throw error;
       };
-      accessToken = jwt.sign(
+      newAccessToken = jwt.sign(
         { email: decoded.email },
         ACCESS_TOKEN_SECRET,
         { expiresIn: 60 * 60 }
       );
     }
   );
-  return accessToken;
+  return newAccessToken;
 };
 
 module.exports = { refreshToken }
