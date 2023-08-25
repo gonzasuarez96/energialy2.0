@@ -2,12 +2,6 @@ const { Users } = require('../db');
 
 const getAllUsers = async () => {
   const allUsers = await Users.findAll();
-  /*
-  [
-    { id: '1', email: 'user1@example.com', isActive: true },
-    { id: '2', email: 'user2@example.com', isActive: false }
-  ];
-*/
   return allUsers;
 };
 
@@ -28,10 +22,9 @@ const updateUserProfile = async (id, newData) => {
     error.status = 404;
     throw error;
   }
-  
-  // actualizo los datos del perfil del usuario con newData
+
   await user.update(newData);
-  
+
   return user;
 };
 
@@ -41,6 +34,3 @@ module.exports = {
   updateUserProfile
 };
 
-
-/* get traer usuarios por id 
-y un put para editar el perfil del usuario */
