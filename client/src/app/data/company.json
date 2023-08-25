@@ -39,7 +39,7 @@
         "homologations": "",
         "isActive": true 
     },
-{
+    {
         "id": 3,
         "companyName": "Tecpetrol S.A.",
         "foundationYear": 2002,
@@ -57,6 +57,7 @@
         "certifications": "",
         "homologations": "",
         "isActive": true 
-    }]
+    }
+]
 
 }

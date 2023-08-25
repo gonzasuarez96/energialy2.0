@@ -83,6 +83,8 @@ export default function Navigation() {
                   )}
                 </Disclosure.Button>
               </div>
+            {/* Acá tenemos que crear la condicional de la navbar para cuando
+            tenemos un sesión iniciada y cuando no. */}
               <UserProfile />
             </div>
           </div>

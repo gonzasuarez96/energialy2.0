@@ -11,7 +11,7 @@ function UserProfile() {
         </div>
         <div className="hidden m-2 sm:block">
           <h4 className="text-sm">Company Name</h4>
-          <h4 className="text-xs text-gray-600  ">User Name</h4>
+          <h4 className="text-xs text-gray-600 ">User Name</h4>
         </div>
       </div>
     </>

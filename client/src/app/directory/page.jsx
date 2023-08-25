@@ -18,6 +18,7 @@ async function getCompanies(){
 async function page() {
 
   const companies = await getCompanies()
+  console.log(companies)
 
   return (
     <>
