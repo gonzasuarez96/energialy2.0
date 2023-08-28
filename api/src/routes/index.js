@@ -6,9 +6,9 @@ const logoutRouter = require('./logout');
 const verifyJWT = require('../middlewares/verifyJWT');
 const usersRouter = require('./resources/usersRouter');
 const companiesRouter = require('./resources/companiesRouter');
+const categoriesRouter = require('./resources/categoriesRouter');
 const locationsRouter = require('./resources/locationsRouter');
-const skillsRouter = require('./resources/skillsRouter');
-// const organizationTypesRouter = require('./resources/organizationTypesRouter');
+const organizationTypesRouter = require('./resources/organizationTypesRouter');
 
 const router = Router();
 
@@ -18,13 +18,12 @@ router.use('/auth', authRouter);
 router.use('/refresh', refreshRouter);
 router.use('/logout', logoutRouter);
 
-
 // Resource Server
 router.use(verifyJWT);
 router.use('/users', usersRouter);
 router.use('/companies', companiesRouter);
+router.use('/categories', categoriesRouter);
 router.use('/locations', locationsRouter);
-router.use('/skills', skillsRouter);
-// router.use('/organizationTypes', organizationTypesRouter);
+router.use('/organizationTypes', organizationTypesRouter);
 
 module.exports = router;
