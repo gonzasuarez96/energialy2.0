@@ -1,11 +1,8 @@
 import LocationFilter from "./LocationFilter";
 
 async function getLocations(){
-  const res = await fetch("http://localhost:3001/locations",{
-    headers: {
-      Authentication:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImZzcGlyaXRvc2lAZ21haWwuY29tIiwiaWF0IjoxNjkyNzk3MTMxLCJleHAiOjE2OTI4MDA3MzF9.S5gGgE_Cwt2hUm0BFKPLHc4toigmU8nqyRuO2pRfZzI",
-    },
+  const res = await fetch("http://localhost:3001/locations", {
+    next: { revalidate: 1 },
   });
   console.log(res.statusText)
   if (!res.ok) {

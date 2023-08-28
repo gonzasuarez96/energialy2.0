@@ -20,7 +20,7 @@ router.use('/logout', logoutRouter);
 
 
 // Resource Server
-router.use(verifyJWT);
+//router.use(verifyJWT);
 router.use('/users', usersRouter);
 router.use('/companies', companiesRouter);
 router.use('/locations', locationsRouter);
