@@ -28,8 +28,8 @@ const getCompanyByIDHandler = async (req, res) => {
 
 const createCompanyHandler = async (req, res) => {
   try {
-    const { name, description, cuit, locations, employeeCount, skills } = req.body;
-    const newCompany = await createCompany(name, description, cuit, locations, employeeCount, skills);
+    const { name, description, cuit, locations, employeeCount, categories } = req.body;
+    const newCompany = await createCompany(name, description, cuit, locations, employeeCount, categories);
     res.status(201).json(newCompany);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
@@ -39,8 +39,8 @@ const createCompanyHandler = async (req, res) => {
 const updateCompanyHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, cuit, locations, employeeCount, skills, isActive } = req.body;
-    const updatedCompany = await updateCompany(id, name, description, cuit, locations, employeeCount, skills, isActive);
+    const { name, description, cuit, locations, employeeCount, categories, isActive } = req.body;
+    const updatedCompany = await updateCompany(id, name, description, cuit, locations, employeeCount, categories, isActive);
     res.status(200).json(updatedCompany);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
@@ -52,4 +52,4 @@ module.exports = {
   getCompanyByIDHandler,
   createCompanyHandler,
   updateCompanyHandler
-}
+};
