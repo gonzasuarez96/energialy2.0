@@ -1,4 +1,4 @@
-const { Companies, Locations, Categories, Subcategories } = require('../db');
+const {Companies, Locations, Categories, Subcategories } = require('../db');
 const { Op } = require('sequelize');
 
 const getAllCompanies = async () => {
@@ -51,27 +51,42 @@ const getCompanyByID = async (id) => {
 
   return foundCompany;
 };
-
 const createCompany = async (name, description, cuit, locations, employeeCount, categories, profilePicture, bannerPicture) => {
-  if (!name || !description || !locations || !employeeCount || !categories || !profilePicture || !bannerPicture) {
+  if (!name || !description || !cuit || !employeeCount || !profilePicture || !bannerPicture || !locations.length || !categories.length) {
     const error = new Error("Missing required attributes.");
     error.status = 400;
     throw error;
   }
 
+  for (const locationID of locations) {
+    const foundLocation = await Locations.findByPk(locationID);
+    if (!foundLocation) {
+      const error = new Error(`Location with id ${locationID} not found.`);
+      error.status = 404;
+      throw error;
+    }
+  }
+
+  for (const categoryID of categories) {
+    const foundCategory = await Categories.findByPk(categoryID);
+    if (!foundCategory) {
+      const error = new Error(`Category with id ${categoryID} not found.`);
+      error.status = 404;
+      throw error;
+    }
+  }
+
   const newCompany = await Companies.create({ name, description, cuit, employeeCount, profilePicture, bannerPicture });
 
-  const locationPromises = locations.map(async (locationID) => {
+  for (const locationID of locations) {
     const foundLocation = await Locations.findByPk(locationID);
     await newCompany.addLocation(foundLocation);
-  });
-  await Promise.all(locationPromises);
+  }
 
-  const categoryPromises = categories.map(async (categoryID) => {
+  for (const categoryID of categories) {
     const foundCategory = await Categories.findByPk(categoryID);
     await newCompany.addCategory(foundCategory);
-  });
-  await Promise.all(categoryPromises);
+  }
 
   return newCompany;
 };
@@ -87,42 +102,39 @@ const updateCompany = async (id, name, description, locations, employeeCount, pr
   await foundCompany.update({ name, description, profilePicture, bannerPicture, employeeCount, isActive });
 
   if (locations) {
-    const currentLocations = foundCompany.Locations.map(location => location.id);
-    const locationsToRemove = currentLocations.filter(locationID => !locations.includes(locationID));
-    const locationsToAdd = locations.filter(locationID => !currentLocations.includes(locationID));
-
-    const removeLocationPromises = locationsToRemove.map(async (locationID) => {
-      await foundCompany.removeLocation(locationID);
-    });
-    await Promise.all(removeLocationPromises);
-
-    const addLocationPromises = locationsToAdd.map(async (locationID) => {
+    for (const location of foundCompany.Locations) {
+      await foundCompany.removeLocation(location);
+    }
+    for (const locationID of locations) {
       const foundLocation = await Locations.findByPk(locationID);
+      if (!foundLocation) {
+        const error = new Error(`Location with id ${locationID} not found.`);
+        error.status = 404;
+        throw error;
+      }
       await foundCompany.addLocation(foundLocation);
-    });
-    await Promise.all(addLocationPromises);
+    }
   }
 
   if (categories) {
-    const currentCategories = foundCompany.Categories.map(category => category.id);
-    const categoriesToRemove = currentCategories.filter(categoryID => !categories.includes(categoryID));
-    const categoriesToAdd = categories.filter(categoryID => !currentCategories.includes(categoryID));
-
-    const removeCategoryPromises = categoriesToRemove.map(async (categoryID) => {
-      await foundCompany.removeCategory(categoryID);
-    });
-    await Promise.all(removeCategoryPromises);
-
-    const addCategoryPromises = categoriesToAdd.map(async (categoryID) => {
+    for (const category of foundCompany.Categories) {
+      await foundCompany.removeCategory(category);
+    }
+    for (const categoryID of categories) {
       const foundCategory = await Categories.findByPk(categoryID);
+      if (!foundCategory) {
+        const error = new Error(`Category with id ${categoryID} not found.`);
+        error.status = 404;
+        throw error;
+      }
       await foundCompany.addCategory(foundCategory);
-    });
-    await Promise.all(addCategoryPromises);
+    }
   }
 
   const updatedCompany = await Companies.findByPk(id);
   return updatedCompany;
 };
+
 
 module.exports = {
   getAllCompanies,
