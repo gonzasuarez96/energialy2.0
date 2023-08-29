@@ -3,7 +3,8 @@ const {
   filterCategoriesByName,
   getCategoryByID,
   createCategory,
-  updateCategory
+  updateCategory,
+  deleteCategory
 } = require('../controllers/categoriesController');
 
 const getCategoriesHandler = async (req, res) => {
@@ -28,8 +29,8 @@ const getCategoryByIDHandler = async (req, res) => {
 
 const createCategoryHandler = async (req, res) => {
   try {
-    const { name, parentID } = req.body;
-    const newCategory = await createCategory(name, parentID);
+    const { name, categoryID } = req.body;
+    const newCategory = await createCategory(name, categoryID);
     res.status(201).json(newCategory);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
@@ -47,9 +48,20 @@ const updateCategoryHandler = async (req, res) => {
   }
 };
 
+const deleteCategoryHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const remainingCategories = await deleteCategory(id);
+    res.status(200).json(remainingCategories);
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getCategoriesHandler,
   getCategoryByIDHandler,
   createCategoryHandler,
-  updateCategoryHandler
+  updateCategoryHandler,
+  deleteCategoryHandler
 }
