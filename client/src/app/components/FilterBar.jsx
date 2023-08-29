@@ -4,7 +4,6 @@ async function getLocations(){
   const res = await fetch("http://localhost:3001/locations", {
     next: { revalidate: 1 },
   });
-  console.log(res.statusText)
   if (!res.ok) {
     console.log('no se pudo realizar la consulta')
   }
