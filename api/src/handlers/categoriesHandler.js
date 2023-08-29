@@ -28,8 +28,8 @@ const getCategoryByIDHandler = async (req, res) => {
 
 const createCategoryHandler = async (req, res) => {
   try {
-    const { name } = req.body;
-    const newCategory = await createCategory(name);
+    const { name, parentID } = req.body;
+    const newCategory = await createCategory(name, parentID);
     res.status(201).json(newCategory);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
