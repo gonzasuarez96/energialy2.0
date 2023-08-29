@@ -1,4 +1,8 @@
 import Image from "next/image";
+import background from "@/app/assets/backgroundImageDetail.png";
+import DetailCompany from "./components/DetailCompany";
+
+
 
 async function page({params}) {
 
@@ -10,15 +14,21 @@ async function page({params}) {
       return res.json();
     }
   const company = await getCompany(params.id);
-  
+    
   return (
-    <div className="flex justify-center">
-      <div className="w-[40px] flex items-center justify-center">
-        <Image src={company.bannerPicture} fill={true} className="w-full" />
+    <>
+      <div className={`flex justify-center`}>
+        <div className="fixed w-full h-1/2 object-cover overflow-hidden -z-10">
+          <Image src={background} fill={true} />
+        </div>
       </div>
-      <div>{company.name}</div>
-      <div>{company.description}</div>
-    </div>
+      <div className="flex bg-white m-20 rounded-md p-3 justify-between">
+        <div>
+          <DetailCompany company={company}/>
+        </div>
+        <div className="border-2">Licitaciones</div>
+      </div>
+    </>
   );
 }
 

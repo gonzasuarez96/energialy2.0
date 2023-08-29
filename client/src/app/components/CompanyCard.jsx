@@ -1,10 +1,10 @@
 'use client'
 import Image from "next/image";
-import Banner from '@/app/assets/banner.jpg'
-import CompanyLogo from '@/app/assets/LogoPenzoil.png'
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 function CompanyCard(props) {
+  const router = useRouter()
   return (
     <>
       <div className="w-[320px] h-[320px] flex flex-col rounded-md bg-white hover:shadow-xl hover:transform hover:scale-120 transition-transform">
@@ -25,19 +25,26 @@ function CompanyCard(props) {
           />
         </div>
         <div className="w-full h-1/2 rounded-br-md rounded-bl-md flex flex-col">
-          <div className="w-full mt-2 pt-2 flex justify-center">
-            <h3 className="text-lg">{props.compName}</h3>
+          <div
+            className="w-full mt-2 pt-2 flex justify-center"
+            onClick={() => {
+              router.refresh(), router.push(`/directory/${props.compId}`);
+            }}
+          >
+            <h3 className="text-lg cursor-pointer  hover:text-secondary-500">
+              {props.compName}
+            </h3>
           </div>
           <div className="w-full flex justify-around p-2">
             <Link
               href="/"
-              className="border-transparent no-underline  text-gray-800  hover:text-purple-600 inline-flex items-center px-1 border-b-2 text-sm font-medium "
+              className="border-transparent no-underline  text-gray-800  hover:text-secondary-500 inline-flex items-center px-1 border-b-2 text-sm font-medium "
             >
               Ver Licitaciones
             </Link>
             <Link
               href={`/directory/${props.compId}`}
-              className="border-transparent no-underline  text-gray-800  hover:text-purple-600 inline-flex items-center px-1  border-b-2 text-sm font-medium "
+              className="border-transparent no-underline  text-gray-800  hover:text-secondary-500 inline-flex items-center px-1  border-b-2 text-sm font-medium "
             >
               Ver Perfil
             </Link>
