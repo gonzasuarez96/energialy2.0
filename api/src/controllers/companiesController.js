@@ -52,29 +52,31 @@ const getCompanyByID = async (id) => {
   return foundCompany;
 };
 
-const createCompany = async (name, description, cuit, locations, employeeCount, categories) => {
-  if (!name || !description || !cuit || !locations || !employeeCount || !categories) {
+const createCompany = async (name, description, cuit, locations, employeeCount, categories, profilePicture, bannerPicture) => {
+  if (!name || !description || !locations || !employeeCount || !categories || !profilePicture || !bannerPicture) {
     const error = new Error("Missing required attributes.");
     error.status = 400;
     throw error;
   }
 
-  const newCompany = await Companies.create({ name, description, cuit, employeeCount });
+  const newCompany = await Companies.create({ name, description, cuit, employeeCount, profilePicture, bannerPicture });
 
-  for (const locationID of locations) {
+  const locationPromises = locations.map(async (locationID) => {
     const foundLocation = await Locations.findByPk(locationID);
     await newCompany.addLocation(foundLocation);
-  }
+  });
+  await Promise.all(locationPromises);
 
-  for (const categoryID of categories) {
+  const categoryPromises = categories.map(async (categoryID) => {
     const foundCategory = await Categories.findByPk(categoryID);
     await newCompany.addCategory(foundCategory);
-  }
+  });
+  await Promise.all(categoryPromises);
 
   return newCompany;
 };
 
-const updateCompany = async (id, name, description, cuit, locations, employeeCount, categories, isActive) => {
+const updateCompany = async (id, name, description, locations, employeeCount, profilePicture, bannerPicture, categories, isActive) => {
   const foundCompany = await Companies.findByPk(id);
   if (!foundCompany) {
     const error = new Error(`Company with id ${id} not found.`);
@@ -82,26 +84,40 @@ const updateCompany = async (id, name, description, cuit, locations, employeeCou
     throw error;
   }
 
-  await foundCompany.update({ name, description, cuit, employeeCount, isActive });
+  await foundCompany.update({ name, description, profilePicture, bannerPicture, employeeCount, isActive });
 
   if (locations) {
-    for (const location of foundCompany.Locations) {
-      await foundCompany.removeLocation(location);
-    }
-    for (const locationID of locations) {
+    const currentLocations = foundCompany.Locations.map(location => location.id);
+    const locationsToRemove = currentLocations.filter(locationID => !locations.includes(locationID));
+    const locationsToAdd = locations.filter(locationID => !currentLocations.includes(locationID));
+
+    const removeLocationPromises = locationsToRemove.map(async (locationID) => {
+      await foundCompany.removeLocation(locationID);
+    });
+    await Promise.all(removeLocationPromises);
+
+    const addLocationPromises = locationsToAdd.map(async (locationID) => {
       const foundLocation = await Locations.findByPk(locationID);
       await foundCompany.addLocation(foundLocation);
-    }
+    });
+    await Promise.all(addLocationPromises);
   }
 
   if (categories) {
-    for (const category of foundCompany.Categories) {
-      await foundCompany.removeCategory(category);
-    }
-    for (const categoryID of categories) {
+    const currentCategories = foundCompany.Categories.map(category => category.id);
+    const categoriesToRemove = currentCategories.filter(categoryID => !categories.includes(categoryID));
+    const categoriesToAdd = categories.filter(categoryID => !currentCategories.includes(categoryID));
+
+    const removeCategoryPromises = categoriesToRemove.map(async (categoryID) => {
+      await foundCompany.removeCategory(categoryID);
+    });
+    await Promise.all(removeCategoryPromises);
+
+    const addCategoryPromises = categoriesToAdd.map(async (categoryID) => {
       const foundCategory = await Categories.findByPk(categoryID);
       await foundCompany.addCategory(foundCategory);
-    }
+    });
+    await Promise.all(addCategoryPromises);
   }
 
   const updatedCompany = await Companies.findByPk(id);
