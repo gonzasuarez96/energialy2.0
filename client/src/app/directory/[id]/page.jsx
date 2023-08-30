@@ -20,9 +20,9 @@ function page({params}) {
     
   return (
     <>
-      <div className={`flex justify-center`}>
-        <div className="fixed w-full h-1/2 object-cover overflow-hidden -z-10">
-          <Image src={company.bannerPicture} fill={true} />
+      <div className="flex justify-center mt-10">
+        <div className="w-full h-1/2 object-cover overflow-hidden -z-10">
+          <Image className="max-h-[60%]" src={company.bannerPicture} fill={true} />
         </div>
       </div>
 
