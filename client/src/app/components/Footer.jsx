@@ -12,11 +12,51 @@ export default function Footer() {
       }}
     >
       <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-yellow-300 opacity-80"></div>
-      <div className="py-20">
-        {/* Aquí puedes agregar el contenido que deseas mostrar sobre el degradado */}
+      <div className="pt-20 relative z-10 w-full px-4 mx-auto">
+        <div className="flex flex-wrap -mx-4">
+          <div className="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-4">
+            <img
+              src="https://energialy.ar/uploads/settings/footer/1624496061-Energialy-Logo-150.png"
+              alt="company logo here"
+            />
+            <div>
+              <p>La Plataforma de Licitaciones Fullstream de Vaca Muerta. Las herramientas de Energialy colaboran en tus procesos licitatorios.</p>
+            </div>
+            <ul>
+              <li>
+                <a href="https://twitter.com/energialy"><i className="fa fab fa-twitter"></i></a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/company/energialy/"><i className="fa fab fa-google-plus-g"></i></a>
+              </li>
+            </ul>
+          </div>
+          <div className="w-full sm:w-6/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-4">
+            <h4>OPORTUNIDADES</h4>
+            <ul>
+              <li>
+                <a href="#">Financiamiento</a>
+              </li>
+            </ul>
+          </div>
+          <div className="w-full sm:w-6/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-4">
+            <h4>COMPAÑIA</h4>
+            <ul>
+              <li>
+                <a href="#">Descubri Energialy</a>
+              </li>
+            </ul>
+          </div>
+          <div className="w-full sm:w-6/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-4">
+            <h4>Seguinos</h4>
+            <ul>
+              <li>
+                <a href="#">logo redes</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </footer>
   );
-};
-
-
+}

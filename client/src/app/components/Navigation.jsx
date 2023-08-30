@@ -9,6 +9,10 @@ import UserProfile from "./UserProfile";
 
 import { useRouter } from "next/navigation";
 
+function isAuthenticated() {
+  return true;
+}
+
 export default function Navigation() {
   let pathname = usePathname() || "/";
   const router = useRouter()
@@ -54,7 +58,33 @@ export default function Navigation() {
                   >
                     Licitaciones
                   </Link>
+                  <UserProfile />
                 </div>
+       
+                  <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
+                    <Link
+                      href='/login'
+                      prefetch
+                      className={`${
+                        pathname === "/login"
+                          ? "border-[#191654] no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 border-b-2 font-medium"
+                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 hover:border-[#191654] pt-1 border-b-2 font-medium"
+                      }`}
+                    >
+                      Iniciar Sesion
+                    </Link>
+                    <Link
+                      href='/register'
+                      prefetch
+                      className={`${
+                        pathname === "/register"
+                          ? "no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide"
+                          : "border-transparent no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide transition duration-300 ease-in-out"
+                      }`}
+                    >
+                      Registrarse
+                    </Link>
+                  </div>
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
                 <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-text-gray-400 ">
