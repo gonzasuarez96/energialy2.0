@@ -33,25 +33,25 @@ export default function Footer() {
           </div>
           <div className="w-full sm:w-6/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-4">
             <h4>OPORTUNIDADES</h4>
-            <ul>
+            <ul className="text-white">
               <li>
-                <a href="#">Financiamiento</a>
+                <a href="#" className="no-underline text-current hover:text-[#191654]">Financiamiento</a>
               </li>
             </ul>
           </div>
           <div className="w-full sm:w-6/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-4">
             <h4>COMPAÑIA</h4>
-            <ul>
+            <ul className="text-white"> 
               <li>
-                <a href="#">Descubri Energialy</a>
+                <a href="#" className="no-underline text-current hover:text-[#191654]">Descubri Energialy</a>
               </li>
             </ul>
           </div>
           <div className="w-full sm:w-6/12 md:w-3/12 lg:w-3/12 xl:w-3/12 px-4">
             <h4>Seguinos</h4>
-            <ul>
+            <ul className="text-white">
               <li>
-                <a href="#">logo redes</a>
+                <a href="#" className="no-underline text-current hover:text-[#191654]">logo redes</a>
               </li>
             </ul>
           </div>

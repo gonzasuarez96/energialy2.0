@@ -10,7 +10,7 @@ import UserProfile from "./UserProfile";
 import { useRouter } from "next/navigation";
 
 function isAuthenticated() {
-  return true;
+  return false;
 }
 
 export default function Navigation() {
@@ -33,6 +33,7 @@ export default function Navigation() {
                     <Image src={Logo} />
                   </div>
                 </div>
+                {isAuthenticated() ? (
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
                   <div
                     onClick={() => {
@@ -60,7 +61,7 @@ export default function Navigation() {
                   </Link>
                   <UserProfile />
                 </div>
-       
+                ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
                     <Link
                       href='/login'
@@ -85,6 +86,7 @@ export default function Navigation() {
                       Registrarse
                     </Link>
                   </div>
+                )}
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
                 <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-text-gray-400 ">
@@ -121,9 +123,6 @@ export default function Navigation() {
                   )}
                 </Disclosure.Button>
               </div>
-              {/* Acá tenemos que crear la condicional de la navbar para cuando
-            tenemos un sesión iniciada y cuando no. */}
-              <UserProfile />
             </div>
           </div>
           <Disclosure.Panel className="sm:hidden">
