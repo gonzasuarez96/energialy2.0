@@ -1,4 +1,15 @@
-import React from 'react'
+import LocationFilter from "./LocationFilter";
+
+async function getLocations(){
+  const res = await fetch("http://localhost:3001/locations", {
+    next: { revalidate: 1 },
+  });
+  if (!res.ok) {
+    console.log('no se pudo realizar la consulta')
+  }
+
+  return res.json();
+}
 
 const employerNumber = [
   "Menos de 50 empleados",
@@ -8,18 +19,21 @@ const employerNumber = [
   "Mas de 5000 empleados",
 ];
 
-function FilterBar() {
+async function FilterBar(props) {
+
+  const locations = await getLocations()
+
   return (
     <div className="flex flex-col justify-items-stretch">
       <div className="bg-white p-8 mb-4">
-        <div className="p-2 border-b-2 border-gray-300 mb-4">
+        <div className="p-2 border-b-2 border-gray-300 mb-4 ">
           <h3 className="text-base">Buscador</h3>
         </div>
         <div>
           <input
             type="text"
             placeholder="Buscar Empresa"
-            className="border-1 border-gray-400 p-3 rounded-sm text-sm"
+            className="border-1 border-gray-400 p-3 rounded-sm text-sm focus:outline-none focus:border-secondary-500-500 focus:ring-1 focus:ring-secondary-500"
           />
         </div>
       </div>
@@ -28,26 +42,7 @@ function FilterBar() {
           <h3 className="text-base">Ubicación</h3>
         </div>
         <div>
-          <div>
-            <input type="checkbox" name="cuenca" id="nqn" />
-            <label>Cuenca Neuquina</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="gsj" />
-            <label>Cuenca Golfo San Jorge</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="austral" />
-            <label>Cuenca Austral</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="cuyo" />
-            <label>Cuenca Cuyana</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="noa" />
-            <label>Cuenca Noroeste</label>
-          </div>
+          <LocationFilter locations={locations} />
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
@@ -57,7 +52,7 @@ function FilterBar() {
         <div>
           {employerNumber.map((item, index) => (
             <div>
-              <input type="checkbox" className='mr-1' name={index} />
+              <input type="checkbox" className="mr-1" name={index} />
               <label>{item}</label>
             </div>
           ))}

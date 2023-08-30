@@ -5,9 +5,8 @@ const newUserRegisterHandler = async (req, res) => {
     const { email, password } = req.body;
     const newUser = await newUserRegister(email, password);
     res.status(201).json(newUser);
-  } catch (err) {
-    const status = err.status || 500;
-    res.status(status).json({ error: err.message });
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
   }
 };
 

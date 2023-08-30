@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt');
 const { Users } = require('../db');
+const bcrypt = require('bcrypt');
 
 const newUserRegister = async (email, password) => {
   if (!email || !password) {
@@ -16,7 +16,7 @@ const newUserRegister = async (email, password) => {
   const hashedPwd = await bcrypt.hash(password, 10);
   const newUser = await Users.create({
     email: email,
-    password: hashedPwd,
+    hashedPassword: hashedPwd,
   });
   return newUser;
 };

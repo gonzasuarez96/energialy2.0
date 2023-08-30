@@ -3,14 +3,15 @@
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-// import Themebutton from "./Themebutton";
 import Image from "next/image";
 import Logo from '@/app/assets/Energialy Logo-01.svg'
 import UserProfile from "./UserProfile";
 
+import { useRouter } from "next/navigation";
 
 export default function Navigation() {
   let pathname = usePathname() || "/";
+  const router = useRouter()
   return (
     <Disclosure as="nav">
       {({ open }) => (
@@ -18,30 +19,37 @@ export default function Navigation() {
           <div className="mt-auto mb-2 p-2 w-full shadow-md bg-white">
             <div className="flex justify-between h-16">
               <div className="flex justify-between w-full">
-                <div className="flex items-center">
-                  <Link href="/">
+                <div className="flex items-center cursor-pointer">
+                  <div
+                    onClick={() => {
+                      router.refresh();
+                      router.push("/");
+                    }}
+                  >
                     <Image src={Logo} />
-                  </Link>
+                  </div>
                 </div>
                 <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                  <Link
-                    href="/directory"
-                    prefetch
+                  <div
+                    onClick={() => {
+                      router.refresh();
+                      router.push("/directory");
+                    }}
                     className={`${
                       pathname === "/directory"
-                        ? "border-purple-600 no-underline h-full inline-flex items-center px-1 text-purple-600 pt-1 border-b-2 text-sm font-medium"
-                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-purple-600 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium cursor-pointer"
+                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
                     }`}
                   >
                     Directorio
-                  </Link>
+                  </div>
                   <Link
                     href="/licitaciones"
                     prefetch
                     className={`${
                       pathname === "/licitaciones"
-                        ? "border-purple-600 no-underline h-full inline-flex items-center px-1 text-purple-600 pt-1 border-b-2 text-sm font-medium"
-                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-purple-600 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
+                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
                     }`}
                   >
                     Licitaciones
@@ -83,6 +91,8 @@ export default function Navigation() {
                   )}
                 </Disclosure.Button>
               </div>
+              {/* Acá tenemos que crear la condicional de la navbar para cuando
+            tenemos un sesión iniciada y cuando no. */}
               <UserProfile />
             </div>
           </div>

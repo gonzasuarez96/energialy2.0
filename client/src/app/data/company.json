@@ -1,0 +1,63 @@
+
+{
+    "data":[
+    {
+        "id": 1,
+        "companyName": "YPF S.A.",
+        "foundationYear": 1940,
+        "cuit": "",
+        "website": "",
+        "annualRevenue": "100M - 1B U$S",
+        "description": "",
+        "profilePicture": "https://picsum.photos/id/15/90/90",
+        "bannerPicture": "https://picsum.photos/id/63/320/160",
+        "numberOfEmployees": "Mas de 5000 empleados",
+        "compreNeuquino": false,
+        "multimedia": "",
+        "experience": "",
+        "services": "",
+        "certifications": "",
+        "homologations": "",
+        "isActive": true 
+    }
+    ,{
+        "id": 2,
+        "companyName": "Test Company S.A.",
+        "foundationYear": 2002,
+        "cuit": "",
+        "website": "",
+        "annualRevenue": "0 - 10M U$S",
+        "description": "",
+        "profilePicture": "https://picsum.photos/id/99/90/90",
+        "bannerPicture": "https://picsum.photos/id/119/320/160",
+        "numberOfEmployees": "Menos de 50 empleados",
+        "compreNeuquino": true ,
+        "multimedia": "",
+        "experience": "",
+        "services": "",
+        "certifications": "",
+        "homologations": "",
+        "isActive": true 
+    },
+    {
+        "id": 3,
+        "companyName": "Tecpetrol S.A.",
+        "foundationYear": 2002,
+        "cuit": "",
+        "website": "",
+        "annualRevenue": "0 - 10M U$S",
+        "description": "",
+        "profilePicture": "https://picsum.photos/id/88/90/90",
+        "bannerPicture": "https://picsum.photos/id/210/320/160",
+        "numberOfEmployees": "Menos de 50 empleados",
+        "compreNeuquino": true ,
+        "multimedia": "",
+        "experience": "",
+        "services": "",
+        "certifications": "",
+        "homologations": "",
+        "isActive": true 
+    }
+]
+
+}
