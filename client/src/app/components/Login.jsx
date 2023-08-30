@@ -1,14 +1,47 @@
 'use client'
 import React, { useState } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+//Toastify module for success message
+const displaySuccessMessage = (mensaje) => {
+  toast.success(mensaje, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+};
+
+// Toastify module for error messages
+const displayFailedMessage = (mensaje) => {
+  toast.error(mensaje, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+};
+
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
+  const [accessToken, setAccessToken] = useState(''); // Estado local para el token
+
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -58,10 +91,16 @@ export default function Login() {
     };
 
     try {
+      console.log('Datos enviados:', user)    
         const response = await axios.post('http://localhost:3001/auth', user);
-        console.log(response)
+        const res = response.data.accessToken;
+        setAccessToken(res); // Actualiza el estado local con el nuevo token
+        console.log('Respuesta del servidor:', response)
+        console.log('Estado accessToken:', accessToken)
+        displaySuccessMessage('Sesion iniciada');
     } catch(error) {
-        console.log(error)
+        console.log('Error:', error)
+        displayFailedMessage(error.response.data.error);
     }
 
   };
@@ -72,7 +111,7 @@ export default function Login() {
   };
 
   return (
-    <div className="d-flex justify-content-center bg-light pt-5">
+    <div className="d-flex justify-content-center bg-light pt-5 pb-5">
       <div className="bg-white shadow rounded w-50">
         <h3 className=" mb-0 p-4 bg-gray-100 border-b border-gray-300">Iniciar sesión</h3>
         <form className="mb-2 pl-4 pr-4 pt-4">
@@ -101,6 +140,7 @@ export default function Login() {
           <a href="#" className="text-decoration-none text-muted">¿Olvidaste tu contraseña?</a>
         </div>
       </div>
+      <ToastContainer style={{ marginTop: '100px'}}/>
     </div>
   );
 };
