@@ -17,13 +17,12 @@ function page({params}) {
       .then((data) => setCompany(data))
       .catch((error) => console.error("Error fetching data:", error));
   },[])
-  
-   
+    
   return (
     <>
       <div className={`flex justify-center`}>
         <div className="fixed w-full h-1/2 object-cover overflow-hidden -z-10">
-          <Image src={background} fill={true} />
+          <Image src={company.bannerPicture} fill={true} />
         </div>
       </div>
 
@@ -31,7 +30,11 @@ function page({params}) {
         <CollapsedBar title={"Compañía"} company={company} intState={false} />
         <CollapsedBar title={"Servicios"} company={company} intState={true} />
         <CollapsedBar title={"Portfolio"} company={company} intState={true} />
-        <CollapsedBar title={"Licitaciones"} company={company} intState={true}/>
+        <CollapsedBar
+          title={"Licitaciones"}
+          company={company}
+          intState={true}
+        />
       </div>
     </>
   );
