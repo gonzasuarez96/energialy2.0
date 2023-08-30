@@ -3,17 +3,11 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import background from "@/app/assets/backgroundImageDetail.png";
 
-import CollapsedBar from "../components/collapsedBar";
-
-
-
-
+import CollapsedBar from "./components/collapsedBar";
 
 function page({params}) {
   
   const [company, setCompany] = useState({})
-  console.log(company
-    )
   const id = params.id
 
   
@@ -24,8 +18,7 @@ function page({params}) {
       .catch((error) => console.error("Error fetching data:", error));
   },[])
   
-
-    
+   
   return (
     <>
       <div className={`flex justify-center`}>
@@ -34,13 +27,11 @@ function page({params}) {
         </div>
       </div>
 
-
-      <div>
-        <CollapsedBar title={"Compañía"} company={company} />
-        <CollapsedBar title={"Servicios"} company={company} />
-        <CollapsedBar title={"Portfolio"} company={company} />
-        <CollapsedBar title={"Licitaciones"} company={company} />
-
+      <div className="mt-20">
+        <CollapsedBar title={"Compañía"} company={company} intState={false} />
+        <CollapsedBar title={"Servicios"} company={company} intState={true} />
+        <CollapsedBar title={"Portfolio"} company={company} intState={true} />
+        <CollapsedBar title={"Licitaciones"} company={company} intState={true}/>
       </div>
     </>
   );

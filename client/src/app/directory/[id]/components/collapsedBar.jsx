@@ -1,19 +1,19 @@
 'use client'
 import { useState, useEffect } from "react";
-import DetailCompany from "../components/DetailCompany";
+import DetailCompany from "./DetailCompany";
 
-function CollapsedBar({title, company}) {
-     const [isCollapsed, setIsCollapsed] = useState(false);
+function CollapsedBar({title, company, intState }) {
+     const [isCollapsed, setIsCollapsed] = useState(intState);
      const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
   return (
     <>
-      <div className="flex flex-col bg-white m-20 rounded-md p-3 justify-between">
-        <div className="flex justify-between">
-          <h3 className="text-sm">{title}</h3>
+      <div className=" flex flex-col bg-white m-4 rounded-md p-3 justify-between ">
+        <div className=" flex justify-between">
+          <h3 className="text-sm h-full my-auto">{title}</h3>
           <button
-            className="bg-gray-100 text-primary-600 px-2 py-1 rounded"
+            className=" text-primary-600 px-2 py-1 rounded"
             onClick={toggleCollapse}
           >
             {isCollapsed ? (

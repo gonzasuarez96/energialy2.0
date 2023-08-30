@@ -34,48 +34,48 @@ export default function Navigation() {
                   </div>
                 </div>
                 {isAuthenticated() ? (
-                <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                  <div
-                    onClick={() => {
-                      router.refresh();
-                      router.push("/directory");
-                    }}
-                    className={`${
-                      pathname === "/directory"
-                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium cursor-pointer"
-                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
-                    }`}
-                  >
-                    Directorio
+                  <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
+                    <div
+                      onClick={() => {
+                        router.refresh();
+                        router.push("/directory");
+                      }}
+                      className={`${
+                        pathname === "/directory"
+                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium cursor-pointer"
+                          : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
+                      }`}
+                    >
+                      Directorio
+                    </div>
+                    <Link
+                      href="/licitaciones"
+                      prefetch
+                      className={`${
+                        pathname === "/licitaciones"
+                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
+                          : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                      }`}
+                    >
+                      Licitaciones
+                    </Link>
+                    <UserProfile />
                   </div>
-                  <Link
-                    href="/licitaciones"
-                    prefetch
-                    className={`${
-                      pathname === "/licitaciones"
-                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
-                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
-                    }`}
-                  >
-                    Licitaciones
-                  </Link>
-                  <UserProfile />
-                </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
                     <Link
-                      href='/login'
+                      href="/login"
                       prefetch
                       className={`${
                         pathname === "/login"
                           ? "border-[#191654] no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 border-b-2 font-medium"
-                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 hover:border-[#191654] pt-1 border-b-2 font-medium"
+                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 hover:border-[#191654] border-b-2 font-medium"
                       }`}
                     >
                       Iniciar Sesion
                     </Link>
                     <Link
-                      href='/register'
+                      href="/register"
                       prefetch
                       className={`${
                         pathname === "/register"
@@ -132,8 +132,8 @@ export default function Navigation() {
                 prefetch
                 className={`${
                   pathname == "/directory"
-                    ? "bg-purple-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-                    : "border-transparent  no-underline text-gray-800 hover:bg-purple-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    ? "border-secondary-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    : "border-transparent  no-underline text-gray-800 hover:border-secondary-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                 }`}
               >
                 Directorio
@@ -143,8 +143,8 @@ export default function Navigation() {
                 prefetch
                 className={`${
                   pathname == "/licitaciones"
-                    ? "bg-purple-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-                    : "border-transparent no-underline text-gray-800 hover:bg-purple-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    ? "border-secondary-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    : "border-transparent no-underline text-gray-800 hover:border-secondary-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                 }`}
               >
                 Licitaciones
