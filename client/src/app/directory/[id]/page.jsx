@@ -1,19 +1,27 @@
+'use client'
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import background from "@/app/assets/backgroundImageDetail.png";
-import DetailCompany from "./components/DetailCompany";
+import CollapsedBar from "../components/collapsedBar";
 
 
 
-async function page({params}) {
 
-    async function getCompany(id){
-      const res = await fetch(`http://localhost:3001/companies/${id}`);
-      if(!res.ok) {
-        console.log("no se pudo realizar la consulta");
-      }
-      return res.json();
-    }
-  const company = await getCompany(params.id);
+function page({params}) {
+  
+  const [company, setCompany] = useState({})
+  console.log(company
+    )
+  const id = params.id
+
+  
+  useEffect(()=> {
+    fetch(`http://localhost:3001/companies/${id}`)
+      .then((response) => response.json())
+      .then((data) => setCompany(data))
+      .catch((error) => console.error("Error fetching data:", error));
+  },[])
+  
     
   return (
     <>
@@ -22,11 +30,12 @@ async function page({params}) {
           <Image src={background} fill={true} />
         </div>
       </div>
-      <div className="flex bg-white m-20 rounded-md p-3 justify-between">
-        <div>
-          <DetailCompany company={company}/>
-        </div>
-        <div className="border-2">Licitaciones</div>
+
+      <div>
+        <CollapsedBar title={"Compañía"} company={company} />
+        <CollapsedBar title={"Servicios"} company={company} />
+        <CollapsedBar title={"Portfolio"} company={company} />
+        <CollapsedBar title={"Licitaciones"} company={company} />
       </div>
     </>
   );

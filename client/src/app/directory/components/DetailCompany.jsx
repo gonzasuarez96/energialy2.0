@@ -9,7 +9,6 @@ function dateTransform(string) {
 
 function DetailCompany({company}) {
     const date = dateTransform(company.createdAt);
-    console.log(company)
   return (
     <>
       <div className="flex">
