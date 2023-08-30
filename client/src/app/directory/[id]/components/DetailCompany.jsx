@@ -42,18 +42,18 @@ function DetailCompany({company}) {
             </p>
           </div>
         </div>
-        <div className="max-w-[40%] flex flex-col justify-between px-3">
+        <div className="max-w-[40%] flex flex-col px-3">
           <div className="flex justify-center mb-4">
             {company.Locations?.map((location) => (
-              <div className=" flex align-middle justify-center ">
-                <div className="w-2 h-full bg-red-500 rounded-full mr-1"></div>
+              <div className=" flex m-auto ">
+                <div className="w-2 h-2 bg-primary-200 rounded-full mr-1 mt-2 mb-2"></div>
                 <p className="text-sm m-auto" key={location.id}>
                   {location.name}
                 </p>
               </div>
             ))}
           </div>
-          <p className="text-md text-justify">{company.description}</p>
+          <p className="text-sm text-justify">{company.description}</p>
         </div>
         <div className="flex flex-col justify-center min-w-[25%] px-4">
           <div className="min-h-[50%]">
