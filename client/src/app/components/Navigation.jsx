@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Logo from '@/app/assets/Energialy Logo-01.svg'
 import UserProfile from "./UserProfile";
+import { useSelector } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
@@ -14,8 +15,10 @@ function isAuthenticated() {
 }
 
 export default function Navigation() {
+  
   let pathname = usePathname() || "/";
   const router = useRouter()
+
   return (
     <Disclosure as="nav">
       {({ open }) => (
@@ -59,7 +62,7 @@ export default function Navigation() {
                   >
                     Licitaciones
                   </Link>
-                  <UserProfile />
+                  <UserProfile user={user} company={company} />
                 </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">

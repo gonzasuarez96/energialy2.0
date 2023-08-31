@@ -3,6 +3,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setAccessToken, setUserData } from '../redux/slice';
+
 
 //Toastify module for success message
 const displaySuccessMessage = (mensaje) => {
@@ -40,7 +44,10 @@ export default function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
-  const [accessToken, setAccessToken] = useState(''); // Estado local para el token
+
+  const router = useRouter()
+
+  const dispatch = useDispatch();
 
 
   const handleEmailChange = (event) => {
@@ -93,14 +100,22 @@ export default function Login() {
     try {
       console.log('Datos enviados:', user)    
         const response = await axios.post('http://localhost:3001/auth', user);
-        const res = response.data.accessToken;
-        setAccessToken(res); // Actualiza el estado local con el nuevo token
+        const accessToken = response.data.accessToken;
+
         console.log('Respuesta del servidor:', response)
-        console.log('Estado accessToken:', accessToken)
+        console.log('Estado accessToken:', response.data.accessToken)
+
         displaySuccessMessage('Sesion iniciada');
+        
+        dispatch(setUserData(user))
+        dispatch(setAccessToken(accessToken))
+           
+        setTimeout(() => {
+          router.push('/directory');
+        }, 2000);
     } catch(error) {
         console.log('Error:', error)
-        displayFailedMessage(error.response.data.error);
+        displayFailedMessage(error.response);
     }
 
   };
