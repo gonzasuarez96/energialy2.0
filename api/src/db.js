@@ -36,6 +36,9 @@ Users.belongsTo(Companies); // This creates the `CompanyId` foreign key in Users
 Companies.belongsToMany(Categories, { through: 'Companies_Categories' });
 Categories.belongsToMany(Companies, { through: 'Companies_Categories' });
 
+Companies.belongsToMany(Subcategories, { through: 'Companies_Subcategories' });
+Subcategories.belongsToMany(Companies, { through: 'Companies_Subcategories' });
+
 Categories.hasMany(Subcategories);
 Subcategories.belongsTo(Categories);
 

@@ -4,7 +4,7 @@ const {
   getCategoryByIDHandler,
   createCategoryHandler,
   updateCategoryHandler,
-  // deleteCategoryHandler
+  deleteCategoryHandler
 } = require('../../handlers/categoriesHandler');
 
 const categoriesRouter = Router();
@@ -13,6 +13,6 @@ categoriesRouter.get('/', getCategoriesHandler);
 categoriesRouter.get('/:id', getCategoryByIDHandler);
 categoriesRouter.post('/', createCategoryHandler);
 categoriesRouter.put('/:id', updateCategoryHandler);
-// categoriesRouter.delete('/:id', deleteCategoryHandler);
+categoriesRouter.delete('/:id', deleteCategoryHandler);
 
 module.exports = categoriesRouter;

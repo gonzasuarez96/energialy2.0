@@ -22,9 +22,7 @@ const updateUserProfile = async (id, newData) => {
     error.status = 404;
     throw error;
   }
-
   await user.update(newData);
-
   return user;
 };
 
