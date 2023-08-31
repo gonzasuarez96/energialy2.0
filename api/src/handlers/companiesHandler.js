@@ -28,8 +28,8 @@ const getCompanyByIDHandler = async (req, res) => {
 
 const createCompanyHandler = async (req, res) => {
   try {
-    const { name, description, cuit, locations, employeeCount, categories, profilePicture, bannerPicture } = req.body;
-    const newCompany = await createCompany(name, description, cuit, locations, employeeCount, categories, profilePicture, bannerPicture);
+    const body = req.body;
+    const newCompany = await createCompany(body);
     res.status(201).json(newCompany);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
@@ -39,8 +39,8 @@ const createCompanyHandler = async (req, res) => {
 const updateCompanyHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, locations, employeeCount, profilePicture, bannerPicture, categories, isActive } = req.body;
-    const updatedCompany = await updateCompany(id, name, description, locations, employeeCount, profilePicture, bannerPicture, categories, isActive);
+    const body = req.body;
+    const updatedCompany = await updateCompany(id, body);
     res.status(200).json(updatedCompany);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });

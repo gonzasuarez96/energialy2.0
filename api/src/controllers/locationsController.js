@@ -1,8 +1,31 @@
-const { Locations } = require('../db');
+const { Locations, Companies } = require('../db');
 const { Op } = require('sequelize');
 
+const cleanLocations = (locations) => {
+  if (Array.isArray(locations)) {
+    const cleanLocationsArray = locations.map((location) => ({
+      id: location.id,
+      name: location.name,
+      isActive: location.isActive
+    }));
+    return cleanLocationsArray;
+  } else {
+    const cleanLocationDetail = {
+      id: locations.id,
+      name: locations.name,
+      companies: locations.Companies,
+      isActive: locations.isActive,
+      createdAt: locations.createdAt,
+      updatedAt: locations.updatedAt
+    };
+    return cleanLocationDetail;
+  }
+};
+
 const getAllLocations = async () => {
-  const allLocations = await Locations.findAll();
+  const allLocations = await Locations.findAll({
+    attributes: { exclude: ["createdAt", "updatedAt"] },
+  });
   return allLocations;
 };
 
@@ -13,18 +36,25 @@ const filterLocationsByName = async (name) => {
         [Op.iLike]: `%${name}%`,
       },
     },
+    attributes: { exclude: ["createdAt", "updatedAt"] },
   });
   return filteredLocations;
 };
 
 const getLocationByID = async (id) => {
-  const foundLocation = await Locations.findByPk(id);
+  const foundLocation = await Locations.findByPk(id, {
+    include: {
+      model: Companies,
+      attributes: ["id", "name", "foundationYear", "annualRevenue", "employeeCount"],
+      through: { attributes: [] },
+    },
+  });
   if (!foundLocation) {
     const error = new Error(`Location with id ${id} not found.`);
     error.status = 404;
     throw error;
   }
-  return foundLocation;
+  return cleanLocations(foundLocation);
 };
 
 const createLocation = async (name) => {
@@ -38,20 +68,41 @@ const createLocation = async (name) => {
 };
 
 const updateLocation = async (id, name, isActive) => {
+  const foundLocation = await Locations.findByPk(id, {
+    include: {
+      model: Companies,
+      attributes: ["id", "name", "foundationYear", "annualRevenue", "employeeCount"],
+      through: { attributes: [] },
+    },
+  });
+  if (!foundLocation) {
+    const error = new Error(`Location with id ${id} not found.`);
+    error.status = 404;
+    throw error;
+  }
+  await foundLocation.update({ name, isActive });
+  return foundLocation;
+};
+
+const deleteLocation = async (id) => {
   const foundLocation = await Locations.findByPk(id);
   if (!foundLocation) {
     const error = new Error(`Location with id ${id} not found.`);
     error.status = 404;
     throw error;
-  };
-  await foundLocation.update({ name, isActive });
-  return foundLocation;
-};
+  }
+  await foundLocation.destroy();
+  const remainingLocations = await Locations.findAll({
+    attributes: { exclude: ["createdAt", "updatedAt"] },
+  });
+  return remainingLocations;
+}
 
 module.exports = {
   getAllLocations,
   filterLocationsByName,
   getLocationByID,
   createLocation,
-  updateLocation
+  updateLocation,
+  deleteLocation
 };

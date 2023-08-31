@@ -3,7 +3,8 @@ const {
   filterLocationsByName,
   getLocationByID,
   createLocation,
-  updateLocation
+  updateLocation,
+  deleteLocation
 } = require('../controllers/locationsController');
 
 const getLocationsHandler = async (req, res) => {
@@ -47,9 +48,20 @@ const updateLocationHandler = async (req, res) => {
   }
 };
 
+const deleteLocationHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const remainingLocations = await deleteLocation(id);
+    res.status(200).json(remainingLocations);
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getLocationsHandler,
   getLocationByIDHandler,
   createLocationHandler,
-  updateLocationHandler
+  updateLocationHandler,
+  deleteLocationHandler
 }

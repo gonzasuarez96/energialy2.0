@@ -7,6 +7,7 @@ const verifyJWT = require('../middlewares/verifyJWT');
 const usersRouter = require('./resources/usersRouter');
 const companiesRouter = require('./resources/companiesRouter');
 const categoriesRouter = require('./resources/categoriesRouter');
+const subcategoriesRouter = require('./resources/subcategoriesRouter');
 const locationsRouter = require('./resources/locationsRouter');
 const organizationTypesRouter = require('./resources/organizationTypesRouter');
 
@@ -23,6 +24,7 @@ router.use('/logout', logoutRouter);
 router.use('/users', usersRouter);
 router.use('/companies', companiesRouter);
 router.use('/categories', categoriesRouter);
+router.use('/subcategories', subcategoriesRouter)
 router.use('/locations', locationsRouter);
 router.use('/organizationTypes', organizationTypesRouter);
 
