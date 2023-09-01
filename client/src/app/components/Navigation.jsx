@@ -10,11 +10,20 @@ import { useSelector } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-function isAuthenticated() {
-  return false;
-}
+
+
 
 export default function Navigation() {
+  const user = useSelector((state) => state.user);
+
+  function isAuthenticated() {
+    if (user.userData.login) {
+     return true;
+    }else{
+      return false
+    }
+    
+  }
   
   let pathname = usePathname() || "/";
   const router = useRouter()
@@ -23,7 +32,7 @@ export default function Navigation() {
     <Disclosure as="nav">
       {({ open }) => (
         <>
-          <div className="mt-auto mb-2 p-2 w-full shadow-md bg-white">
+          <div className="mt-auto mb-2 p-2 w-full shadow-md bg-white fixed">
             <div className="flex justify-between h-16">
               <div className="flex justify-between w-full">
                 <div className="flex items-center cursor-pointer">
@@ -62,23 +71,23 @@ export default function Navigation() {
                   >
                     Licitaciones
                   </Link>
-                  <UserProfile user={user} company={company} />
+                  <UserProfile user={user.userData.email}/>
                 </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
                     <Link
-                      href='/login'
+                      href="/login"
                       prefetch
                       className={`${
                         pathname === "/login"
                           ? "border-[#191654] no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 border-b-2 font-medium"
-                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 hover:border-[#191654] pt-1 border-b-2 font-medium"
+                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 hover:border-[#191654] border-b-2 font-medium"
                       }`}
                     >
                       Iniciar Sesion
                     </Link>
                     <Link
-                      href='/register'
+                      href="/register"
                       prefetch
                       className={`${
                         pathname === "/register"
@@ -135,8 +144,8 @@ export default function Navigation() {
                 prefetch
                 className={`${
                   pathname == "/directory"
-                    ? "bg-purple-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-                    : "border-transparent  no-underline text-gray-800 hover:bg-purple-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    ? "border-secondary-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    : "border-transparent  no-underline text-gray-800 hover:border-secondary-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                 }`}
               >
                 Directorio
@@ -146,8 +155,8 @@ export default function Navigation() {
                 prefetch
                 className={`${
                   pathname == "/licitaciones"
-                    ? "bg-purple-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-                    : "border-transparent no-underline text-gray-800 hover:bg-purple-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    ? "border-secondary-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    : "border-transparent no-underline text-gray-800 hover:border-secondary-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                 }`}
               >
                 Licitaciones

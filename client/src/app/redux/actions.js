@@ -1,22 +1,15 @@
-import axios from 'axios';
-
 export const GET_ALL_COMPANIES = "GET_ALL_COMPANIES";
 export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 
-const desarrolloApp = "http://localhost:3001";
+// const desarrolloApp = "http://localhost:3001";
 
-export const getAllCompanies = () => {
-    return async function (dispatch) {
-        try {
-            const response = await axios.get(`http://localhost:3001/companies`)
-            const companies = response.data.data
-            dispatch({ type: GET_ALL_COMPANIES, payload: companies})
-        } catch (error) {
-            console.log(error)
-        }
-    }
-}
+export const setAllCompanies = () => {
+  return {
+    type: GET_ALL_COMPANIES, 
+    payload: companies 
+  };
+};
 
 export const setAccessToken = (token) => {
     return {
@@ -25,10 +18,10 @@ export const setAccessToken = (token) => {
     };
 };
 
-export const  loginSuccess = (user) => {
-    return {
-        type: LOGIN_SUCCESS,
-        payload: user,
-    }
-}
+export const setUserData = (user) => {
+  return {
+    type: LOGIN_SUCCESS,
+    payload: user,
+  };
+};
 

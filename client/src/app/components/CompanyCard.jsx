@@ -7,7 +7,7 @@ function CompanyCard(props) {
   const router = useRouter()
   return (
     <>
-      <div className="w-[320px] h-[320px] flex flex-col rounded-md bg-white hover:shadow-xl hover:transform hover:scale-120 transition-transform">
+      <div className="w-[360px] h-[320px] flex flex-col rounded-md bg-white hover:shadow-xl hover:transform hover:scale-120 transition-transform">
         <div className="w-full h-1/2  -mb-[45px] rounded-tr-md rounded-tl-md">
           <Image
             className="w-full h-auto rounded-tr-md rounded-tl-md"

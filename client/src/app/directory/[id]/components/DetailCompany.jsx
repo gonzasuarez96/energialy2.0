@@ -8,12 +8,13 @@ function dateTransform(string) {
 }
 
 function DetailCompany({company}) {
+  
     const date = dateTransform(company.createdAt);
-    console.log(company)
+    
   return (
     <>
-      <div className="flex">
-        <div className="flex flex-col justify-center align-middle p-2">
+      <div className="flex mt-2 pt-8 border-t-2 ">
+        <div className="flex flex-col justify-center align-middle min-w-[35%]">
           <div className="w-full h-1/2 flex justify-center">
             <Image
               src={company.profilePicture}
@@ -41,8 +42,52 @@ function DetailCompany({company}) {
             </p>
           </div>
         </div>
-        <div>
-          <p>{company.description}</p>
+        <div className="max-w-[40%] flex flex-col px-3">
+          <div className="flex justify-center mb-4">
+            {company.Locations?.map((location) => (
+              <div className=" flex m-auto ">
+                <div className="w-2 h-2 bg-primary-200 rounded-full mr-1 mt-2 mb-2"></div>
+                <p className="text-sm m-auto" key={location.id}>
+                  {location.name}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="text-sm text-justify">{company.description}</p>
+        </div>
+        <div className="flex flex-col justify-center min-w-[25%] px-4">
+          <div className="min-h-[50%]">
+            <span className="font-bold pb-4">Categorias:</span>
+            <div className="min-w-full">
+              {company.Categories?.map((category) => (
+                <div className="flex m-auto">
+                  <div className="w-2 h-2 bg-secondary-500 rounded-full mr-2 mt-2 mb-2"></div>
+                  <p
+                    className="text-sm font-semibold my-auto"
+                    key={category.id}
+                  >
+                    {category.name}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="min-h-[50%]">
+            <span className="font-bold pb-4">Sub-Categorias:</span>
+            <div className="min-w-full">
+              {company.Categories?.map((category) => (
+                <div className="flex m-auto">
+                  <div className="w-2 h-2 bg-secondary-500 rounded-full mr-2 mt-2 mb-2"></div>
+                  <p
+                    className="text-sm font-semibold my-auto"
+                    key={category.id}
+                  >
+                    {category.name}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>

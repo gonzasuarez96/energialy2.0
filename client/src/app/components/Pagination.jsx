@@ -20,7 +20,8 @@ function PaginationComp() {
       <Pagination.Next />
       <Pagination.Last />
     </Pagination>
-  );
+    
+  )
 }
 
 export default PaginationComp;
