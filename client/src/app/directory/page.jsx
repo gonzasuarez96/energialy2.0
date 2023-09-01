@@ -1,30 +1,34 @@
+'use client'
 import CompanyCardContainer from "../components/CompanyCardContainer";
 import FilterBar from "../components/FilterBar";
 import PaginationComp from "../components/Pagination";
+import { setAllCompanies } from "@/app/redux/features/companieSlice";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
-async function getCompanies(){
-  const res = await fetch("http://localhost:3001/companies", {next: { revalidate: 1 }});
-  const data = await res.json()
-  
-  if (!res.ok) {
-    console.log("no se pudo realizar la consulta");
-  }
-  
-  return data;
-}
+function page() {
 
-async function page() {
+ const dispatch = useDispatch();
+ const companies = useSelector((state) => state.company.companies);
 
-  const companies = await getCompanies()
+   
+  useEffect(() => {
+    fetch(`http://localhost:3001/companies`)
+      .then((response) => response.json())
+      .then((data) => dispatch(setAllCompanies(data)))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
+
 
   return (
     <>
       <div className="mt-8 mb-0 w-full flex">
-        <div className="hidden  md:w-1/3 md:flex md:justify-center md:mx-4">
-          <FilterBar />
+        <div className="hidden  md:w-1/3 md:flex  md:justify-center md:mx-4">
+          {/* <FilterBar /> */}
         </div>
         <div className="flex flex-col justify-center items-center">
-          <CompanyCardContainer data={companies}/>
+          <CompanyCardContainer />
           <PaginationComp />
         </div>
       </div>

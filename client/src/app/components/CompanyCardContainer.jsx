@@ -1,12 +1,11 @@
-import React from 'react'
-import data from '@/app/data/company.json'
+'use client'
 import CompanyCard from './CompanyCard';
-
-function CompanyCardContainer({data}) {
-  
+import { useSelector } from 'react-redux/es/hooks/useSelector';
+function CompanyCardContainer() {
+  const companies = useSelector((state) => state.company.companies);
   return (
     <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-4 justify-center">
-      {data?.map((comp) => (
+      {companies?.map((comp) => (
         <CompanyCard
           key={comp.id}
           compBanner={comp.bannerPicture}

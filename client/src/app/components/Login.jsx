@@ -5,7 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { setAccessToken, setUserData } from '../redux/slice';
+import { setAccessToken, setUserData } from '../redux/features/userSlice';
 
 
 //Toastify module for success message
@@ -74,22 +74,32 @@ export default function Login() {
     }
   };
 
-  const handleLogin = async () => {
-    // Validaciones
+  const loginValidator = () => {
     if (!email || !password) {
-      setError('Por favor, completa ambos campos.');
+      setError("Por favor, completa ambos campos.");
       return;
     } else if (!isValidEmail(email)) {
-      setEmailError('Por favor, ingresa una dirección de correo electrónico válida.');
-      setPasswordError('');
+      setEmailError(
+        "Por favor, ingresa una dirección de correo electrónico válida."
+      );
+      setPasswordError("");
       return;
     } else if (password.length < 6) {
-      setPasswordError('La contraseña debe tener al menos 6 caracteres.');
-      setEmailError('');
+      setPasswordError("La contraseña debe tener al menos 6 caracteres.");
+      setEmailError("");
       return;
     } else {
-      setEmailError('');
-      setPasswordError('');
+      setEmailError("");
+      setPasswordError("");
+    }
+  }
+
+  const handleLogin = async () => {
+    // Validaciones
+
+    const validations = loginValidator();
+    if (validations) {
+      return;
     }
 
     const user = {
@@ -106,8 +116,11 @@ export default function Login() {
         console.log('Estado accessToken:', response.data.accessToken)
 
         displaySuccessMessage('Sesion iniciada');
-        
-        dispatch(setUserData(user))
+        const userData = {
+          email: user.email,
+          login: true
+        }
+        dispatch(setUserData(userData));
         dispatch(setAccessToken(accessToken))
            
         setTimeout(() => {

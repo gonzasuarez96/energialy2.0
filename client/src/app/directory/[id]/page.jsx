@@ -1,22 +1,26 @@
 'use client'
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import background from "@/app/assets/backgroundImageDetail.png";
 
 import CollapsedBar from "./components/collapsedBar";
+import { setAllCompanies } from "@/app/redux/features/companieSlice";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 function page({params}) {
-  
+  const dispatch = useDispatch()
+  const companies = useSelector((state) => state.companies)
   const [company, setCompany] = useState({})
   const id = params.id
 
   
-  useEffect(()=> {
+  useEffect(() => {
     fetch(`http://localhost:3001/companies/${id}`)
       .then((response) => response.json())
       .then((data) => setCompany(data))
       .catch((error) => console.error("Error fetching data:", error));
-  },[])
+    
+  }, []);
     
   return (
     <>

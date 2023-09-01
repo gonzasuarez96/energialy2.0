@@ -10,11 +10,20 @@ import { useSelector } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-function isAuthenticated() {
-  return false;
-}
+
+
 
 export default function Navigation() {
+  const user = useSelector((state) => state.user);
+
+  function isAuthenticated() {
+    if (user.userData.login) {
+     return true;
+    }else{
+      return false
+    }
+    
+  }
   
   let pathname = usePathname() || "/";
   const router = useRouter()
@@ -62,7 +71,7 @@ export default function Navigation() {
                   >
                     Licitaciones
                   </Link>
-                  <UserProfile />
+                  <UserProfile user={user.userData.email}/>
                 </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
