@@ -1,8 +1,9 @@
 import './globals.css'
 import { Montserrat } from 'next/font/google'
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navigation from './components/Navigation';
+import Navigation from './components/Navigation'; 
 import Footer from './components/Footer';
+import Providers from './redux/provider';
 
 
 const montserrat = Montserrat({ subsets: ['latin'] })
@@ -15,6 +16,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <Providers>
       <body className={`${montserrat.className} bg-[#F7F7F7] flex flex-col min-h-screen`}>
         <div className="flex-grow">
           <Navigation />
@@ -24,6 +26,7 @@ export default function RootLayout({ children }) {
         </div>
         <Footer />
       </body>
+      </Providers>
     </html>
   );
 }
