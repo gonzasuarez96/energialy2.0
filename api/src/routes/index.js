@@ -20,11 +20,7 @@ router.use('/refresh', refreshRouter);
 router.use('/logout', logoutRouter);
 
 // Resource Server
-<<<<<<< HEAD
-//router.use(verifyJWT);
-=======
 // router.use(verifyJWT);
->>>>>>> f6840d7137d30ec5a476453da81552875dd722e6
 router.use('/users', usersRouter);
 router.use('/companies', companiesRouter);
 router.use('/categories', categoriesRouter);
