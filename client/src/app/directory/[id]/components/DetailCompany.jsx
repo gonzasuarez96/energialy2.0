@@ -33,18 +33,20 @@ function DetailCompany({company}) {
           </div>
           <div>
             <p className="text-sm">
-              <span className="font-bold">Año Fundación:</span> 2002
+              <span className="font-bold">Año Fundación:</span>{" "}
+              {company.foundationYear}
             </p>
           </div>
           <div>
             <p className="text-sm">
-              <span className="font-bold">Ingresos Ultimo Año:</span> 0
+              <span className="font-bold">Ingresos Ultimo Año:</span>{" "}
+              {company.annualRevenue}
             </p>
           </div>
         </div>
         <div className="max-w-[40%] flex flex-col px-3">
           <div className="flex justify-center mb-4">
-            {company.Locations?.map((location) => (
+            {company.locations?.map((location) => (
               <div className=" flex m-auto ">
                 <div className="w-2 h-2 bg-primary-200 rounded-full mr-1 mt-2 mb-2"></div>
                 <p className="text-sm m-auto" key={location.id}>
@@ -59,7 +61,7 @@ function DetailCompany({company}) {
           <div className="min-h-[50%]">
             <span className="font-bold pb-4">Categorias:</span>
             <div className="min-w-full">
-              {company.Categories?.map((category) => (
+              {company.categories?.map((category) => (
                 <div className="flex m-auto">
                   <div className="w-2 h-2 bg-secondary-500 rounded-full mr-2 mt-2 mb-2"></div>
                   <p
@@ -75,14 +77,14 @@ function DetailCompany({company}) {
           <div className="min-h-[50%]">
             <span className="font-bold pb-4">Sub-Categorias:</span>
             <div className="min-w-full">
-              {company.Categories?.map((category) => (
+              {company.subcategories?.map((subcategory) => (
                 <div className="flex m-auto">
                   <div className="w-2 h-2 bg-secondary-500 rounded-full mr-2 mt-2 mb-2"></div>
                   <p
                     className="text-sm font-semibold my-auto"
-                    key={category.id}
+                    key={subcategory.id}
                   >
-                    {category.name}
+                    {subcategory.name}
                   </p>
                 </div>
               ))}

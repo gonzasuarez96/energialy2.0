@@ -1,15 +1,8 @@
+'use client'
 import LocationFilter from "./LocationFilter";
-
-async function getLocations(){
-  const res = await fetch("http://localhost:3001/locations", {
-    next: { revalidate: 1 },
-  });
-  if (!res.ok) {
-    console.log('no se pudo realizar la consulta')
-  }
-
-  return res.json();
-}
+import { useDispatch } from "react-redux";
+import {filterCompaniesByName} from "@/app/redux/features/companieSlice";
+import { useState } from "react";
 
 const employerNumber = [
   "Menos de 50 empleados",
@@ -19,9 +12,18 @@ const employerNumber = [
   "Mas de 5000 empleados",
 ];
 
-async function FilterBar(props) {
+function FilterBar() {
+  const dispatch = useDispatch();
 
-  const locations = await getLocations()
+  const [search, setSearch] = useState("");
+  const handleSearch = (e) => {
+    const name = e.target.value;
+    setSearch(name);
+  };
+
+  const searchCompanies = () => {
+    dispatch(filterCompaniesByName(search));
+  };
 
   return (
     <div className="flex flex-col justify-items-stretch">
@@ -33,8 +35,12 @@ async function FilterBar(props) {
           <input
             type="text"
             placeholder="Buscar Empresa"
-            className="border-1 border-gray-400 p-3 rounded-sm text-sm focus:outline-none focus:border-secondary-500-500 focus:ring-1 focus:ring-secondary-500"
+            className="border-1 border-gray-400 p-3 rounded-sm text-sm focus:outline-none focus:border-secondary-500-500 focus:ring-1 focus:ring-secondary-500 w-full"
+            onChange={handleSearch}
           />
+        </div>
+        <div className="mt-2">
+          <button className="bg-primary-500 w-full text-white p-2 rounded-sm font-bold hover:bg-primary-400" onClick={searchCompanies}>Buscar</button>
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
@@ -42,7 +48,7 @@ async function FilterBar(props) {
           <h3 className="text-base">Ubicación</h3>
         </div>
         <div>
-          <LocationFilter locations={locations} />
+          <LocationFilter/>
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
@@ -56,26 +62,6 @@ async function FilterBar(props) {
               <label>{item}</label>
             </div>
           ))}
-          {/* <div>
-            <input type="checkbox" name="cuenca" id="nqn" />
-            <label>Menos de 50 Empleados</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="gsj" />
-            <label>De 50 a 200 Empleados</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="austral" />
-            <label>De 200 a 1000 Empleados</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="cuyo" />
-            <label>De 1000 a 5000 Empleados</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="noa" />
-            <label>Mas de 5000 Empleados</label>
-          </div> */}
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
