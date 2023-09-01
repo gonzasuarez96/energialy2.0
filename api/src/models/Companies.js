@@ -16,6 +16,26 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING(1234),
       allowNull: false
     },
+    profilePicture: {
+      type: DataTypes.STRING
+    },
+    bannerPicture: {
+      type: DataTypes.STRING
+    },
+    foundationYear: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    annualRevenue: {
+      type: DataTypes.ENUM,
+      values: ["No Revelado", "0 - 10M U$S", "10M - 100M U$D", "100M - 1B U$S", "+1B U$S"],
+      allowNull: false
+    },
+    employeeCount: {
+      type: DataTypes.ENUM,
+      values: ["Menos de 50 empleados", "De 50 a 200 empleados", "De 200 a 1000 empleados", "De 1000 a 5000 empleados", "Mas de 5000 empleados"],
+      allowNull: false
+    },
     cuit: {
       type: DataTypes.STRING,
       allowNull: false
@@ -25,24 +45,6 @@ module.exports = (sequelize) => {
       validate: {
         isUrl: true
       }
-    },
-    foundationYear: {
-      type: DataTypes.INTEGER
-    },
-    annualRevenue: {
-      type: DataTypes.ENUM,
-      values: ["No Revelado", "0 - 10M U$S", "10M - 100M U$D", "100M - 1B U$S", "+1B U$S"]
-    },
-    profilePicture: {
-      type: DataTypes.STRING
-    },
-    bannerPicture: {
-      type: DataTypes.STRING
-    },
-    employeeCount: {
-      type: DataTypes.ENUM,
-      values: ["Menos de 50 empleados", "De 50 a 200 empleados", "De 200 a 1000 empleados", "De 1000 a 5000 empleados", "Mas de 5000 empleados"],
-      allowNull: false
     },
     compreNeuquino: {
       type: DataTypes.BOOLEAN

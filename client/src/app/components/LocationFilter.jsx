@@ -1,9 +1,12 @@
 'use client'
 
 function LocationFilter({locations}) {
+  if (!Array.isArray(locations)) {
+    return null;
+  }
   return (
     <div>
-      {locations.map((item) => (
+      {locations?.map((item) => (
         <div>
           <input
             type="checkbox"

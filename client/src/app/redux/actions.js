@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const GET_ALL_COMPANIES = "GET_ALL_COMPANIES";
 export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 
 const desarrolloApp = "http://localhost:3001";
 
@@ -23,4 +24,11 @@ export const setAccessToken = (token) => {
         payload: token,
     };
 };
+
+export const  loginSuccess = (user) => {
+    return {
+        type: LOGIN_SUCCESS,
+        payload: user,
+    }
+}
 

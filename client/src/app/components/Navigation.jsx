@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Logo from '@/app/assets/Energialy Logo-01.svg'
 import UserProfile from "./UserProfile";
+import { useSelector } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
@@ -14,8 +15,10 @@ function isAuthenticated() {
 }
 
 export default function Navigation() {
+  
   let pathname = usePathname() || "/";
   const router = useRouter()
+
   return (
     <Disclosure as="nav">
       {({ open }) => (
@@ -34,33 +37,33 @@ export default function Navigation() {
                   </div>
                 </div>
                 {isAuthenticated() ? (
-                  <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                    <div
-                      onClick={() => {
-                        router.refresh();
-                        router.push("/directory");
-                      }}
-                      className={`${
-                        pathname === "/directory"
-                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium cursor-pointer"
-                          : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
-                      }`}
-                    >
-                      Directorio
-                    </div>
-                    <Link
-                      href="/licitaciones"
-                      prefetch
-                      className={`${
-                        pathname === "/licitaciones"
-                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
-                          : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
-                      }`}
-                    >
-                      Licitaciones
-                    </Link>
-                    <UserProfile />
+                <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
+                  <div
+                    onClick={() => {
+                      router.refresh();
+                      router.push("/directory");
+                    }}
+                    className={`${
+                      pathname === "/directory"
+                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium cursor-pointer"
+                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
+                    }`}
+                  >
+                    Directorio
                   </div>
+                  <Link
+                    href="/licitaciones"
+                    prefetch
+                    className={`${
+                      pathname === "/licitaciones"
+                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
+                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                    }`}
+                  >
+                    Licitaciones
+                  </Link>
+                  <UserProfile />
+                </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
                     <Link
