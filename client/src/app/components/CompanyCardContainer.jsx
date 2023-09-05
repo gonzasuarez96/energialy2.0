@@ -30,12 +30,7 @@ function CompanyCardContainer() {
     setCurrentPage(page)
   }
 
-
-
-
   const { isLoading } = useGetCompaniesQuery();
-
-
 
   return (
     <div>
