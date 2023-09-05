@@ -1,7 +1,7 @@
 const {
   getAllCompanies,
   filterCompaniesByName,
-  getCompanyByID,
+  getCompanyById,
   createCompany,
   updateCompany
 } = require('../controllers/companiesController');
@@ -16,10 +16,10 @@ const getCompaniesHandler = async (req, res) => {
   }
 };
 
-const getCompanyByIDHandler = async (req, res) => {
+const getCompanyByIdHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const foundCompany = await getCompanyByID(id);
+    const foundCompany = await getCompanyById(id);
     res.status(200).json(foundCompany);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
@@ -49,7 +49,7 @@ const updateCompanyHandler = async (req, res) => {
 
 module.exports = {
   getCompaniesHandler,
-  getCompanyByIDHandler,
+  getCompanyByIdHandler,
   createCompanyHandler,
   updateCompanyHandler
 };

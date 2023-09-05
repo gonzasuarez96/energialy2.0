@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const {
   getCompaniesHandler,
-  getCompanyByIDHandler,
+  getCompanyByIdHandler,
   createCompanyHandler,
   updateCompanyHandler,
   // deleteCompanyHandler
@@ -10,7 +10,7 @@ const {
 const companiesRouter = Router();
 
 companiesRouter.get('/', getCompaniesHandler);
-companiesRouter.get('/:id', getCompanyByIDHandler);
+companiesRouter.get('/:id', getCompanyByIdHandler);
 companiesRouter.post('/', createCompanyHandler);
 companiesRouter.put('/:id', updateCompanyHandler);
 // companiesRouter.delete('/:id', deleteCompanyHandler);
