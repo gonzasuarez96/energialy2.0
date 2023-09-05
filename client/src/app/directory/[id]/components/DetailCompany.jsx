@@ -25,9 +25,9 @@ function DetailCompany({company}) {
           <div className="text-center p-3">
             <h2 className="text-lg font-bold">{company.name}</h2>
           </div>
-          <div className="text-sm">
+          {/* <div className="text-sm">
             <p>Comentarios</p>
-          </div>
+          </div> */}
           <div className="text-sm">
             <p>Miembro desde, {date}</p>
           </div>

@@ -12,20 +12,28 @@ function LocationFilter() {
   const {data, error, isLoading} = useGetLocationsQuery()
   
   const handleChecked = (e) => {
-    const locationId = e.target.id;
-    // Verificar si la ubicación ya está seleccionada
-    if (checkedLocations.includes(locationId)) {
-      // Si está seleccionada, la deseleccionamos
-      setCheckedLocations(checkedLocations.filter((id) => id !== locationId));
-    } else {
-      // Si no está seleccionada, la seleccionamos
-      setCheckedLocations([...checkedLocations, locationId]);
-    }
-    dispatch(fiterCompaniesByLocation(checkedLocations));
+  
+    if(e.target.checked){
+         setCheckedLocations([...checkedLocations, e.target.id]);
+          dispatch(
+            fiterCompaniesByLocation([...checkedLocations, e.target.id])
+          );
+      }else{
+         setCheckedLocations(
+           checkedLocations.filter((id) => id !== e.target.id)
+         );
+         dispatch(
+           fiterCompaniesByLocation(
+             checkedLocations.filter((id) => id !== e.target.id)
+           )
+         );
+      }
   }
+
 
   return (
     <div>
+      {isLoading && <p>Cargando...</p>}
       {data?.map((item) => (
         <div>
           <input
@@ -35,7 +43,7 @@ function LocationFilter() {
             className="mr-2 cursor-pointer peer"
             onChange={handleChecked}
           />
-          <label className="peer-checked:text-secondary-500 peer-checked:font-semibold">
+          <label className="peer-checked:text-secondary-500 peer-checked:font-semibold text-sm">
             {item.name}
           </label>
         </div>

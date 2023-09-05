@@ -26,7 +26,6 @@ function page() {
         </div>
         <div className="flex flex-col justify-center items-center">
           <CompanyCardContainer />
-          <PaginationComp />
         </div>
       </div>
     </>

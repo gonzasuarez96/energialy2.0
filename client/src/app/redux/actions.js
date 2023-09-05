@@ -3,6 +3,8 @@ export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const FILTER_COMPANIES = "FILTER_COMPANIES";
 export const FILTER_COMPANIES_LOCATION = "FILTER_COMPANIES_LOCATION";
+export const FILTER_COMPANIES_CATEGORIE = "FILTER_COMPANIES_CATEGORIE";
+export const FILTER_COMPANIES_SUBCATEGORIE = "FILTER_COMPANIES_SUBCATEGORIE";
 
 export const setAllCompanies = () => {
   return {
@@ -23,6 +25,19 @@ export const fiterCompaniesByLocation = (location) => {
     payload: location,
   };
 };
+export const filterCompaniesByCategorie = (categorie) => {
+  return {
+    type: FILTER_COMPANIES_CATEGORIE,
+    payload: categorie,
+  };
+};
+export const filterCompaniesBySubcategorie = (subcategorie) => {
+  return {
+    type: FILTER_COMPANIES_SUBCATEGORIE,
+    payload: subcategorie,
+  };
+};
+
 
 export const setAccessToken = (token) => {
     return {

@@ -1,7 +1,10 @@
 'use client'
 import LocationFilter from "./LocationFilter";
 import { useDispatch } from "react-redux";
-import {filterCompaniesByName} from "@/app/redux/features/companieSlice";
+import {filterCompaniesByName, filterCompaniesByCategorie, filterCompaniesBySubcategorie } from "@/app/redux/features/companieSlice";
+import { useGetCategoriesQuery } from '../redux/services/categoriesApi';
+import Select from 'react-select';
+
 import { useState } from "react";
 
 const employerNumber = [
@@ -15,11 +18,31 @@ const employerNumber = [
 function FilterBar() {
   const dispatch = useDispatch();
 
+  const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const [search, setSearch] = useState("");
+  const [categorieSelected, setCategorieSelected] = useState([])
+  const [subCatSelected, setSubCatSelected] = useState([])
+  
   const handleSearch = (e) => {
     const name = e.target.value;
     setSearch(name);
   };
+
+  const handleChangeCategories = (e) => {
+    //crear las subcategorias para el select
+    const subcategories = categories?.find(cat => cat.id === e.value).subcategories
+    setSubCatSelected(subcategories.map(subcat => ({label:subcat.name, value:subcat.id})))      
+    //mandar a redux las categorias seleccionada para modificar el filterCompanies
+    dispatch(filterCompaniesByCategorie(e.value))
+    //setear su propio estado para no perder la referencia
+    setCategorieSelected(e)
+  }
+  
+  const handleSubcategorieChange = (e) => {
+    dispatch(filterCompaniesBySubcategorie(e.value))
+    // setSubCatSelected(e)
+  }
+  
 
   const searchCompanies = () => {
     dispatch(filterCompaniesByName(search));
@@ -40,7 +63,12 @@ function FilterBar() {
           />
         </div>
         <div className="mt-2">
-          <button className="bg-primary-500 w-full text-white p-2 rounded-sm font-bold hover:bg-primary-400" onClick={searchCompanies}>Buscar</button>
+          <button
+            className="bg-primary-500 w-full text-white p-2 rounded-sm font-bold hover:bg-primary-400"
+            onClick={searchCompanies}
+          >
+            Buscar
+          </button>
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
@@ -48,20 +76,24 @@ function FilterBar() {
           <h3 className="text-base">Ubicación</h3>
         </div>
         <div>
-          <LocationFilter/>
+          <LocationFilter />
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
         <div className="p-2 border-b-2 border-gray-300 mb-4">
-          <h3 className="text-base">No. De Empleados</h3>
+          <h3 className="text-base inline-flex mr-1">Categoria: </h3>
+          <span className="inline-flex mr-1 text-xs">{categorieSelected.label}</span>
         </div>
         <div>
-          {employerNumber.map((item, index) => (
-            <div>
-              <input type="checkbox" className="mr-1" name={index} />
-              <label>{item}</label>
-            </div>
-          ))}
+          {categoriesLoading && "Loading..."}
+          <Select
+            defaultInputValue={"Elige una categoria"}
+            options={categories?.map((cat) => ({
+              value: cat.id,
+              label: cat.name,
+            }))}
+            onChange={handleChangeCategories}
+          />
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
@@ -69,26 +101,11 @@ function FilterBar() {
           <h3 className="text-base">Especializaciones</h3>
         </div>
         <div>
-          <div>
-            <input type="checkbox" name="cuenca" id="nqn" />
-            <label>Cuenca Neuquina</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="gsj" />
-            <label>Cuenca Golfo San Jorge</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="austral" />
-            <label>Cuenca Austral</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="cuyo" />
-            <label>Cuenca Cuyana</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="noa" />
-            <label>Cuenca Noroeste</label>
-          </div>
+          {categoriesLoading && "Loading..."}
+          <Select
+            options={subCatSelected}
+            onChange={handleSubcategorieChange}
+          />
         </div>
       </div>
     </div>
