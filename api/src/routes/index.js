@@ -9,7 +9,7 @@ const companiesRouter = require('./resources/companiesRouter');
 const categoriesRouter = require('./resources/categoriesRouter');
 const subcategoriesRouter = require('./resources/subcategoriesRouter');
 const locationsRouter = require('./resources/locationsRouter');
-const organizationTypesRouter = require('./resources/organizationTypesRouter');
+const tendersRouter = require('./resources/tendersRouter');
 
 const router = Router();
 
@@ -26,6 +26,6 @@ router.use('/companies', companiesRouter);
 router.use('/categories', categoriesRouter);
 router.use('/subcategories', subcategoriesRouter)
 router.use('/locations', locationsRouter);
-router.use('/organizationTypes', organizationTypesRouter);
+router.use('/tenders', tendersRouter);
 
 module.exports = router;
