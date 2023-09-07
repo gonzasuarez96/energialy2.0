@@ -1,5 +1,5 @@
+const { Tenders, Proposals, Companies, Locations, Categories, Subcategories } = require("../db");
 const { Op } = require("sequelize");
-const { Tenders, Companies, Locations, Categories, Subcategories } = require("../db");
 
 const cleanTenders = (tenders) => {
   if (Array.isArray(tenders)) {
@@ -14,6 +14,7 @@ const cleanTenders = (tenders) => {
       location: tender.Location,
       majorSector: tender.majorSector,
       projectDuration: tender.projectDuration,
+      proposals: tender.Proposals,
       company: tender.Company,
       status: tender.status,
       isActive: tender.isActive
@@ -33,7 +34,7 @@ const cleanTenders = (tenders) => {
       subcategories: tenders.Subcategories,
       budget: tenders.budget,
       showBudget: tenders.showBudget,
-      // proposals: tenders.Proposals,
+      proposals: tenders.Proposals,
       company: tenders.Company,
       status: tenders.status,
       isActive: tenders.isActive,
@@ -59,6 +60,14 @@ const getAllTenders = async () => {
       {
         model: Locations,
         attributes: ["id", "name"]
+      },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "status"],
+        include: {
+          model: Companies,
+          attributes: ["id", "name"]
+        }
       }
     ]
   });
@@ -85,6 +94,14 @@ const filterTendersByName = async (name) => {
       {
         model: Locations,
         attributes: ["id", "name"]
+      },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "status"],
+        include: {
+          model: Companies,
+          attributes: ["id", "name"]
+        }
       }
     ]
   });
@@ -111,6 +128,14 @@ const getTenderById = async (id) => {
       {
         model: Locations,
         attributes: ["id", "name"]
+      },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        include: {
+          model: Companies,
+          attributes: ["id", "name"]
+        }
       }
     ]
   });
@@ -161,6 +186,14 @@ const createTender = async (body) => {
       {
         model: Locations,
         attributes: ["id", "name"]
+      },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        include: {
+          model: Companies,
+          attributes: ["id", "name"]
+        }
       }
     ]
   });
@@ -220,6 +253,14 @@ const updateTender = async (id, body) => {
       {
         model: Locations,
         attributes: ["id", "name"]
+      },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        include: {
+          model: Companies,
+          attributes: ["id", "name"]
+        }
       }
     ]
   });
@@ -248,6 +289,14 @@ const deleteTender = async (id) => {
       {
         model: Locations,
         attributes: ["id", "name"]
+      },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "status"],
+        include: {
+          model: Companies,
+          attributes: ["id", "name"]
+        }
       }
     ]
   });

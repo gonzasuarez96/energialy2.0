@@ -10,6 +10,7 @@ const categoriesRouter = require('./resources/categoriesRouter');
 const subcategoriesRouter = require('./resources/subcategoriesRouter');
 const locationsRouter = require('./resources/locationsRouter');
 const tendersRouter = require('./resources/tendersRouter');
+const proposalsRouter = require('./resources/proposalsRouter');
 
 const router = Router();
 
@@ -27,5 +28,6 @@ router.use('/categories', categoriesRouter);
 router.use('/subcategories', subcategoriesRouter)
 router.use('/locations', locationsRouter);
 router.use('/tenders', tendersRouter);
+router.use('/proposals', proposalsRouter);
 
 module.exports = router;

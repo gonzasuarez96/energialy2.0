@@ -57,7 +57,7 @@ module.exports = (sequelize) => {
       values: [
         "Organismo Público",
         "Operadora",
-        "PyMEs",
+        "PyME",
         "Cámara/Cluster/Federación",
         "Profesional independiente",
         "Servicios especiales",

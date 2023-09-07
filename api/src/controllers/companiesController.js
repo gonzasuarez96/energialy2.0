@@ -1,4 +1,4 @@
-const { Companies, Locations, Categories, Subcategories, Tenders } = require("../db");
+const { Companies, Locations, Categories, Subcategories, Tenders, Proposals } = require("../db");
 const { Op } = require("sequelize");
 
 const cleanCompanies = (companies) => {
@@ -31,16 +31,17 @@ const cleanCompanies = (companies) => {
       foundationYear: companies.foundationYear,
       annualRevenue: companies.annualRevenue,
       employeeCount: companies.employeeCount,
-      tenders: companies.Tenders,
       cuit: companies.cuit,
       organizationType: companies.organizationType,
-      website: companies.website,
+      tenders: companies.Tenders,
+      proposals: companies.Proposals,
       compreNeuquino: companies.compreNeuquino,
       multimedia: companies.multimedia,
       experience: companies.experience,
       services: companies.services,
       certifications: companies.certifications,
       homologations: companies.homologations,
+      website: companies.website,
       isActive: companies.isActive,
       createdAt: companies.createdAt,
       updatedAt: companies.updatedAt
@@ -122,6 +123,14 @@ const getCompanyById = async (id) => {
       {
         model: Tenders,
         attributes: ["id", "title", "description", "majorSector", "budget", "projectDuration", "status"],
+      },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        include: {
+          model: Tenders,
+          attributes: ["id", "title", "budget", "status"]
+        }
       }
     ],
   });
@@ -186,6 +195,14 @@ const createCompany = async (body) => {
         attributes: ["id", "name", "isActive"],
         through: { attributes: [] },
       },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        include: {
+          model: Tenders,
+          attributes: ["id", "title", "budget", "status"]
+        }
+      }
     ],
   });
   return cleanCompanies(createdCompany);
@@ -271,6 +288,14 @@ const updateCompany = async (id, body) => {
         attributes: ["id", "name", "isActive"],
         through: { attributes: [] },
       },
+      {
+        model: Proposals,
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        include: {
+          model: Tenders,
+          attributes: ["id", "title", "budget", "status"]
+        }
+      }
     ],
   });
   return cleanCompanies(updatedCompany);
