@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
       <body className={`${montserrat.className} bg-[#F7F7F7] flex flex-col min-h-screen`}>
         <div className="flex-grow">
           <Navigation />
-          <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-32 ">
+          <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             {children}
           </main>
         </div>

@@ -32,7 +32,7 @@ export default function Navigation() {
     <Disclosure as="nav">
       {({ open }) => (
         <>
-          <div className="mt-auto mb-2 p-2 w-full shadow-md bg-white fixed">
+          <div className="mt-auto p-2 w-full shadow-md bg-white">
             <div className="flex justify-between h-16">
               <div className="flex justify-between w-full">
                 <div className="flex items-center cursor-pointer">
@@ -93,7 +93,7 @@ export default function Navigation() {
                       className={`${
                         pathname === "/login"
                           ? "border-[#191654] no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 border-b-2 font-medium"
-                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 hover:border-[#191654] border-b-2 font-medium"
+                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 transition duration-300 hover:border-[#191654] border-b-2 font-medium"
                       }`}
                     >
                       Iniciar Sesion
@@ -103,8 +103,8 @@ export default function Navigation() {
                       prefetch
                       className={`${
                         pathname === "/register"
-                          ? "no-underline bg-secondary-600 text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide"
-                          : "no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide transition duration-300 ease-in-out hover:bg-secondary-600"
+                          ? "no-underline bg-secondary-600 text-white py-2 px-3 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm"
+                          : "no-underline bg-[#191654] text-white py-2 px-3 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm transition duration-300 ease-in-out hover:bg-secondary-600"
                       }`}
                     >
                       Registrarse
