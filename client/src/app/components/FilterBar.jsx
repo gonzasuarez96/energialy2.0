@@ -1,15 +1,11 @@
+'use client'
 import LocationFilter from "./LocationFilter";
+import { useDispatch } from "react-redux";
+import {filterCompaniesByName, filterCompaniesByCategorie, filterCompaniesBySubcategorie } from "@/app/redux/features/companieSlice";
+import { useGetCategoriesQuery } from '../redux/services/categoriesApi';
+import Select from 'react-select';
 
-async function getLocations(){
-  const res = await fetch("http://localhost:3001/locations", {
-    next: { revalidate: 1 },
-  });
-  if (!res.ok) {
-    console.log('no se pudo realizar la consulta')
-  }
-
-  return res.json();
-}
+import { useState } from "react";
 
 const employerNumber = [
   "Menos de 50 empleados",
@@ -19,9 +15,38 @@ const employerNumber = [
   "Mas de 5000 empleados",
 ];
 
-async function FilterBar(props) {
+function FilterBar() {
+  const dispatch = useDispatch();
 
-  const locations = await getLocations()
+  const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
+  const [search, setSearch] = useState("");
+  const [categorieSelected, setCategorieSelected] = useState([])
+  const [subCatSelected, setSubCatSelected] = useState([])
+  
+  const handleSearch = (e) => {
+    const name = e.target.value;
+    setSearch(name);
+  };
+
+  const handleChangeCategories = (e) => {
+    //crear las subcategorias para el select
+    const subcategories = categories?.find(cat => cat.id === e.value).subcategories
+    setSubCatSelected(subcategories.map(subcat => ({label:subcat.name, value:subcat.id})))      
+    //mandar a redux las categorias seleccionada para modificar el filterCompanies
+    dispatch(filterCompaniesByCategorie(e.value))
+    //setear su propio estado para no perder la referencia
+    setCategorieSelected(e)
+  }
+  
+  const handleSubcategorieChange = (e) => {
+    dispatch(filterCompaniesBySubcategorie(e.value))
+    // setSubCatSelected(e)
+  }
+  
+
+  const searchCompanies = () => {
+    dispatch(filterCompaniesByName(search));
+  };
 
   return (
     <div className="flex flex-col justify-items-stretch">
@@ -33,8 +58,17 @@ async function FilterBar(props) {
           <input
             type="text"
             placeholder="Buscar Empresa"
-            className="border-1 border-gray-400 p-3 rounded-sm text-sm focus:outline-none focus:border-secondary-500-500 focus:ring-1 focus:ring-secondary-500"
+            className="border-1 border-gray-400 p-3 rounded-sm text-sm focus:outline-none focus:border-secondary-500-500 focus:ring-1 focus:ring-secondary-500 w-full"
+            onChange={handleSearch}
           />
+        </div>
+        <div className="mt-2">
+          <button
+            className="bg-primary-500 w-full text-white p-2 rounded-sm font-bold hover:bg-primary-400"
+            onClick={searchCompanies}
+          >
+            Buscar
+          </button>
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
@@ -42,40 +76,24 @@ async function FilterBar(props) {
           <h3 className="text-base">Ubicación</h3>
         </div>
         <div>
-          <LocationFilter locations={locations} />
+          <LocationFilter />
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
         <div className="p-2 border-b-2 border-gray-300 mb-4">
-          <h3 className="text-base">No. De Empleados</h3>
+          <h3 className="text-base inline-flex mr-1">Categoria: </h3>
+          <span className="inline-flex mr-1 text-xs">{categorieSelected.label}</span>
         </div>
         <div>
-          {employerNumber.map((item, index) => (
-            <div>
-              <input type="checkbox" className="mr-1" name={index} />
-              <label>{item}</label>
-            </div>
-          ))}
-          {/* <div>
-            <input type="checkbox" name="cuenca" id="nqn" />
-            <label>Menos de 50 Empleados</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="gsj" />
-            <label>De 50 a 200 Empleados</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="austral" />
-            <label>De 200 a 1000 Empleados</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="cuyo" />
-            <label>De 1000 a 5000 Empleados</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="noa" />
-            <label>Mas de 5000 Empleados</label>
-          </div> */}
+          {categoriesLoading && "Loading..."}
+          <Select
+            defaultInputValue={"Elige una categoria"}
+            options={categories?.map((cat) => ({
+              value: cat.id,
+              label: cat.name,
+            }))}
+            onChange={handleChangeCategories}
+          />
         </div>
       </div>
       <div className="bg-white p-8 mb-4">
@@ -83,26 +101,11 @@ async function FilterBar(props) {
           <h3 className="text-base">Especializaciones</h3>
         </div>
         <div>
-          <div>
-            <input type="checkbox" name="cuenca" id="nqn" />
-            <label>Cuenca Neuquina</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="gsj" />
-            <label>Cuenca Golfo San Jorge</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="austral" />
-            <label>Cuenca Austral</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="cuyo" />
-            <label>Cuenca Cuyana</label>
-          </div>
-          <div>
-            <input type="checkbox" name="cuenca" id="noa" />
-            <label>Cuenca Noroeste</label>
-          </div>
+          {categoriesLoading && "Loading..."}
+          <Select
+            options={subCatSelected}
+            onChange={handleSubcategorieChange}
+          />
         </div>
       </div>
     </div>

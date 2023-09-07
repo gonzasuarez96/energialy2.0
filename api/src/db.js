@@ -27,7 +27,7 @@ let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].s
 sequelize.models = Object.fromEntries(capsEntries);
 
 // Destructuring models
-const { Users, Companies, Categories, Subcategories, Locations, OrganizationTypes } = sequelize.models;
+const { Users, Companies, Categories, Subcategories, Locations, Tenders } = sequelize.models;
 
 // Associations
 Companies.hasMany(Users);
@@ -45,8 +45,17 @@ Subcategories.belongsTo(Categories);
 Companies.belongsToMany(Locations, { through: 'Companies_Locations' });
 Locations.belongsToMany(Companies, { through: 'Companies_Locations' });
 
-OrganizationTypes.hasMany(Companies);
-Companies.belongsTo(OrganizationTypes);
+Locations.hasMany(Tenders);
+Tenders.belongsTo(Locations);
+
+Companies.hasMany(Tenders);
+Tenders.belongsTo(Companies);
+
+Tenders.belongsToMany(Categories, { through: 'Tenders_Categories' });
+Categories.belongsToMany(Tenders, { through: 'Tenders_Categories' });
+
+Tenders.belongsToMany(Subcategories, { through: 'Tenders_Subcategories' });
+Subcategories.belongsToMany(Tenders, { through: 'Tenders_Subcategories' });
 
 module.exports = {
   ...sequelize.models, // to import models like this: const { Product, User } = require('./db.js');

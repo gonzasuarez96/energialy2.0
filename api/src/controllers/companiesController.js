@@ -1,4 +1,4 @@
-const { Companies, Locations, Categories, Subcategories } = require("../db");
+const { Companies, Locations, Categories, Subcategories, Tenders } = require("../db");
 const { Op } = require("sequelize");
 
 const cleanCompanies = (companies) => {
@@ -6,14 +6,15 @@ const cleanCompanies = (companies) => {
     const cleanCompaniesArray = companies.map((company) => ({
       id: company.id,
       name: company.name,
-      categories: company.Categories,
-      subcategories: company.Subcategories,
       profilePicture: company.profilePicture,
       bannerPicture: company.bannerPicture,
+      categories: company.Categories,
+      subcategories: company.Subcategories,
       locations: company.Locations,
       foundationYear: company.foundationYear,
       annualRevenue: company.annualRevenue,
       employeeCount: company.employeeCount,
+      organizationType: company.organizationType,
       isActive: company.isActive,
     }));
     return cleanCompaniesArray;
@@ -22,15 +23,17 @@ const cleanCompanies = (companies) => {
       id: companies.id,
       name: companies.name,
       description: companies.description,
-      categories: companies.Categories,
-      subcategories: companies.Subcategories,
       profilePicture: companies.profilePicture,
       bannerPicture: companies.bannerPicture,
+      categories: companies.Categories,
+      subcategories: companies.Subcategories,
       locations: companies.Locations,
       foundationYear: companies.foundationYear,
       annualRevenue: companies.annualRevenue,
       employeeCount: companies.employeeCount,
+      tenders: companies.Tenders,
       cuit: companies.cuit,
+      organizationType: companies.organizationType,
       website: companies.website,
       compreNeuquino: companies.compreNeuquino,
       multimedia: companies.multimedia,
@@ -48,7 +51,7 @@ const cleanCompanies = (companies) => {
 
 const getAllCompanies = async () => {
   const allCompanies = await Companies.findAll({
-    attributes: ["id", "name", "profilePicture", "bannerPicture", "foundationYear", "annualRevenue", "employeeCount", "isActive"],
+    attributes: ["id", "name", "profilePicture", "bannerPicture", "foundationYear", "annualRevenue", "employeeCount", "organizationType", "isActive"],
     include: [
       {
         model: Categories,
@@ -98,7 +101,7 @@ const filterCompaniesByName = async (name) => {
   return cleanCompanies(filteredCompanies);
 };
 
-const getCompanyByID = async (id) => {
+const getCompanyById = async (id) => {
   const foundCompany = await Companies.findByPk(id, {
     include: [
       {
@@ -116,6 +119,10 @@ const getCompanyByID = async (id) => {
         attributes: ["id", "name", "isActive"],
         through: { attributes: [] },
       },
+      {
+        model: Tenders,
+        attributes: ["id", "title", "description", "majorSector", "budget", "projectDuration", "status"],
+      }
     ],
   });
   if (!foundCompany) {
@@ -127,35 +134,35 @@ const getCompanyByID = async (id) => {
 };
 
 const createCompany = async (body) => {
-  const { name, description, locations, subcategories, profilePicture, bannerPicture, foundationYear, annualRevenue, employeeCount, cuit, website, compreNeuquino, multimedia, experience, services, certifications, homologations } = body;
-  if ( !name || !description || !locations || !subcategories || !profilePicture || !bannerPicture || !foundationYear || !annualRevenue || !employeeCount || !cuit ) {
+  const { name, description, locations, subcategories, profilePicture, bannerPicture, foundationYear, annualRevenue, employeeCount, cuit } = body;
+  if (!name || !description || !locations || !subcategories || !profilePicture || !bannerPicture || !foundationYear || !annualRevenue || !employeeCount || !cuit) {
     const error = new Error("Missing required attributes.");
     error.status = 400;
     throw error;
   }
-  for (const locationID of locations) {
-    const foundLocation = await Locations.findByPk(locationID);
+  for (const locationId of locations) {
+    const foundLocation = await Locations.findByPk(locationId);
     if (!foundLocation) {
-      const error = new Error(`Location with id ${locationID} not found.`);
+      const error = new Error(`Location with id ${locationId} not found.`);
       error.status = 404;
       throw error;
     }
   }
-  for (const subcategoryID of subcategories) {
-    const foundSubcategory = await Subcategories.findByPk(subcategoryID);
+  for (const subcategoryId of subcategories) {
+    const foundSubcategory = await Subcategories.findByPk(subcategoryId);
     if (!foundSubcategory) {
-      const error = new Error(`Subcategory with id ${subcategoryID} not found.`);
+      const error = new Error(`Subcategory with id ${subcategoryId} not found.`);
       error.status = 404;
       throw error;
     }
   }
   const newCompany = await Companies.create(body);
-  for (const locationID of locations) {
-    const foundLocation = await Locations.findByPk(locationID);
+  for (const locationId of locations) {
+    const foundLocation = await Locations.findByPk(locationId);
     await newCompany.addLocation(foundLocation);
   }
-  for (const subcategoryID of subcategories) {
-    const foundSubcategory = await Subcategories.findByPk(subcategoryID);
+  for (const subcategoryId of subcategories) {
+    const foundSubcategory = await Subcategories.findByPk(subcategoryId);
     const foundParentCategory = await Categories.findByPk(
       foundSubcategory.CategoryId
     );
@@ -185,6 +192,7 @@ const createCompany = async (body) => {
 };
 
 const updateCompany = async (id, body) => {
+  const { locations, subcategories } = body;
   const foundCompany = await Companies.findByPk(id, {
     include: [
       { model: Categories },
@@ -197,22 +205,21 @@ const updateCompany = async (id, body) => {
     error.status = 404;
     throw error;
   }
-  const { locations, subcategories } = body;
   if (locations) {
-    for (const locationID of locations) {
-      const foundLocation = await Locations.findByPk(locationID);
+    for (const locationId of locations) {
+      const foundLocation = await Locations.findByPk(locationId);
       if (!foundLocation) {
-        const error = new Error(`Location with id ${locationID} not found.`);
+        const error = new Error(`Location with id ${locationId} not found.`);
         error.status = 404;
         throw error;
       }
     }
   }
   if (subcategories) {
-    for (const subcategoryID of subcategories) {
-      const foundSubcategory = await Subcategories.findByPk(subcategoryID);
+    for (const subcategoryId of subcategories) {
+      const foundSubcategory = await Subcategories.findByPk(subcategoryId);
       if (!foundSubcategory) {
-        const error = new Error(`Subcategory with id ${subcategoryID} not found.`);
+        const error = new Error(`Subcategory with id ${subcategoryId} not found.`);
         error.status = 404;
         throw error;
       }
@@ -226,8 +233,8 @@ const updateCompany = async (id, body) => {
         await foundCompany.removeLocation(foundLocation);
       }
     }
-    for (const locationID of locations) {
-      const foundLocation = await Locations.findByPk(locationID);
+    for (const locationId of locations) {
+      const foundLocation = await Locations.findByPk(locationId);
       await foundCompany.addLocation(foundLocation);
     }
   }
@@ -240,8 +247,8 @@ const updateCompany = async (id, body) => {
         await foundCompany.removeCategory(foundParentCategory);
       }
     }
-    for (const subcategoryID of subcategories) {
-      const foundSubcategory = await Subcategories.findByPk(subcategoryID);
+    for (const subcategoryId of subcategories) {
+      const foundSubcategory = await Subcategories.findByPk(subcategoryId);
       const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
       await foundCompany.addSubcategory(foundSubcategory);
       await foundCompany.addCategory(foundParentCategory);
@@ -272,7 +279,7 @@ const updateCompany = async (id, body) => {
 module.exports = {
   getAllCompanies,
   filterCompaniesByName,
-  getCompanyByID,
+  getCompanyById,
   createCompany,
   updateCompany,
 };

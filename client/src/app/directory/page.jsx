@@ -4,14 +4,11 @@ import FilterBar from "../components/FilterBar";
 import PaginationComp from "../components/Pagination";
 import { setAllCompanies } from "@/app/redux/features/companieSlice";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
 function page() {
 
  const dispatch = useDispatch();
- const companies = useSelector((state) => state.company.companies);
-
    
   useEffect(() => {
     fetch(`http://localhost:3001/companies`)
@@ -25,11 +22,10 @@ function page() {
     <>
       <div className="mt-8 mb-0 w-full flex">
         <div className="hidden  md:w-1/3 md:flex  md:justify-center md:mx-4">
-          {/* <FilterBar /> */}
+          <FilterBar />
         </div>
         <div className="flex flex-col justify-center items-center">
           <CompanyCardContainer />
-          <PaginationComp />
         </div>
       </div>
     </>
