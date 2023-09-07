@@ -32,7 +32,7 @@ export default function Navigation() {
     <Disclosure as="nav">
       {({ open }) => (
         <>
-          <div className="mt-auto mb-2 p-2 w-full shadow-md bg-white fixed">
+          <div className="mt-auto p-2 w-full shadow-md bg-white">
             <div className="flex justify-between h-16">
               <div className="flex justify-between w-full">
                 <div className="flex items-center cursor-pointer">
