@@ -57,16 +57,20 @@ module.exports = (sequelize) => {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
+    public: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
     status: {
       type: DataTypes.ENUM,
       values: [
-        "publish",
+        "published",
         "expired",
         "working",
         "completed",
         "cancelled",
       ],
-      defaultValue: "publish",
+      defaultValue: "published",
       allowNull: false,
     },
     isActive: {
