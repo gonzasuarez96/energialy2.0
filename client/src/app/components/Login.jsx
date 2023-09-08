@@ -128,7 +128,7 @@ export default function Login() {
         }, 2000);
     } catch(error) {
         console.log('Error:', error)
-        displayFailedMessage(error.response);
+        displayFailedMessage(error.response.data.error);
     }
 
   };
