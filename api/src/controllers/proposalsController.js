@@ -48,17 +48,11 @@ const getAllProposals = async () => {
     include: [
       {
         model: Tenders,
-        attributes: ["id", "title", "budget", "majorSector", "projectDuration"],
-        include: [
-          {
-            model: Locations,
-            attributes: ["name"],
-          },
-          {
+        attributes: ["id", "title", "budget", "status"],
+        include: {
             model: Companies,
             attributes: ["id", "name"],
-          },
-        ]
+        },
       },
       {
         model: Companies,
@@ -139,11 +133,12 @@ const createProposal = async (body) => {
 };
 
 const updateProposal = async (id, body) => {
+  const { status } = body;
   const foundProposal = await Proposals.findByPk(id, {
     include: [
       {
         model: Tenders,
-        attributes: ["id", "title", "budget", "majorSector", "projectDuration"],
+        attributes: ["id", "title", "budget", "status", "majorSector", "projectDuration"],
         include: [
           {
             model: Locations,
@@ -167,6 +162,17 @@ const updateProposal = async (id, body) => {
     throw error;
   }
   await foundProposal.update(body);
+  if (status === "accepted") {
+    const foundTender = await Tenders.findByPk(foundProposal.TenderId, {
+      include: { model: Proposals }
+    });
+    await foundTender.update({ status: "working" });
+    const filteredProposals = foundTender.Proposals.filter((proposal) => proposal.id !== foundProposal.id);
+    for (const proposal of filteredProposals) {
+      const proposalInstance = await Proposals.findByPk(proposal.id);
+      await proposalInstance.update({ status: "declined" });
+    }
+  }
   return cleanProposals(foundProposal);
 };
 

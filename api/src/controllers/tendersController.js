@@ -5,26 +5,30 @@ const cleanTenders = (tenders) => {
   if (Array.isArray(tenders)) {
     const cleanTendersArray = tenders.map((tender) => ({
       id: tender.id,
+      company: tender.Company,
       title: tender.title,
       description: tender.description,
       subcategories: tender.Subcategories,
       budget: tender.budget,
       showBudget: tender.showBudget,
+      status: tender.status,
       contractType: tender.contractType,
       location: tender.Location,
       majorSector: tender.majorSector,
       projectDuration: tender.projectDuration,
       proposals: tender.Proposals,
-      company: tender.Company,
-      status: tender.status,
       isActive: tender.isActive
     }));
     return cleanTendersArray;
   } else {
     const cleanTenderDetail = {
       id: tenders.id,
+      company: tenders.Company,
       title: tenders.title,
       description: tenders.description,
+      budget: tenders.budget,
+      showBudget: tenders.showBudget,
+      status: tenders.status,
       contractType: tenders.contractType,
       location: tenders.Location,
       majorSector: tenders.majorSector,
@@ -32,11 +36,7 @@ const cleanTenders = (tenders) => {
       validityDate: tenders.validityDate,
       categories: tenders.Categories,
       subcategories: tenders.Subcategories,
-      budget: tenders.budget,
-      showBudget: tenders.showBudget,
       proposals: tenders.Proposals,
-      company: tenders.Company,
-      status: tenders.status,
       isActive: tenders.isActive,
       createdAt: tenders.createdAt,
       updatedAt: tenders.updatedAt
