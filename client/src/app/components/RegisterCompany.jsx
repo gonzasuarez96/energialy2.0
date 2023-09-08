@@ -6,7 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 
-
 const displaySuccessMessage = (mensaje) => {
   toast.success(mensaje, {
     position: "top-right",
@@ -66,6 +65,15 @@ const serviceOptions = [
   "Servicio 3",
 ];
 
+const organizationTypes = [
+  "Organismo Público",
+  "Operadora",
+  "PyME",
+  "Cámara/Cluster/Federación",
+  "Profesional independiente",
+  "Servicios especiales",
+];
+
 const stepsForm = ["01", "02", "03", "04"];
 
 export default function RegisterCompany() {
@@ -84,6 +92,7 @@ export default function RegisterCompany() {
   const [bannerPicture, setBannerPicture] = useState(null);
   const [profilePictureError, setProfilePictureError] = useState("");
   const [bannerPictureError, setBannerPictureError] = useState("");
+  const [organizationType, setOrganizationType] = useState("");
 
   const [website, setWebsite] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
@@ -93,8 +102,7 @@ export default function RegisterCompany() {
   const [certifications, setCertifications] = useState([]);
   const [homologations, setHomologations] = useState([]);
 
-  const router = useRouter()
-
+  const router = useRouter();
 
   // ------------------------------------------------- //
 
@@ -156,7 +164,7 @@ export default function RegisterCompany() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
@@ -166,21 +174,47 @@ export default function RegisterCompany() {
     formData.append("annualRevenue", annualRevenue);
     formData.append("employeeCount", employeeCount);
     formData.append("cuit", cuit);
-    formData.append("profileImage", profilePicture); 
-    formData.append("bannerImage", bannerPicture);  
-  
-    console.log("Datos enviados en companyData:", formData);
-  
-    try {
-      const response = await axios.post("http://localhost:3001/companies", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+    formData.append("profileImage", profilePicture);
+    formData.append("bannerImage", bannerPicture);
+    formData.append("organizationType",organizationType);
+
+
+    // ----- Esto solo esta hecho para poder ver en consola lo q se manda, luego se borra ----- //
+    function formDataToObject(formData) {
+      const obj = {};
+      formData.forEach((value, key) => {
+        if (!obj.hasOwnProperty(key)) {
+          obj[key] = value;
+        } else {
+          if (!Array.isArray(obj[key])) {
+            obj[key] = [obj[key]];
+          }
+          obj[key].push(value);
         }
       });
+      return obj;
+    }
+    const formDataObject = formDataToObject(formData);
+    console.log("Datos enviados en formDataObject:",formDataObject);
+
+    // ------------------------------------------------------------------------ //
+
+    console.log("Datos enviados en formData:", formData);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/companies",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       console.log("Respuesta del servidor:", response);
-      displaySuccessMessage('Empresa registrada con exito');
+      displaySuccessMessage("Empresa registrada con exito");
       setTimeout(() => {
-        router.push('/directory');
+        router.push("/directory");
       }, 2000);
     } catch (error) {
       console.error("Error al registrar la empresa:", error);
@@ -188,7 +222,7 @@ export default function RegisterCompany() {
       displayFailedMessage(error.response.data.error);
     }
   };
-  
+
   // -------------------------------- //
 
   return (
@@ -433,6 +467,46 @@ export default function RegisterCompany() {
                       Volver
                     </button>
                     <button
+                      onClick={handleNextStep}
+                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                    >
+                      Siguiente
+                    </button>
+                  </div>
+                </div>
+              )}
+              {step === 4 && (
+                <div>
+                  <div className="mb-3">
+                    <label className="block mb-2">Tipo de Organización</label>
+                    <div className="flex flex-wrap">
+                      {organizationTypes.map((type, index) => (
+                        <div key={index} className="w-1/2 mb-2">
+                          <label className="flex items-center">
+                            <input
+                              type="radio"
+                              id={`organizationType${index}`}
+                              value={type}
+                              checked={organizationType === type}
+                              onChange={(e) =>
+                                setOrganizationType(e.target.value)
+                              }
+                            />
+                            <span className="ml-2">{type}</span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 space-x-4">
+                    <button
+                      onClick={() => setStep(step - 1)}
+                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
+                    >
+                      Volver
+                    </button>
+                    <button
                       className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
                       type="submit"
                     >
@@ -441,11 +515,10 @@ export default function RegisterCompany() {
                   </div>
                 </div>
               )}
-              {step === 4 && <div>Aqui irian los campos que faltan</div>}
             </div>
           </form>
         </div>
-        <ToastContainer style={{ marginTop: '100px'}}/>
+        <ToastContainer style={{ marginTop: "100px" }} />
       </div>
     </div>
   );
