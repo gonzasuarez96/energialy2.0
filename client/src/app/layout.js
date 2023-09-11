@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import Providers from './redux/provider';
 
 
+
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata = {

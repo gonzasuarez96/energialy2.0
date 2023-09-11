@@ -49,10 +49,14 @@ function SideBar() {
         ></Image>
       </div>
       {/*Menu Items*/}
-      <div className="flex flex-col items-start justify-center gap-4 duration-300 px-2">
-        <ul className="pt-2 w-full">
+      <div
+        className={`flex flex-col items-start justify-center gap-4 duration-300 ${
+          isOpen ? "px-2" : "px-0"
+        } `}
+      >
+        <ul className="pt-2 w-full items-center ">
           {menuBar.map((menuItem, index) => (
-            <MenuItem menuItem={menuItem} key={index} isOpen={isOpen}/>
+            <MenuItem menuItem={menuItem} key={index} isOpen={isOpen} />
           ))}
         </ul>
       </div>
