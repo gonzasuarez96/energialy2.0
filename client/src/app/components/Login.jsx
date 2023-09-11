@@ -1,42 +1,38 @@
 'use client'
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux';
 import { setAccessToken, setUserData } from '../redux/features/userSlice';
-import PasswordForm from '../components/PasswordForm';
 
 //Toastify module for success message
 const displaySuccessMessage = (mensaje) => {
   toast.success(mensaje, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: "light",
+    theme: 'light',
   });
 };
 
 // Toastify module for error messages
 const displayFailedMessage = (mensaje) => {
   toast.error(mensaje, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: "light",
+    theme: 'light',
   });
 };
-
-
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -44,10 +40,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
 
-
-  const router = useRouter()
 
   const dispatch = useDispatch();
 
@@ -78,26 +71,24 @@ export default function Login() {
 
   const loginValidator = () => {
     if (!email || !password) {
-      setError("Por favor, completa ambos campos.");
+      setError('Por favor, completa ambos campos.');
       return;
     } else if (!isValidEmail(email)) {
-      setEmailError(
-        "Por favor, ingresa una dirección de correo electrónico válida."
-      );
-      setPasswordError("");
+      setEmailError('Por favor, ingresa una dirección de correo electrónico válida.');
+      setPasswordError('');
       return;
     } else if (password.length < 6) {
-      setPasswordError("La contraseña debe tener al menos 6 caracteres.");
-      setEmailError("");
+      setPasswordError('La contraseña debe tener al menos 6 caracteres.');
+      setEmailError('');
       return;
     } else {
-      setEmailError("");
-      setPasswordError("");
+      setEmailError('');
+      setPasswordError('');
     }
-  }
+  };
 
   const handleLogin = async () => {
-    // Validaciones
+
 
     const validations = loginValidator();
     if (validations) {
@@ -106,33 +97,32 @@ export default function Login() {
 
     const user = {
       email: email,
-      password: password
+      password: password,
     };
 
     try {
-      console.log('Datos enviados:', user)
+      console.log('Datos enviados:', user);
       const response = await axios.post('http://localhost:3001/auth', user);
       const accessToken = response.data.accessToken;
 
-      console.log('Respuesta del servidor:', response)
-      console.log('Estado accessToken:', response.data.accessToken)
+      console.log('Respuesta del servidor:', response);
+      console.log('Estado accessToken:', response.data.accessToken);
 
       displaySuccessMessage('Sesion iniciada');
       const userData = {
         email: user.email,
-        login: true
-      }
+        login: true,
+      };
       dispatch(setUserData(userData));
-      dispatch(setAccessToken(accessToken))
+      dispatch(setAccessToken(accessToken));
 
       setTimeout(() => {
         router.push('/directory');
       }, 2000);
     } catch (error) {
-      console.log('Error:', error)
-      displayFailedMessage(error.response);
+      console.log('Error:', error);
+      displayFailedMessage(error.response.data.error);
     }
-
   };
 
   const isValidEmail = (email) => {
@@ -141,9 +131,8 @@ export default function Login() {
   };
 
   const handlePasswordFormClick = () => {
-    setShowPasswordForm(true);
+    window.location.href = '/emailPassword';
   };
-
 
   return (
     <div className="d-flex justify-content-center bg-light pt-5 pb-5">
@@ -151,14 +140,14 @@ export default function Login() {
         <h3 className=" mb-0 p-4 bg-gray-100 border-b border-gray-300">Iniciar sesión</h3>
         <form className="mb-2 pl-4 pr-4 pt-4">
           <div className="mb-3 items-center">
-            <div className='flex items-center'>
+            <div className="flex items-center">
               <label htmlFor="email" className="form-label w-40">Correo electrónico</label>
               <input type="email" className="form-control" id="email" value={email} onChange={handleEmailChange} onBlur={handleEmailBlur} required />
             </div>
             {emailError && <div className="text-danger  mb-2">{emailError}</div>}
           </div>
           <div className="mb-3 items-center">
-            <div className='flex'>
+            <div className="flex">
               <label htmlFor="password" className="form-label w-40">Contraseña</label>
               <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} onBlur={handlePasswordBlur} required />
             </div>
@@ -180,13 +169,8 @@ export default function Login() {
             ¿Olvidaste tu contraseña?
           </a>
         </div>
-        {showPasswordForm && (
-          <PasswordForm />
-        )}
       </div>
       <ToastContainer style={{ marginTop: '100px' }} />
     </div>
   );
-};
-
-
+}

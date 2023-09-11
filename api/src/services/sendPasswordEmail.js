@@ -21,7 +21,7 @@ const sendPasswordEmail = (email, token, accessToken) => {
     const mailOptions = {
         from: process.env.EMAIL_USERNAME,
         to: email,
-        subject: 'Restablecimiento de Contraseña - [Nombre de la Plataforma]',
+        subject: 'Restablecimiento de Contraseña - [Energialy]',
         text: `${customMessage}\n\nHemos recibido una solicitud para restablecer la contraseña de tu cuenta en [Nombre de la Plataforma]. Para continuar, por favor, sigue este enlace:\n${resetPasswordLink}`,
         html: `
             <p>${customMessage}</p>

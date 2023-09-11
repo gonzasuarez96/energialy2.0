@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import axios from "axios";
 const EmailForm = () => {
@@ -29,15 +30,15 @@ const EmailForm = () => {
 
   return (
     <div className="flex flex-col items-center mt-8">
-      <h2 className="text-2xl font-semibold mb-4">Enviar Correo Electrónico</h2>
+      <h2 className="text-2xl font-semibold mb-4">Enviar Correo de restablecimiento</h2>
       {submitted ? (
         <p className="text-green-600 mb-4">
-          Se ha enviado un correo electrónico de prueba.
+          Se ha enviado un correo electrónico de restablecimiento de contraseña.
         </p>
       ) : (
         <>
           <p className="mb-4">
-            Ingresa un correo electrónico y presiona el botón para enviar un correo electrónico de prueba.
+            Ingresa un correo electrónico y presiona el botón para enviar un correo electrónico de restablecimiento de contraseña.
           </p>
           <div className="flex items-center justify-center">
             <input
