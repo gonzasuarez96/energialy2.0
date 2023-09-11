@@ -31,14 +31,14 @@ const updateUserProfile = async (id, newData) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const { email } = req.params; // Obtener el correo electrónico desde los parámetros de la URL
-    const { newPassword } = req.body; // Obtener la nueva contraseña desde el cuerpo de la solicitud
+    const { email } = req.params; 
+    const { newPassword } = req.body; 
 
-    // Hashear la nueva contraseña antes de guardarla en la base de datos
+    
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     console.log('Hashed Password:', hashedPassword);
 
-    // Buscar al usuario por su correo electrónico
+ 
     const user = await Users.findOne({ where: { email } });
     console.log('User:', user);
 
@@ -46,8 +46,8 @@ const resetPassword = async (req, res) => {
       return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
 
-    // Actualizar la contraseña en la base de datos para el usuario correspondiente
-    user.hashedPassword = hashedPassword; // Asegúrate de actualizar el campo correcto (hashedPassword)
+  
+    user.hashedPassword = hashedPassword;
     await user.save();
     console.log('Password updated');
 
