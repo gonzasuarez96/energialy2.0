@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setAccessToken, setUserData } from '../redux/features/userSlice';
-
+import PasswordForm from '../components/PasswordForm';
 
 //Toastify module for success message
 const displaySuccessMessage = (mensaje) => {
@@ -44,6 +44,8 @@ export default function Login() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+
 
   const router = useRouter()
 
@@ -103,32 +105,32 @@ export default function Login() {
     }
 
     const user = {
-        email: email,
-        password: password
+      email: email,
+      password: password
     };
 
     try {
-      console.log('Datos enviados:', user)    
-        const response = await axios.post('http://localhost:3001/auth', user);
-        const accessToken = response.data.accessToken;
+      console.log('Datos enviados:', user)
+      const response = await axios.post('http://localhost:3001/auth', user);
+      const accessToken = response.data.accessToken;
 
-        console.log('Respuesta del servidor:', response)
-        console.log('Estado accessToken:', response.data.accessToken)
+      console.log('Respuesta del servidor:', response)
+      console.log('Estado accessToken:', response.data.accessToken)
 
-        displaySuccessMessage('Sesion iniciada');
-        const userData = {
-          email: user.email,
-          login: true
-        }
-        dispatch(setUserData(userData));
-        dispatch(setAccessToken(accessToken))
-           
-        setTimeout(() => {
-          router.push('/directory');
-        }, 2000);
-    } catch(error) {
-        console.log('Error:', error)
-        displayFailedMessage(error.response);
+      displaySuccessMessage('Sesion iniciada');
+      const userData = {
+        email: user.email,
+        login: true
+      }
+      dispatch(setUserData(userData));
+      dispatch(setAccessToken(accessToken))
+
+      setTimeout(() => {
+        router.push('/directory');
+      }, 2000);
+    } catch (error) {
+      console.log('Error:', error)
+      displayFailedMessage(error.response);
     }
 
   };
@@ -138,6 +140,11 @@ export default function Login() {
     return emailPattern.test(email);
   };
 
+  const handlePasswordFormClick = () => {
+    setShowPasswordForm(true);
+  };
+
+
   return (
     <div className="d-flex justify-content-center bg-light pt-5 pb-5">
       <div className="bg-white shadow rounded w-50">
@@ -145,15 +152,15 @@ export default function Login() {
         <form className="mb-2 pl-4 pr-4 pt-4">
           <div className="mb-3 items-center">
             <div className='flex items-center'>
-            <label htmlFor="email" className="form-label w-40">Correo electrónico</label>
-            <input type="email" className="form-control" id="email" value={email} onChange={handleEmailChange} onBlur={handleEmailBlur} required />
+              <label htmlFor="email" className="form-label w-40">Correo electrónico</label>
+              <input type="email" className="form-control" id="email" value={email} onChange={handleEmailChange} onBlur={handleEmailBlur} required />
             </div>
             {emailError && <div className="text-danger  mb-2">{emailError}</div>}
           </div>
           <div className="mb-3 items-center">
             <div className='flex'>
-            <label htmlFor="password" className="form-label w-40">Contraseña</label>
-            <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} onBlur={handlePasswordBlur} required />
+              <label htmlFor="password" className="form-label w-40">Contraseña</label>
+              <input type="password" className="form-control" id="password" value={password} onChange={handlePasswordChange} onBlur={handlePasswordBlur} required />
             </div>
             {passwordError && <div className="text-danger mt- mb-2">{passwordError}</div>}
           </div>
@@ -165,10 +172,19 @@ export default function Login() {
           {error && <div className="flex justify-center text-danger mt-2 mb-2">{error}</div>}
         </form>
         <div className="text-center p-2">
-          <a href="#" className="text-decoration-none text-muted">¿Olvidaste tu contraseña?</a>
+          <a
+            href="#"
+            className="text-decoration-none text-muted"
+            onClick={handlePasswordFormClick}
+          >
+            ¿Olvidaste tu contraseña?
+          </a>
         </div>
+        {showPasswordForm && (
+          <PasswordForm />
+        )}
       </div>
-      <ToastContainer style={{ marginTop: '100px'}}/>
+      <ToastContainer style={{ marginTop: '100px' }} />
     </div>
   );
 };
