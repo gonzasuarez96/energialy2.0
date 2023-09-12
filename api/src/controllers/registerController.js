@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { sendConfirmationEmail } = require("../services/sendEmail");
 
-const newUserRegister = async (email, password) => {
+const newUserRegister = async (email, password, firstName, lastName) => {
   if (!email || !password) {
     const error = new Error("Email and password are required.");
     error.status = 400;
@@ -19,10 +19,11 @@ const newUserRegister = async (email, password) => {
 
   const hashedPwd = await bcrypt.hash(password, 10);
   const newUser = await Users.create({
-    email: email,
+    email,
     hashedPassword: hashedPwd,
+    firstName,
+    lastName
   });
-
 
   const token = jwt.sign({ userId: newUser.id }, 'secretKey', { expiresIn: '1d' });
 

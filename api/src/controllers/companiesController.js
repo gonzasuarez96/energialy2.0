@@ -1,4 +1,4 @@
-const { Companies, Locations, Categories, Subcategories, Tenders, Proposals } = require("../db");
+const { Companies, Users, Locations, Categories, Subcategories, Tenders, Proposals } = require("../db");
 const { Op } = require("sequelize");
 
 const cleanCompanies = (companies) => {
@@ -42,6 +42,7 @@ const cleanCompanies = (companies) => {
       certifications: companies.certifications,
       homologations: companies.homologations,
       website: companies.website,
+      users: companies.Users,
       isActive: companies.isActive,
       createdAt: companies.createdAt,
       updatedAt: companies.updatedAt
@@ -106,6 +107,10 @@ const getCompanyById = async (id) => {
   const foundCompany = await Companies.findByPk(id, {
     include: [
       {
+        model: Users,
+        attributes: ["id", "firstName", "lastName", "email"]
+      },
+      {
         model: Categories,
         attributes: ["id", "name", "isActive"],
         through: { attributes: [] },
@@ -143,8 +148,8 @@ const getCompanyById = async (id) => {
 };
 
 const createCompany = async (body) => {
-  const { name, description, locations, subcategories, profilePicture, bannerPicture, foundationYear, annualRevenue, employeeCount, cuit } = body;
-  if (!name || !description || !locations || !subcategories || !profilePicture || !bannerPicture || !foundationYear || !annualRevenue || !employeeCount || !cuit) {
+  const { name, description, locations, subcategories, profilePicture, bannerPicture, foundationYear, annualRevenue, employeeCount, cuit, userId } = body;
+  if (!name || !description || !locations || !subcategories || !profilePicture || !bannerPicture || !foundationYear || !annualRevenue || !employeeCount || !cuit || !userId) {
     const error = new Error("Missing required attributes.");
     error.status = 400;
     throw error;
@@ -166,10 +171,15 @@ const createCompany = async (body) => {
     }
   }
   const newCompany = await Companies.create(body);
+
+  const foundUser = await Users.findByPk(userId);
+  await newCompany.addUser(foundUser);
+
   for (const locationId of locations) {
     const foundLocation = await Locations.findByPk(locationId);
     await newCompany.addLocation(foundLocation);
   }
+
   for (const subcategoryId of subcategories) {
     const foundSubcategory = await Subcategories.findByPk(subcategoryId);
     const foundParentCategory = await Categories.findByPk(
@@ -178,8 +188,13 @@ const createCompany = async (body) => {
     await newCompany.addSubcategory(foundSubcategory);
     await newCompany.addCategory(foundParentCategory);
   }
+
   const createdCompany = await Companies.findByPk(newCompany.id, {
     include: [
+      {
+        model: Users,
+        attributes: ["id", "firstName", "lastName", "email"]
+      },
       {
         model: Categories,
         attributes: ["id", "name", "isActive"],
@@ -242,6 +257,7 @@ const updateCompany = async (id, body) => {
       }
     }
   }
+
   await foundCompany.update(body);
   if (locations) {
     if (foundCompany.Locations) {
@@ -273,6 +289,10 @@ const updateCompany = async (id, body) => {
   }
   const updatedCompany = await Companies.findByPk(id, {
     include: [
+      {
+        model: Users,
+        attributes: ["id", "firstName", "lastName", "email"]
+      },
       {
         model: Categories,
         attributes: ["id", "name", "isActive"],
