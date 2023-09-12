@@ -108,20 +108,20 @@ export default function Login() {
       console.log('Respuesta del servidor:', response);
       console.log('Estado accessToken:', response.data.accessToken);
 
-      displaySuccessMessage('Sesion iniciada');
-      const userData = {
-        email: user.email,
-        login: true,
-      };
-      dispatch(setUserData(userData));
-      dispatch(setAccessToken(accessToken));
-
-      setTimeout(() => {
-        router.push('/directory');
-      }, 2000);
-    } catch (error) {
-      console.log('Error:', error);
-      displayFailedMessage(error.response.data.error);
+        displaySuccessMessage('Sesion iniciada');
+        const userData = {
+          email: user.email,
+          login: true
+        }
+        dispatch(setUserData(userData));
+        dispatch(setAccessToken(accessToken))
+           
+        setTimeout(() => {
+          router.push('/directory');
+        }, 2000);
+    } catch(error) {
+        console.log('Error:', error)
+        displayFailedMessage(error.response.data.error);
     }
   };
 

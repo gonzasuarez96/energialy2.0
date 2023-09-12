@@ -4,35 +4,35 @@ import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import Logo from '@/app/assets/Energialy Logo-01.svg'
+import Logo from "@/app/assets/Energialy Logo-01.svg";
 import UserProfile from "./UserProfile";
 import { useSelector } from "react-redux";
 
 import { useRouter } from "next/navigation";
 
-
-
+function isAuthenticated() {
+  return true;
+}
 
 export default function Navigation() {
   const user = useSelector((state) => state.user);
 
   function isAuthenticated() {
     if (user.userData.login) {
-     return true;
-    }else{
-      return false
+      return true;
+    } else {
+      return false;
     }
-    
   }
-  
+
   let pathname = usePathname() || "/";
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <Disclosure as="nav">
       {({ open }) => (
         <>
-          <div className="mt-auto mb-2 p-2 w-full shadow-md bg-white fixed">
+          <div className="mt-auto p-2 w-full shadow-md bg-white">
             <div className="flex justify-between h-16">
               <div className="flex justify-between w-full">
                 <div className="flex items-center cursor-pointer">
@@ -45,34 +45,46 @@ export default function Navigation() {
                     <Image src={Logo} />
                   </div>
                 </div>
+
                 {isAuthenticated() ? (
-                <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                  <div
-                    onClick={() => {
-                      router.refresh();
-                      router.push("/directory");
-                    }}
-                    className={`${
-                      pathname === "/directory"
-                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium cursor-pointer"
-                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
-                    }`}
-                  >
-                    Directorio
+                  <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
+                    <Link
+                      href="/registerCompany"
+                      prefetch
+                      className={`${
+                        pathname === "/registerCompany"
+                          ? "no-underline bg-secondary-600 text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide"
+                          : "no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide transition duration-300 ease-in-out hover:bg-secondary-600"
+                      }`}
+                    >
+                      Registra tu empresa
+                    </Link>
+                    <div
+                      onClick={() => {
+                        router.refresh();
+                        router.push("/directory");
+                      }}
+                      className={`${
+                        pathname === "/directory"
+                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium cursor-pointer"
+                          : "border-transparent no-underline  text-gray-600 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
+                      }`}
+                    >
+                      Directorio
+                    </div>
+                    <Link
+                      href="/licitaciones"
+                      prefetch
+                      className={`${
+                        pathname === "/licitaciones"
+                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
+                          : "border-transparent no-underline  text-gray-600 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                      }`}
+                    >
+                      Licitaciones
+                    </Link>
+                    <UserProfile user={user.userData.email} />
                   </div>
-                  <Link
-                    href="/licitaciones"
-                    prefetch
-                    className={`${
-                      pathname === "/licitaciones"
-                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
-                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
-                    }`}
-                  >
-                    Licitaciones
-                  </Link>
-                  <UserProfile user={user.userData.email}/>
-                </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
                     <Link
@@ -81,7 +93,7 @@ export default function Navigation() {
                       className={`${
                         pathname === "/login"
                           ? "border-[#191654] no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 border-b-2 font-medium"
-                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 hover:border-[#191654] border-b-2 font-medium"
+                          : "border-transparent no-underline text-[#191654] h-full inline-flex items-center px-1 pt-1 transition duration-300 hover:border-[#191654] border-b-2 font-medium"
                       }`}
                     >
                       Iniciar Sesion
@@ -91,8 +103,8 @@ export default function Navigation() {
                       prefetch
                       className={`${
                         pathname === "/register"
-                          ? "no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide"
-                          : "border-transparent no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide transition duration-300 ease-in-out"
+                          ? "no-underline bg-secondary-600 text-white py-2 px-3 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm"
+                          : "no-underline bg-[#191654] text-white py-2 px-3 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm transition duration-300 ease-in-out hover:bg-secondary-600"
                       }`}
                     >
                       Registrarse

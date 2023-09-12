@@ -23,6 +23,15 @@ module.exports = (sequelize) => {
     refreshToken: {
       type: DataTypes.STRING,
     },
+    firstName: {
+      type: DataTypes.STRING,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+    },
+    position: {
+      type: DataTypes.STRING,
+    },
     isActive: {
       type: DataTypes.BOOLEAN,
       defaultValue: true
