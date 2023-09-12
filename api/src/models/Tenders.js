@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
     contractType: {
       type: DataTypes.ENUM,
       values: [
-        "Licitación área (Licitación pública de área",
+        "Licitación área (Licitación pública de área)",
         "Servicio completo (Desarrollo total de un proyecto)",
         "Individual (Servicio específico en un proyecto)",
       ],

@@ -5,9 +5,9 @@ const cleanTenders = (tenders) => {
   if (Array.isArray(tenders)) {
     const cleanTendersArray = tenders.map((tender) => ({
       id: tender.id,
-      company: tender.Company,
       title: tender.title,
       description: tender.description,
+      company: tender.Company,
       subcategories: tender.Subcategories,
       budget: tender.budget,
       showBudget: tender.showBudget,
@@ -23,9 +23,9 @@ const cleanTenders = (tenders) => {
   } else {
     const cleanTenderDetail = {
       id: tenders.id,
-      company: tenders.Company,
       title: tenders.title,
       description: tenders.description,
+      company: tenders.Company,
       budget: tenders.budget,
       showBudget: tenders.showBudget,
       status: tenders.status,
