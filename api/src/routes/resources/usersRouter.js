@@ -1,15 +1,10 @@
 const { Router } = require('express');
 const {
   getUsersHandler,
-<<<<<<< HEAD
-   getUserByIDHandler,
-   updateUserProfileHandler,
-   sendEmailHandler,
-   resetPasswordHandler,
-=======
   getUserByIdHandler,
   updateUserProfileHandler,
->>>>>>> 19b26a991e37cccaace56b48e01e7a990936ed1d
+  sendEmailHandler,
+  resetPasswordHandler,
   // createUserHandler,
   // deleteUserHandler,
 } = require('../../handlers/usersHandler');
