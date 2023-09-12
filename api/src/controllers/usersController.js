@@ -5,30 +5,30 @@ const getAllUsers = async () => {
   return allUsers;
 };
 
-const getUserByID = async (id) => {
-  const user = await Users.findByPk(id);
-  if (!user) {
+const getUserById = async (id) => {
+  const foundUser = await Users.findByPk(id);
+  if (!foundUser) {
     const error = new Error(`User with id ${id} not found.`);
     error.status = 404;
     throw error;
   }
-  return user;
+  return foundUser;
 };
 
 const updateUserProfile = async (id, newData) => {
-  const user = await Users.findByPk(id);
-  if (!user) {
+  const foundUser = await Users.findByPk(id);
+  if (!foundUser) {
     const error = new Error(`User with id ${id} not found.`);
     error.status = 404;
     throw error;
   }
-  await user.update(newData);
-  return user;
+  await foundUser.update(newData);
+  return foundUser;
 };
 
 module.exports = {
   getAllUsers,
-  getUserByID,
+  getUserById,
   updateUserProfile
 };
 
