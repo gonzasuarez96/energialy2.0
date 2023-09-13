@@ -55,6 +55,21 @@ const getUserById = async (id) => {
   return cleanUsers(foundUser);
 };
 
+const getUserByEmail = async (email) => {
+  const foundUser = await Users.findOne({ where: { email: email } }, {
+    include: {
+      model: Companies,
+      attributes: ["id", "name", "profilePicture", "bannerPicture"]
+    }
+  });
+  if (!foundUser) {
+    const error = new Error(`User with email ${email} not found.`);
+    error.status = 404;
+    throw error;
+  }
+  return cleanUsers(foundUser);
+};
+
 const updateUserProfile = async (id, newData) => {
   const foundUser = await Users.findByPk(id, {
     include: {
@@ -74,6 +89,7 @@ const updateUserProfile = async (id, newData) => {
 module.exports = {
   getAllUsers,
   getUserById,
+  getUserByEmail,
   updateUserProfile
 };
 
