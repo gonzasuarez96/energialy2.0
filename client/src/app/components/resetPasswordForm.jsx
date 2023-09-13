@@ -62,11 +62,11 @@ const ResetPasswordForm = () => {
         />
         <button
           onClick={handleResetPassword}
-          className="w-full mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+          className="w-full mt-4 p-2 bg-[#191654] text-white rounded hover:bg-secondary-600 trasition duration-300"
         >
           Restablecer Contraseña
         </button>
-        <p className="mt-4 text-red-500">{message}</p>
+        {message && <p className={`mt-4 ${message.includes('éxito') ? 'text-green-500' : 'text-red-500'}`}>{message}</p>}
       </div>
       <ToastContainer style={{ marginTop: '100px' }} />
     </div>
