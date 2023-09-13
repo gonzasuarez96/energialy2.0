@@ -121,7 +121,13 @@ export default function Login() {
         }, 2000);
     } catch(error) {
         console.log('Error:', error)
-        displayFailedMessage(error.response.data.error);
+        if(error.response.data.error == 'Incorrect password.'){
+          displayFailedMessage('Contraseña incorrecta');
+        }else if(error.response.data.error == 'Email not registered.'){
+          displayFailedMessage('El usuario no esta registrado');
+        }else{
+          displayFailedMessage(error.response.data.error);
+        }
     }
   };
 

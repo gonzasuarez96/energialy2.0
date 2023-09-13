@@ -1,13 +1,15 @@
 import React from 'react'
-import Nav from './components/Nav'
+import Nav from '../ajustesProfile/components/Nav'
 
 const optionsNav = [
-  'Datos personales',
-  'Imagen de perfil',
-  'Contraseña'
+  'Opcion 1',
+  'Opcion 2',
+  'Opcion 3',
+  'Opcion 4',
+  'Opcion 5',
 ]
 
-function pageProfile() {
+function pageProfileCompany() {
   return (
     <div className='w-full h-100 bg-white flex ml-4'>
       <div className='w-1/4'>
@@ -21,4 +23,4 @@ function pageProfile() {
   )
 }
 
-export default pageProfile
+export default pageProfileCompany

@@ -1,9 +1,11 @@
 const {
   getAllUsers,
   getUserById,
+  getUserByEmail,
   updateUserProfile,
   resetPassword
 } = require('../controllers/usersController');
+
 
 
 
@@ -23,7 +25,8 @@ const sendEmailHandler = async (req, res) => {
 };
 const getUsersHandler = async (req, res) => {
   try {
-    const users = await getAllUsers();
+    const { email } = req.query;
+    const users = email ? await getUserByEmail(email) : await getAllUsers();
     res.status(200).json(users);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
@@ -70,3 +73,5 @@ module.exports = {
   sendEmailHandler,
   resetPasswordHandler
 };
+
+

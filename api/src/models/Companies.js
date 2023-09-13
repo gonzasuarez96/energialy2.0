@@ -63,6 +63,7 @@ module.exports = (sequelize) => {
         "Servicios especiales",
       ],
       allowNull: false,
+      defaultValue: "PyME"
     },
     website: {
       type: DataTypes.STRING,
