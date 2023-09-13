@@ -1,8 +1,8 @@
 const { Router } = require('express');
 const {
   getUsersHandler,
-   getUserByIDHandler,
-   updateUserProfileHandler,
+  getUserByIdHandler,
+  updateUserProfileHandler,
   // createUserHandler,
   // deleteUserHandler,
 } = require('../../handlers/usersHandler');
@@ -10,7 +10,7 @@ const {
 const usersRouter = Router();
 
 usersRouter.get('/', getUsersHandler);
-usersRouter.get('/:id', getUserByIDHandler);
+usersRouter.get('/:id', getUserByIdHandler);
 usersRouter.put('/:id', updateUserProfileHandler);
 // usersRouter.delete('/:id', deleteUserHandler);
 
