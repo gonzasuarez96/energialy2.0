@@ -2,7 +2,7 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 
-const sendPasswordEmail = (email, token, accessToken) => {
+const sendPasswordEmail = (email, accessToken) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -16,7 +16,7 @@ const sendPasswordEmail = (email, token, accessToken) => {
     });
 
     const customMessage = 'Estimado/a Usuario,';
-    const resetPasswordLink = `${process.env.APP_URL}/resetPassword?token=${token}`;
+    const resetPasswordLink = `${process.env.APP_URL}/resetPassword`;
 
     const mailOptions = {
         from: process.env.EMAIL_USERNAME,
