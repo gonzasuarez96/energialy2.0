@@ -18,7 +18,7 @@ export default function Navigation() {
   const user = useSelector((state) => state.user);
 
   function isAuthenticated() {
-    if (user.userData.login) {
+    if (user.userData.firstName) {
       return true;
     } else {
       return false;
@@ -83,7 +83,7 @@ export default function Navigation() {
                     >
                       Licitaciones
                     </Link>
-                    <UserProfile user={user.userData.email} />
+                    <UserProfile user={user.userData}/>
                   </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
