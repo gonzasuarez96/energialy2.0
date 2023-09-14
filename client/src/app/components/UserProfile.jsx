@@ -12,7 +12,7 @@ function UserProfile({user, company}) {
         </div>
         <div className="hidden m-2 sm:block">
           <h4 className="text-sm">{company?.name || 'Nombre de la empresa'}</h4>
-          <h4 className="text-xs text-gray-600 ">{user || 'Nombre de usuario'}</h4>
+          <h4 className="text-xs text-gray-600 flex justify-end">{user.firstName + ' ' + user.lastName || 'Nombre de usuario'}</h4>
         </div>
       </div>
     </>
