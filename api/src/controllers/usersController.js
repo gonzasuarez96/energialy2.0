@@ -58,7 +58,8 @@ const getUserById = async (id) => {
 };
 
 const getUserByEmail = async (email) => {
-  const foundUser = await Users.findOne({ where: { email: email } }, {
+  const foundUser = await Users.findOne({
+    where: { email: email },
     include: {
       model: Companies,
       attributes: ["id", "name", "profilePicture", "bannerPicture"]
