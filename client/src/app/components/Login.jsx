@@ -117,7 +117,7 @@ export default function Login() {
         dispatch(setAccessToken(accessToken))
            
         setTimeout(() => {
-          router.push('/directory');
+          router.push('/dashboard');
         }, 2000);
     } catch(error) {
         console.log('Error:', error)

@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import DetailCompany from "./DetailCompany";
+import TendersCompany from "./TendersCompany";
 
 function CollapsedBar({title, company, intState }) {
      const [isCollapsed, setIsCollapsed] = useState(intState);
@@ -50,7 +51,9 @@ function CollapsedBar({title, company, intState }) {
           </button>
         </div>
         <div className={`${isCollapsed ? "hidden" : "block"}`}>
-          <DetailCompany company={company} />
+          {title === 'Compañía' ? <DetailCompany company={company} /> : title === 'Licitaciones' ? <TendersCompany company={company}/> : null }
+          
+          
         </div>
       </div>
     </>

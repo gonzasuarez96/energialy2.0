@@ -127,7 +127,7 @@ const getCompanyById = async (id) => {
       },
       {
         model: Tenders,
-        attributes: ["id", "title", "description", "majorSector", "budget", "projectDuration", "status"],
+        attributes: ["id", "title", "description", "majorSector", "budget", "projectDuration", "status","showBudget"],
       },
       {
         model: Proposals,

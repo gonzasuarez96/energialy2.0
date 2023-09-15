@@ -8,6 +8,7 @@ import Logo from "@/app/assets/Energialy Logo-01.svg";
 import UserProfile from "./UserProfile";
 import { useSelector } from "react-redux";
 
+
 import { useRouter } from "next/navigation";
 
 function isAuthenticated() {
@@ -73,16 +74,16 @@ export default function Navigation() {
                       Directorio
                     </div>
                     <Link
-                      href="/licitaciones"
-                      prefetch
-                      className={`${
-                        pathname === "/licitaciones"
-                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
-                          : "border-transparent no-underline  text-gray-600 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
-                      }`}
-                    >
-                      Licitaciones
-                    </Link>
+                    href="/tenders"
+                    prefetch
+                    className={`${
+                      pathname === "/licitaciones"
+                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
+                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                    }`}
+                  >
+                    Licitaciones
+                  </Link>
                     <UserProfile user={user.userData.email} />
                   </div>
                 ) : (

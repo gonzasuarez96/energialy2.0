@@ -10,10 +10,14 @@ function MenuItem({menuItem, index, isOpen}) {
     <>
       <li
         key={index}
-        className={`text-gray-800 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-slate-200 rounded-md ${
-          menuItem.spacing ? "mt-9" : "mt-2"
-        }`}
-        onClick={()=> {if(!menuItem.submenu){ router.push(`${menuItem.url}`)}}}
+        className={`text-gray-800 text-sm  cursor-pointer flex items-center p-2 hover:bg-slate-200 rounded-md ${
+          isOpen ? "gap-x-4 w-full  " : "gap-x-0 w-auto justify-center"
+        } ${menuItem.spacing ? "mt-9" : "mt-2"}`}
+        onClick={() => {
+          if (!menuItem.submenu) {
+            router.push(`${menuItem.url}`);
+          }
+        }}
       >
         <span className="text-2xl block float-left">{menuItem.icon}</span>
         <span className={`text-base font-medium flex-1 ${!isOpen && "hidden"}`}>
