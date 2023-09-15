@@ -18,8 +18,8 @@ const cleanUsers = (users) => {
     const cleanUserDetail = {
       id: users.id,
       email: users.email,
-      hashedPassword: users.hashedPassword,
-      refreshToken: users.refreshToken,
+      // hashedPassword: users.hashedPassword,
+      // refreshToken: users.refreshToken,
       firstName: users.firstName,
       lastName: users.lastName,
       position: users.position,
