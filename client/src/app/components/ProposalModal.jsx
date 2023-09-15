@@ -13,16 +13,40 @@ import {
 import Select from "react-select";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const createProposal = async (proposal) => {
-  
-  const data = await axios.post(
-    "http://localhost:3001/proposals",
-    proposal
-  );
-  console.log(data);
 
-}
+
+//Toastify module for success message
+const displaySuccessMessage = (mensaje) => {
+  toast.success(mensaje, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+};
+
+// Toastify module for error messages
+const displayFailedMessage = (mensaje) => {
+  toast.error(mensaje, {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+};
+
+
 
 export function ProposalModal({open, handleOpen, data}) {
 
@@ -34,14 +58,58 @@ export function ProposalModal({open, handleOpen, data}) {
       companyId: "",
       // attachments: [],
     });
+    const [serviceFeePercentage, setServiceFeePercentage] = useState(1);
+    const [serviceAmount, setServiceAmount] = useState(0);
+    const [receiverAmount, setReceiverAmount] = useState(0);
+
+    const createProposal = async (proposal) => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3001/proposals",
+          proposal
+        );
+        displaySuccessMessage("Propuesta enviada");
+        setProposal({
+          totalAmount: 0,
+          projectDuration: "",
+          description: "",
+          tenderId: "",
+          companyId: "",
+        });
+        setTimeout(() => {
+          handleOpen()
+        }, 3000);
+      } catch (error) {
+        displayFailedMessage(
+          "Error al enviar la propuesta, Por favor complete todos los campos"
+        );
+      }
+
+      console.log(data);
+    };
+    const calculateFee = (totalAmount, serviceFeePercentage) => {
+      if (
+        typeof serviceFeePercentage !== "number" ||
+        serviceFeePercentage < 0 ||
+        serviceFeePercentage > 100
+      ) {
+        throw new Error(
+          "Service fee percentage must be a number between 0 and 100."
+        );
+      }
+      const serviceAmount = (totalAmount * serviceFeePercentage) / 100;
+      const receiverAmount = totalAmount - serviceAmount;
+      
+      setServiceAmount(serviceAmount);
+      setReceiverAmount(receiverAmount);
+      return { serviceAmount, receiverAmount };
+    
+    };
 
     const handleSubmit = async (e) => {
         console.log(proposal)
         e.preventDefault();
         createProposal(proposal);
-        //crear tostify que diga que se ha enviado la propuesta
-        //setOpen(false);
-        //ver si lo redireccionamos a algun lugar puntual
     }
   const optionDuration = [
         "Menos de una semana",
@@ -122,16 +190,28 @@ export function ProposalModal({open, handleOpen, data}) {
                 name="totalAmount"
                 className="border-1 mt-1"
                 onChange={(e) => {
-                  const amount = parseFloat(e.target.value)
+                  const amount = parseFloat(e.target.value);
                   setProposal({
                     ...proposal,
                     totalAmount: amount,
                   });
-                }
-                  
-                }
+                  calculateFee(amount, 1);
+                }}
               />
-              <div>Acá se tiene que mostrar la cuenta de la comisión</div>
+              <div className="mt-2 flex justify-start gap-5 ml-2">
+                <div className="text-xs">
+                  <span className="font-bold">(U$S) {serviceAmount}</span>{" "}
+                  {"  "}
+                  <span className="font-bold text-secondary-600">
+                    "Energialy"
+                  </span>{" "}
+                  ServiceFee ( Fee: {serviceFeePercentage}% )
+                </div>
+                <div className="text-xs">
+                  <span className="font-bold">(U$S) {receiverAmount}</span>{" "}
+                  Ingresos que recibirás si tu Propuesta es elegida{" "}
+                </div>
+              </div>
             </div>
             <label htmlFor="">Duración:</label>
             <Select
@@ -148,6 +228,7 @@ export function ProposalModal({open, handleOpen, data}) {
               <label htmlFor="">Descripción del Trabajo</label>
               <textarea
                 name="description"
+                placeholder="Mensaje a la empresa que contratará tus servicios. Indicá de forma detallada el trabajo que realizarás en esta licitación"
                 id="description"
                 rows={10}
                 cols={70}
@@ -170,6 +251,7 @@ export function ProposalModal({open, handleOpen, data}) {
             </div>
           </CardFooter>
         </Card>
+        <ToastContainer style={{ marginTop: "100px" }} />
       </Dialog>
     </>
   );
