@@ -97,6 +97,7 @@ const getProposalById = async (id) => {
 const createProposal = async (body) => {
   const { totalAmount, projectDuration, description, tenderId, companyId, attachments } = body;
   if (!totalAmount || !projectDuration || !description || !tenderId || !companyId) {
+    console.log(totalAmount, projectDuration, description, tenderId, companyId)
     const error = new Error("Missing required attributes.");
     error.status = 400;
     throw error;
