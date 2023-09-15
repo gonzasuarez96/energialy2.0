@@ -4,7 +4,9 @@ import PopMenu from "./PopMenu";
 function UserProfile() {
   const defaultImg = "../assets/Energialy_Logo_Favicon-01";
   return (
-    <PopMenu>
+
+    <PopMenu >
+
       {/* <div className="flex justify-center align-middle ml-4 sm:ml-2 sm:min-w-max"
       >
         <div className="w-[50px] h-[50px] m-2">

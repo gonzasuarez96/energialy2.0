@@ -49,7 +49,7 @@ export default function Navigation() {
 
                 {isAuthenticated() ? (
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                    <Link
+                    {user.userData.company?.id ? null: <Link
                       href="/registerCompany"
                       prefetch
                       className={`${
@@ -59,7 +59,7 @@ export default function Navigation() {
                       }`}
                     >
                       Registra tu empresa
-                    </Link>
+                    </Link> }
                     <div
                       onClick={() => {
                         router.refresh();
