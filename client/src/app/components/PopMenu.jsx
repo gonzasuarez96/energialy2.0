@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { MdSpaceDashboard } from "react-icons/md";
 import {MdOutlineLogout} from "react-icons/md";
+
 import {useSelector} from "react-redux";
 
 
@@ -21,6 +22,7 @@ export default function Example() {
   const user = useSelector((state) => state.user);
   const userData = user.userData
   console.log(user.userData);
+
   return (
     <Popover placement="bottom">
       <PopoverHandler>
@@ -28,16 +30,20 @@ export default function Example() {
           <div className="w-[50px] h-[50px] m-2">
             <img
               className="rounded-full"
+
               src={userData.company?.pictureProfile || "defaultImg"}
               alt={userData.company?.name || "Default Image"}
+
             />
           </div>
           <div className="hidden m-2 sm:block">
             <h4 className="text-sm">
+
               {userData.company?.name || "Sin empresa asociada"}
             </h4>
             <h4 className="text-xs text-gray-600 ">
               {userData.firstName + " " + userData.lastName}
+
             </h4>
           </div>
         </div>
