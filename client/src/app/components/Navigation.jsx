@@ -84,7 +84,7 @@ export default function Navigation() {
                   >
                     Licitaciones
                   </Link>
-                    <UserProfile user={user.userData.email} />
+                    <UserProfile />
                   </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
