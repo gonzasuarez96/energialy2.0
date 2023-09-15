@@ -149,7 +149,7 @@ export default function Register() {
   };
 
   return (
-    <div className="d-flex justify-content-center bg-light pt-5 pb-5">
+    <div className="h-[90vh] flex items-center justify-center">
       <div className="bg-white shadow rounded w-50">
         <h3 className="mb-0 p-4 bg-gray-100 border-b border-gray-300">
           Registro de usuario
@@ -211,7 +211,7 @@ export default function Register() {
           </div>
 
           {/* Campo de Contraseña */}
-          <div className="mb-3">
+          <div className="mb-8">
             <label htmlFor="password" className="form-label w-40">
               Contraseña
             </label>
@@ -230,14 +230,15 @@ export default function Register() {
           </div>
 
           {/* Botón de Registro */}
+          <div className="flex justify-center border-t pt-4">
           <button
             type="button"
-            className="btn btn-primary w-100"
-            style={{ backgroundColor: "#191654", borderColor: "#191654" }}
+            className="px-8 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
             onClick={handleRegister}
           >
             Registrarse
           </button>
+          </div>
 
           {error && (
             <div className="flex justify-center text-danger mt-2 mb-2">

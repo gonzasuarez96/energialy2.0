@@ -19,7 +19,7 @@ export default function Navigation() {
   const user = useSelector((state) => state.user);
 
   function isAuthenticated() {
-    if (user.userData.login) {
+    if (user.userData.firstName) {
       return true;
     } else {
       return false;

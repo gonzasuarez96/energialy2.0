@@ -303,7 +303,7 @@ export default function RegisterCompany() {
                   </div>
                   <button
                     onClick={handleNextStep}
-                    className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                    className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
                   >
                     Siguiente
                   </button>
@@ -413,13 +413,13 @@ export default function RegisterCompany() {
                     <div className="mt-4 space-x-4">
                       <button
                         onClick={() => setStep(step - 1)}
-                        className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
+                        className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
                       >
                         Volver
                       </button>
                       <button
                         onClick={handleNextStep}
-                        className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                        className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
                       >
                         Siguiente
                       </button>
@@ -462,13 +462,13 @@ export default function RegisterCompany() {
                   <div className="mt-4 space-x-4">
                     <button
                       onClick={() => setStep(step - 1)}
-                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
+                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
                     >
                       Volver
                     </button>
                     <button
                       onClick={handleNextStep}
-                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
                     >
                       Siguiente
                     </button>
@@ -502,12 +502,12 @@ export default function RegisterCompany() {
                   <div className="mt-4 space-x-4">
                     <button
                       onClick={() => setStep(step - 1)}
-                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
+                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
                     >
                       Volver
                     </button>
                     <button
-                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
                       type="submit"
                     >
                       Registrarse
