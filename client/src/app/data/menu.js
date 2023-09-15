@@ -34,18 +34,10 @@ export const menuBar = [
     submenu: true,
     submenuItems: [
       {
-        title: "Administrar Licitaciones",
-        url: "/dashboard/licitaciones/admin",
+        title: "Mis Licitaciones",
+        url: "/dashboard/tenders",
       },
-      { title: "Liciataiones en curso", url: "/dashboard/licitaciones/active" },
-      {
-        title: "Liciataiones Completas",
-        url: "/dashboard/licitaciones/complete",
-      },
-      {
-        title: "Liciataiones Canceladas",
-        url: "/dashboard/licitaciones/cancel",
-      },
+      { title: "Mis Propuestas", url: "/dashboard/proposals" },
     ],
   },
   {

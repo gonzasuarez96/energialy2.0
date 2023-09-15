@@ -1,4 +1,5 @@
 import React from 'react'
+
 import Nav from '../ajustesProfile/components/Nav'
 
 const optionsNav = [
@@ -24,3 +25,4 @@ function pageProfileCompany() {
 }
 
 export default pageProfileCompany
+

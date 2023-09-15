@@ -5,6 +5,11 @@ export const FILTER_COMPANIES = "FILTER_COMPANIES";
 export const FILTER_COMPANIES_LOCATION = "FILTER_COMPANIES_LOCATION";
 export const FILTER_COMPANIES_CATEGORIE = "FILTER_COMPANIES_CATEGORIE";
 export const FILTER_COMPANIES_SUBCATEGORIE = "FILTER_COMPANIES_SUBCATEGORIE";
+export const GET_ALL_TENDERS = "GET_ALL_TENDERS";
+export const FILTER_TENDERS = "FILTER_TENDERS";
+export const FILTER_TENDERS_LOCATION = "FILTER_TENDERS_LOCATION";
+export const FILTER_TENDERS_CATEGORIE = "FILTER_TENDERS_CATEGORIE";
+export const FILTER_TENDERS_SUBCATEGORIE = "FILTER_TENDERS_SUBCATEGORIE";
 
 export const setAllCompanies = () => {
   return {
@@ -37,6 +42,39 @@ export const filterCompaniesBySubcategorie = (subcategorie) => {
     payload: subcategorie,
   };
 };
+
+export const setAllTenders = () => {
+  return {
+    type: GET_ALL_TENDERS,
+    payload: tenders,
+  };
+};
+
+export const filterTenderByName = (name) => {
+  return {
+    type: FILTER_TENDERS,
+    payload: name,
+  };
+};
+export const fiterTendersByLocation = (location) => {
+  return {
+    type: FILTER_TENDERS_LOCATION,
+    payload: location,
+  };
+};
+export const filterTendersByCategorie = (categorie) => {
+  return {
+    type: FILTER_TENDERS_CATEGORIE,
+    payload: categorie,
+  };
+};
+export const filterTendersBySubcategorie = (subcategorie) => {
+  return {
+    type: FILTER_TENDERS_SUBCATEGORIE,
+    payload: subcategorie,
+  };
+};
+
 
 
 export const setAccessToken = (token) => {

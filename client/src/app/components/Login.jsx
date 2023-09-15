@@ -10,28 +10,28 @@ import { setAccessToken, setUserData } from "../redux/features/userSlice";
 //Toastify module for success message
 const displaySuccessMessage = (mensaje) => {
   toast.success(mensaje, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: "light",
+    theme: 'light',
   });
 };
 
 // Toastify module for error messages
 const displayFailedMessage = (mensaje) => {
   toast.error(mensaje, {
-    position: "top-right",
+    position: 'top-right',
     autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: "light",
+    theme: 'light',
   });
 };
 
@@ -74,26 +74,25 @@ export default function Login() {
 
   const loginValidator = () => {
     if (!email || !password) {
-      setError("Por favor, completa ambos campos.");
+      setError('Por favor, completa ambos campos.');
       return;
     } else if (!isValidEmail(email)) {
-      setEmailError(
-        "Por favor, ingresa una dirección de correo electrónico válida."
-      );
-      setPasswordError("");
+      setEmailError('Por favor, ingresa una dirección de correo electrónico válida.');
+      setPasswordError('');
       return;
     } else if (password.length < 6) {
-      setPasswordError("La contraseña debe tener al menos 6 caracteres.");
-      setEmailError("");
+      setPasswordError('La contraseña debe tener al menos 6 caracteres.');
+      setEmailError('');
       return;
     } else {
-      setEmailError("");
-      setPasswordError("");
+      setEmailError('');
+      setPasswordError('');
     }
+  };
   };
 
   const handleLogin = async () => {
-    // Validaciones
+
 
     const validations = loginValidator();
     if (validations) {
@@ -101,6 +100,8 @@ export default function Login() {
     }
 
     const user = {
+      email: email,
+      password: password,
       email: email,
       password: password,
     };
@@ -142,6 +143,10 @@ export default function Login() {
   const isValidEmail = (email) => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
+  };
+
+  const handlePasswordFormClick = () => {
+    window.location.href = '/emailPassword';
   };
 
   return (
