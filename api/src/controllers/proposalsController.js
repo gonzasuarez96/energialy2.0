@@ -102,11 +102,22 @@ const createProposal = async (body) => {
     error.status = 400;
     throw error;
   }
-  const { serviceAmount, receiverAmount } = calculateFee(totalAmount, 1); // Hardcoded serviceFee
-  const newProposal = await Proposals.create({ totalAmount,  serviceAmount, receiverAmount, projectDuration, description, attachments });
-  const foundTender = await Tenders.findByPk(tenderId);
-  await newProposal.setTender(foundTender);
+  const { serviceAmount, receiverAmount } = calculateFee(totalAmount, 1); // Hardcoded serviceFee; hay que ajustar el fee conforme la suscripción del usuario
+  
+  const foundTender = await Tenders.findByPk(tenderId, {
+    include: {
+      model: Companies,
+      attributes: ["id", "name"]
+    }
+  });
   const foundCompany = await Companies.findByPk(companyId);
+  if (foundTender.Company.id === companyId) {
+    const error = new Error("Can't create a proposal over your own tender.");
+    error.status = 400;
+    throw error;
+  }
+  const newProposal = await Proposals.create({ totalAmount,  serviceAmount, receiverAmount, projectDuration, description, attachments });
+  await newProposal.setTender(foundTender);
   await newProposal.setCompany(foundCompany);
   const createdProposal = await Proposals.findByPk(newProposal.id, {
     include: [
