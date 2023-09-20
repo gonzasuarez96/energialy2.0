@@ -1,10 +1,9 @@
 import React from 'react'
 import Nav from './components/Nav'
+import EditProfile from './components/EditProfile'
 
 const optionsNav = [
   'Datos personales',
-  'Imagen de perfil',
-  'Contraseña'
 ]
 
 function pageProfile() {
@@ -14,7 +13,7 @@ function pageProfile() {
         <Nav options={optionsNav}/>
       </div>
       <div className='flex-1'>
-        <div>Formulario</div>
+        <EditProfile />
         {/* Contenido principal aquí */}
       </div>
     </div>
