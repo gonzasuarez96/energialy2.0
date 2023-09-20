@@ -15,6 +15,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {useSelector}  from 'react-redux'
+
+
 
 
 
@@ -58,6 +61,7 @@ export function ProposalModal({open, handleOpen, data}) {
       companyId: "",
       // attachments: [],
     });
+    const userData = useSelector((state) => state.user.userData);
     const [serviceFeePercentage, setServiceFeePercentage] = useState(1);
     const [serviceAmount, setServiceAmount] = useState(0);
     const [receiverAmount, setReceiverAmount] = useState(0);
@@ -85,7 +89,6 @@ export function ProposalModal({open, handleOpen, data}) {
         );
       }
 
-      console.log(data);
     };
     const calculateFee = (totalAmount, serviceFeePercentage) => {
       if (
@@ -107,7 +110,7 @@ export function ProposalModal({open, handleOpen, data}) {
     };
 
     const handleSubmit = async (e) => {
-        console.log(proposal)
+        
         e.preventDefault();
         createProposal(proposal);
     }
@@ -118,12 +121,12 @@ export function ProposalModal({open, handleOpen, data}) {
         "De 3 a 6 meses",
         "Más de 6 meses",
       ];
-    console.log(data)
+      
       useEffect(() => {
         setProposal({
           ...proposal,
           tenderId: data.id,
-          companyId: data.company.id,
+          companyId: userData.company.id,
         });
       },[])
   return (
