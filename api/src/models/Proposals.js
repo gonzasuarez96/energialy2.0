@@ -46,7 +46,6 @@ module.exports = (sequelize) => {
       type: DataTypes.ENUM,
       values: [
         "sent",
-        "seen",
         "accepted",
         "declined",
       ],

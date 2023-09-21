@@ -48,10 +48,6 @@ module.exports = (sequelize) => {
       ],
       allowNull: false,
     },
-    cuit: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     organizationType: {
       type: DataTypes.ENUM,
       values: [
@@ -64,6 +60,31 @@ module.exports = (sequelize) => {
       ],
       allowNull: false,
       defaultValue: "PyME"
+    },
+    businessName: {
+      type: DataTypes.STRING,
+    },
+    fiscalAdress: {
+      type: DataTypes.STRING,
+    },
+    cuit: {
+      type: DataTypes.STRING,
+    },
+    companyEmail: {
+      type: DataTypes.STRING,
+      unique: true,
+      validate: {
+        isEmail: true
+      }
+    },
+    legalManager: {
+      type: DataTypes.JSONB
+    },
+    bankAccountFiles: {
+      type: DataTypes.ARRAY(DataTypes.JSONB)
+    },
+    bankAccountStatus: {
+      type: DataTypes.JSONB
     },
     website: {
       type: DataTypes.STRING,

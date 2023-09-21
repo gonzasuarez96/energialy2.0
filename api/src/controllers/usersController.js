@@ -7,9 +7,7 @@ const cleanUsers = (users) => {
     const cleanUsersArray = users.map((user) => ({
       id: user.id,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      position: user.position,
+      role: user.role,
       company: user.Company,
       isActive: user.isActive
   }));
@@ -23,6 +21,7 @@ const cleanUsers = (users) => {
       firstName: users.firstName,
       lastName: users.lastName,
       position: users.position,
+      role: users.role,
       company: users.Company,
       isActive: users.isActive,
       createdAt: users.createdAt,
@@ -123,6 +122,6 @@ module.exports = {
   updateUserProfile,
   resetPassword,
   getUserById,
-   getUserByEmail
+  getUserByEmail
 };
 
