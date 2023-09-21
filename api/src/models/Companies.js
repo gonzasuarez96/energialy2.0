@@ -72,11 +72,19 @@ module.exports = (sequelize) => {
     },
     companyEmail: {
       type: DataTypes.STRING,
-      allowNull: false,
       unique: true,
       validate: {
         isEmail: true
       }
+    },
+    legalManager: {
+      type: DataTypes.JSONB
+    },
+    bankAccountFiles: {
+      type: DataTypes.ARRAY(DataTypes.JSONB)
+    },
+    bankAccountStatus: {
+      type: DataTypes.JSONB
     },
     website: {
       type: DataTypes.STRING,
