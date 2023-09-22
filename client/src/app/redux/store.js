@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import userReducer from "./features/userSlice";
 import companieReducer from "./features/companieSlice";
 import tenderReducer from "./features/tenderSlice";
@@ -6,7 +7,6 @@ import { locationApi } from "./services/locationApi";
 import { companiesApi } from "./services/companiesApi";
 import { categoriesApi } from "./services/categoriesApi";
 import { tendersApi } from "./services/tendersApi";
-
 
 const store = configureStore({
   reducer: {
