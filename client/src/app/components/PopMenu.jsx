@@ -30,20 +30,16 @@ export default function Example() {
           <div className="w-[50px] h-[50px] m-2">
             <img
               className="rounded-full"
-
-              src={userData.company?.pictureProfile || "defaultImg"}
+              src={userData.company?.profilePicture || "defaultImg"}
               alt={userData.company?.name || "Default Image"}
-
             />
           </div>
           <div className="hidden m-2 sm:block">
             <h4 className="text-sm">
-
               {userData.company?.name || "Sin empresa asociada"}
             </h4>
             <h4 className="text-xs text-gray-600 ">
               {userData.firstName + " " + userData.lastName}
-
             </h4>
           </div>
         </div>

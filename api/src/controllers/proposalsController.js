@@ -48,17 +48,26 @@ const getAllProposals = async () => {
     include: [
       {
         model: Tenders,
-        attributes: ["id", "title", "budget", "status"],
+        attributes: [
+          "id",
+          "title",
+          "budget",
+          "description",
+          "contractType",
+          "majorSector",
+          "validityDate",
+          "status",
+        ],
         include: {
-            model: Companies,
-            attributes: ["id", "name"],
+          model: Companies,
+          attributes: ["id", "name"],
         },
       },
       {
         model: Companies,
-        attributes: ["id", "name"]
-      }
-    ]
+        attributes: ["id", "name", "profilePicture"],
+      },
+    ],
   });
   return cleanProposals(allProposals);
 };

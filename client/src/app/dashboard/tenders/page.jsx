@@ -1,9 +1,13 @@
-import React from 'react'
+import Link from "next/link";
 
 function Licitaciones() {
   return (
-    <div>Licitaciones</div>
-  )
+    <div>
+      <Link href="/dashboard/tenders/createTender" className="text-white">
+        <button>Crear Licitación</button>
+      </Link>
+    </div>
+  );
 }
 
 export default Licitaciones

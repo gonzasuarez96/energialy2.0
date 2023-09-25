@@ -1,14 +1,15 @@
 'use client'
 import Link from "next/link";
 import Image from "next/image";
-import Banner from "@/app/assets/banner.jpg";
-import Logo from "@/app/assets/LogoPenzoil.png";
+//import Banner from "@/app/assets/banner.jpg";
+//import Logo from "@/app/assets/LogoPenzoil.png";
 import { MdMoney } from "react-icons/md";
 import {MdPointOfSale} from 'react-icons/md'
 import {MdOutlineArrowDropDown} from 'react-icons/md'
 import {AiOutlineMenu} from 'react-icons/ai'
 import { useState } from "react";
 import MenuItem from "./MenuItem";
+import { useSelector } from "react-redux";
 
 import { menuBar } from "@/app/data/menu";
 
@@ -16,12 +17,18 @@ import { menuBar } from "@/app/data/menu";
 function SideBar() {
   const [isOpen, setIsOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
+  const userData = useSelector((state) => state.user.userData )
+  // const banner = userData.company.bannerPicture || null;
+  // const logo = userData.company.profilePicture || null;
+  //console.log(userData)
 
   const toggle = () => {
     setIsOpen(!isOpen);
   };
 
   
+  //console.log(banner)
+  //console.log(logo);
 
   return (
     <div
@@ -42,11 +49,11 @@ function SideBar() {
       </div>
       {/*Company Data */}
       <div className="flex flex-col items-center justify-center">
-        <Image className="-z-0" src={Banner} width={500} height={500} />
-        <Image
-          src={Logo}
+        {/* <img className="-z-0" src={banner} alt="bannerProfile"/>
+        <img
+          src={logo}
           className={`${isOpen ? "w-[100px]" : "w-[50px] duration-300"}`}
-        ></Image>
+        /> */}
       </div>
       {/*Menu Items*/}
       <div
