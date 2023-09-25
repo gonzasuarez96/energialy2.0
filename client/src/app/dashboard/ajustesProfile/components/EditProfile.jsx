@@ -36,7 +36,7 @@ const displaySuccessMessage = (mensaje) => {
   };
   //---------------------------------------------------------------//
 
-export default function EditProfile() {
+export default function EditProfile({ option }) {
   const user = useSelector((state) => state.user.userData);
 
   // Estados locales para los campos editables
@@ -108,9 +108,10 @@ export default function EditProfile() {
   
 
   return (
-    <div className="min-h-screen flex flex-col justify-start">
+    <div className="min-h-screen flex flex-col justify-start shadow-md">
       <div className="w-full">
         <div className="m-20">
+        {(!option || option === 0 || typeof option === 'undefined') && (
           <form
             className="m-10 p-8 max-w-[70%] mx-auto"
             onSubmit={handleSubmit}
@@ -158,6 +159,7 @@ export default function EditProfile() {
             </div>
           )}
           </form>
+        )}
         </div>
       </div>
       <ToastContainer style={{ marginTop: "100px" }} />

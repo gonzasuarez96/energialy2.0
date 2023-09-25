@@ -83,6 +83,14 @@ export default function RegisterCompany() {
   const [locationsOptions, setLocationsOptions] = useState([]);
   const [subcategoriesOptions, setSubcategoriesOptions] = useState([]);
   const [subcategorySelected, setSubcategorySelected] = useState([]);
+  const [stepCompletion, setStepCompletion] = useState([false, false, false, false]);
+  const [errorMessages, setErrorMessages] = useState({
+    step1: "",
+    step2: "",
+    step3: "",
+    step4: "",
+  });
+  
 
   const getLocation = async () => {
     try {
@@ -187,33 +195,6 @@ export default function RegisterCompany() {
 
     console.log("Datos enviados en companyData:", companyData);
 
-    const uploadImage = async (e, imageType) => {
-      const files = e.target.files;
-      const data = new FormData();
-      data.append("file", files[0]);
-      data.append("upload_preset", "energialy_users");
-      setLoading(true);
-
-      try {
-        const res = await axios.post(
-          "https://api.cloudinary.com/v1_1/dbraa6jpj/image/upload",
-          data
-        );
-        const file = res.data;
-        console.log("Respuesta de cloudinary:", res);
-
-        if (imageType === "profile") {
-          setProfilePicture(file.secure_url);
-        } else if (imageType === "banner") {
-          setBannerPicture(file.secure_url);
-        }
-
-        setLoading(false);
-      } catch (error) {
-        console.log("Error al cargar la imagen:", error);
-        setLoading(false);
-      }
-    };
 
     try {
       const response = await axios.post(
@@ -500,7 +481,7 @@ export default function RegisterCompany() {
                   </div>
                   <div className="mb-3">
                     <select
-                      value={categories}
+                      value=''
                       onChange={handleCategoryChange} 
                       className="border rounded px-2 py-2 w-full"
                     >
