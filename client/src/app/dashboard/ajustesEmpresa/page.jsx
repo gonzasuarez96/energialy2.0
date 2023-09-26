@@ -21,7 +21,7 @@ function pageProfileCompany() {
   };
 
   return (
-    <div className="w-full h-100 bg-white flex ml-4">
+    <div className="w-full h-100 bg-white flex ml-4 shadow">
       <div className="w-1/4">
         <Nav options={optionsNav} onClick={handleOptions} />
       </div>

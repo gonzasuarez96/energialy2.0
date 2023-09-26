@@ -50,6 +50,14 @@ export const menuBar = [
         title: "Mis Facturas",
         url: "/dashboard/finanzas/facturas",
       },
+      {
+        title: "Apertura de cuenta",
+        url: "/dashboard/finanzas/aperturaCuenta",
+      },
+      {
+        title:"Factura de credito",
+        url: "/dashboard/finanzas/facturaCredito",
+      }
     ],
   },
 ];
