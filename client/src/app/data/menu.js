@@ -52,4 +52,9 @@ export const menuBar = [
       },
     ],
   },
+  {
+    title: "Banco",
+    url: "/dashboard/bank",
+    icon: <BiSolidBank />,
+  },
 ];
