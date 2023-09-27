@@ -79,21 +79,19 @@ module.exports = (sequelize) => {
     },
     legalManager: {
       type: DataTypes.JSONB
-    },
-    bankAccountFiles: {
-      type: DataTypes.ARRAY(DataTypes.JSONB)
-    },
-    bankAccountStatus: {
-      type: DataTypes.JSONB
+      // "legalManager": {
+      //   "firstName": "Tim",
+      //   "lastName": "Cook",
+      //   "email": "tim@apple.com",
+      //   "position": "CEO",
+      //   "phoneNumber": "+5491112345678"
+      // },
     },
     website: {
       type: DataTypes.STRING,
       validate: {
         isUrl: true,
       },
-    },
-    compreNeuquino: {
-      type: DataTypes.BOOLEAN,
     },
     multimedia: {
       type: DataTypes.ARRAY(DataTypes.JSONB),

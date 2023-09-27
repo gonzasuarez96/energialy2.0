@@ -1,31 +1,28 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  sequelize.define("Finances", {
+  sequelize.define("FinanceProducts", {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
-    financeProduct: {
+    productName: {
       type: DataTypes.ENUM,
       values: [
         "CC en pesos $",
         "CC en dólares u$s",
         "Home Banking",
         "Tarjeta de crédito",
-        "Cheques a terceros",
         "Cheques propios",
+        "Cheques a terceros",
         "E-Cheqs",
-        "COMEX",
-        "Factura crédito electrónica",
+        "Factura de crédito electrónica",
         "Préstamo a sola firma",
         "Préstamo con garantía",
+        "COMEX",
       ],
       allowNull: false,
-    },
-    attachments: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
     },
     status: {
       type: DataTypes.ENUM,
@@ -36,6 +33,9 @@ module.exports = (sequelize) => {
       ],
       defaultValue: "sent",
       allowNull: false,
+    },
+    aditionalData: {
+      type: DataTypes.JSONB,
     },
     isActive: {
       type: DataTypes.BOOLEAN,

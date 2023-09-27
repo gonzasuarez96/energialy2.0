@@ -1,5 +1,14 @@
-const { Companies, Users, Locations, Categories, Subcategories, Tenders, Proposals } = require("../db");
-const { Op } = require("sequelize");
+const {
+  Companies,
+  Users,
+  Locations,
+  Categories,
+  Subcategories,
+  Tenders,
+  Proposals,
+  Documents,
+} = require('../db');
+const { Op } = require('sequelize');
 
 const cleanCompanies = (companies) => {
   if (Array.isArray(companies)) {
@@ -8,9 +17,9 @@ const cleanCompanies = (companies) => {
       name: company.name,
       profilePicture: company.profilePicture,
       bannerPicture: company.bannerPicture,
+      locations: company.Locations,
       categories: company.Categories,
       subcategories: company.Subcategories,
-      locations: company.Locations,
       foundationYear: company.foundationYear,
       annualRevenue: company.annualRevenue,
       employeeCount: company.employeeCount,
@@ -25,9 +34,9 @@ const cleanCompanies = (companies) => {
       description: companies.description,
       profilePicture: companies.profilePicture,
       bannerPicture: companies.bannerPicture,
+      locations: companies.Locations,
       categories: companies.Categories,
       subcategories: companies.Subcategories,
-      locations: companies.Locations,
       foundationYear: companies.foundationYear,
       annualRevenue: companies.annualRevenue,
       employeeCount: companies.employeeCount,
@@ -39,9 +48,8 @@ const cleanCompanies = (companies) => {
       cuit: companies.cuit,
       companyEmail: companies.companyEmail,
       legalManager: companies.legalManager,
-      bankAccountFiles: companies.bankAccountFiles,
-      bankAccountStatus: companies.bankAccountStatus,
-      compreNeuquino: companies.compreNeuquino,
+      documents: companies.Documents,
+      // bankAccount: companies.BankAccounts,
       multimedia: companies.multimedia,
       experience: companies.experience,
       services: companies.services,
@@ -51,7 +59,7 @@ const cleanCompanies = (companies) => {
       users: companies.Users,
       isActive: companies.isActive,
       createdAt: companies.createdAt,
-      updatedAt: companies.updatedAt
+      updatedAt: companies.updatedAt,
     };
     return cleanCompanyDetail;
   }
@@ -59,21 +67,31 @@ const cleanCompanies = (companies) => {
 
 const getAllCompanies = async () => {
   const allCompanies = await Companies.findAll({
-    attributes: ["id", "name", "profilePicture", "bannerPicture", "foundationYear", "annualRevenue", "employeeCount", "organizationType", "isActive"],
+    attributes: [
+      'id',
+      'name',
+      'profilePicture',
+      'bannerPicture',
+      'foundationYear',
+      'annualRevenue',
+      'employeeCount',
+      'organizationType',
+      'isActive',
+    ],
     include: [
       {
+        model: Locations,
+        attributes: ['id', 'name', 'isActive'],
+        through: { attributes: [] },
+      },
+      {
         model: Categories,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId", "isActive"],
-        through: { attributes: [] },
-      },
-      {
-        model: Locations,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'CategoryId', 'isActive'],
         through: { attributes: [] },
       },
     ],
@@ -90,18 +108,18 @@ const filterCompaniesByName = async (name) => {
     },
     include: [
       {
+        model: Locations,
+        attributes: ['id', 'name', 'isActive'],
+        through: { attributes: [] },
+      },
+      {
         model: Categories,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId", "isActive"],
-        through: { attributes: [] },
-      },
-      {
-        model: Locations,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'CategoryId', 'isActive'],
         through: { attributes: [] },
       },
     ],
@@ -114,35 +132,48 @@ const getCompanyById = async (id) => {
     include: [
       {
         model: Users,
-        attributes: ["id", "firstName", "lastName", "email"]
+        attributes: ['id', 'firstName', 'lastName', 'email'],
+      },
+      {
+        model: Locations,
+        attributes: ['id', 'name', 'isActive'],
+        through: { attributes: [] },
       },
       {
         model: Categories,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId", "isActive"],
-        through: { attributes: [] },
-      },
-      {
-        model: Locations,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'CategoryId', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Tenders,
-        attributes: ["id", "title", "description", "majorSector", "budget", "projectDuration", "status","showBudget"],
+        attributes: [
+          'id',
+          'title',
+          'description',
+          'majorSector',
+          'budget',
+          'projectDuration',
+          'status',
+          'showBudget',
+        ],
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
         include: {
           model: Tenders,
-          attributes: ["id", "title", "budget", "status"]
-        }
-      }
+          attributes: ['id', 'title', 'budget', 'status'],
+        },
+      },
+      {
+        model: Documents,
+        attributes: ['id', 'name', 'attachment'],
+      },
     ],
   });
   if (!foundCompany) {
@@ -154,9 +185,33 @@ const getCompanyById = async (id) => {
 };
 
 const createCompany = async (body) => {
-  const { name, description, locations, subcategories, profilePicture, bannerPicture, foundationYear, annualRevenue, employeeCount, cuit, userId } = body;
-  if (!name || !description || !locations || !subcategories || !profilePicture || !bannerPicture || !foundationYear || !annualRevenue || !employeeCount || !cuit || !userId) {
-    const error = new Error("Missing required attributes.");
+  const {
+    name,
+    description,
+    locations,
+    subcategories,
+    profilePicture,
+    bannerPicture,
+    foundationYear,
+    annualRevenue,
+    employeeCount,
+    cuit,
+    userId,
+  } = body;
+  if (
+    !name ||
+    !description ||
+    !locations ||
+    !subcategories ||
+    !profilePicture ||
+    !bannerPicture ||
+    !foundationYear ||
+    !annualRevenue ||
+    !employeeCount ||
+    !cuit ||
+    !userId
+  ) {
+    const error = new Error('Missing required attributes.');
     error.status = 400;
     throw error;
   }
@@ -171,7 +226,9 @@ const createCompany = async (body) => {
   for (const subcategoryId of subcategories) {
     const foundSubcategory = await Subcategories.findByPk(subcategoryId);
     if (!foundSubcategory) {
-      const error = new Error(`Subcategory with id ${subcategoryId} not found.`);
+      const error = new Error(
+        `Subcategory with id ${subcategoryId} not found.`
+      );
       error.status = 404;
       throw error;
     }
@@ -199,31 +256,31 @@ const createCompany = async (body) => {
     include: [
       {
         model: Users,
-        attributes: ["id", "firstName", "lastName", "email"]
+        attributes: ['id', 'firstName', 'lastName', 'email'],
       },
       {
         model: Categories,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId", "isActive"],
+        attributes: ['id', 'name', 'CategoryId', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
         include: {
           model: Tenders,
-          attributes: ["id", "title", "budget", "status"]
-        }
-      }
+          attributes: ['id', 'title', 'budget', 'status'],
+        },
+      },
     ],
   });
   return cleanCompanies(createdCompany);
@@ -257,7 +314,9 @@ const updateCompany = async (id, body) => {
     for (const subcategoryId of subcategories) {
       const foundSubcategory = await Subcategories.findByPk(subcategoryId);
       if (!foundSubcategory) {
-        const error = new Error(`Subcategory with id ${subcategoryId} not found.`);
+        const error = new Error(
+          `Subcategory with id ${subcategoryId} not found.`
+        );
         error.status = 404;
         throw error;
       }
@@ -281,14 +340,18 @@ const updateCompany = async (id, body) => {
     if (foundCompany.Subcategories) {
       for (const subcategory of foundCompany.Subcategories) {
         const foundSubcategory = await Subcategories.findByPk(subcategory.id);
-        const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
+        const foundParentCategory = await Categories.findByPk(
+          foundSubcategory.CategoryId
+        );
         await foundCompany.removeSubcategory(foundSubcategory);
         await foundCompany.removeCategory(foundParentCategory);
       }
     }
     for (const subcategoryId of subcategories) {
       const foundSubcategory = await Subcategories.findByPk(subcategoryId);
-      const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
+      const foundParentCategory = await Categories.findByPk(
+        foundSubcategory.CategoryId
+      );
       await foundCompany.addSubcategory(foundSubcategory);
       await foundCompany.addCategory(foundParentCategory);
     }
@@ -297,31 +360,31 @@ const updateCompany = async (id, body) => {
     include: [
       {
         model: Users,
-        attributes: ["id", "firstName", "lastName", "email"]
+        attributes: ['id', 'firstName', 'lastName', 'email'],
       },
       {
         model: Categories,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId", "isActive"],
+        attributes: ['id', 'name', 'CategoryId', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ["id", "name", "isActive"],
+        attributes: ['id', 'name', 'isActive'],
         through: { attributes: [] },
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
         include: {
           model: Tenders,
-          attributes: ["id", "title", "budget", "status"]
-        }
-      }
+          attributes: ['id', 'title', 'budget', 'status'],
+        },
+      },
     ],
   });
   return cleanCompanies(updatedCompany);
