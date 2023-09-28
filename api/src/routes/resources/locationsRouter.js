@@ -1,16 +1,16 @@
 const { Router } = require('express');
 const {
   getLocationsHandler,
-  getLocationByIDHandler,
+  getLocationByIdHandler,
   createLocationHandler,
   updateLocationHandler,
-  deleteLocationHandler
+  deleteLocationHandler,
 } = require('../../handlers/locationsHandler');
 
 const locationsRouter = Router();
 
 locationsRouter.get('/', getLocationsHandler);
-locationsRouter.get('/:id', getLocationByIDHandler);
+locationsRouter.get('/:id', getLocationByIdHandler);
 locationsRouter.post('/', createLocationHandler);
 locationsRouter.put('/:id', updateLocationHandler);
 locationsRouter.delete('/:id', deleteLocationHandler);
