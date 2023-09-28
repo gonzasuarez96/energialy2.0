@@ -7,6 +7,7 @@ const {
   Tenders,
   Proposals,
   Documents,
+  BankAccounts,
 } = require('../db');
 const { Op } = require('sequelize');
 
@@ -49,7 +50,7 @@ const cleanCompanies = (companies) => {
       companyEmail: companies.companyEmail,
       legalManager: companies.legalManager,
       documents: companies.Documents,
-      // bankAccount: companies.BankAccounts,
+      bankAccount: companies.BankAccount,
       multimedia: companies.multimedia,
       experience: companies.experience,
       services: companies.services,
@@ -173,6 +174,10 @@ const getCompanyById = async (id) => {
       {
         model: Documents,
         attributes: ['id', 'name', 'attachment'],
+      },
+      {
+        model: BankAccounts,
+        attributes: ['id', 'status', 'statusMessage'],
       },
     ],
   });

@@ -13,8 +13,8 @@ const locationsRouter = require('./resources/locationsRouter');
 const tendersRouter = require('./resources/tendersRouter');
 const proposalsRouter = require('./resources/proposalsRouter');
 const documentsRouter = require('./resources/documentsRouter');
-// const bankAccountsRouter = require('./resources/bankAccountsRouter');
-// const financeProductsRouter = require('./resources/financeProductsRouter');
+const bankAccountsRouter = require('./resources/bankAccountsRouter');
+const financeProductsRouter = require('./resources/financeProductsRouter');
 
 const router = Router();
 
@@ -34,7 +34,7 @@ router.use('/locations', locationsRouter);
 router.use('/tenders', tendersRouter);
 router.use('/proposals', proposalsRouter);
 router.use('/documents', documentsRouter);
-// router.use('/bankAccounts', bankAccountsRouter)
-// router.use('/financeProducts', financeProductsRouter)
+router.use('/bankAccounts', bankAccountsRouter);
+router.use('/financeProducts', financeProductsRouter);
 
 module.exports = router;

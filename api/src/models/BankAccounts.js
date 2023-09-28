@@ -1,7 +1,7 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  sequelize.define("BankAccounts", {
+  sequelize.define('BankAccounts', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -9,13 +9,12 @@ module.exports = (sequelize) => {
     },
     status: {
       type: DataTypes.ENUM,
-      values: [
-        "waiting approval",
-        "request changes",
-        "accepted",
-      ],
-      defaultValue: "waiting approval",
+      values: ['waiting approval', 'require changes', 'open'],
+      defaultValue: 'waiting approval',
       allowNull: false,
+    },
+    statusMessage: {
+      type: DataTypes.STRING,
     },
     isActive: {
       type: DataTypes.BOOLEAN,
