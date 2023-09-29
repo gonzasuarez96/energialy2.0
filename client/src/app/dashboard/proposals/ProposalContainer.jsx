@@ -5,12 +5,16 @@ import CardProposal from "@/app/components/CardProposal";
 
 function ProposalContainer({proposals}) {
     const userData = useSelector((state) => state.user.userData);
-    if(userData.id){
-      const userProposals = proposals?.filter((proposal) => proposal.company.id === userData.company.id)
-      return userProposals
-    }else{
-      const userProposals = []
-      return userProposals
+    const userProposals = () => {
+      if (userData.id) {
+        const userProposals = proposals?.filter(
+          (proposal) => proposal.company.id === userData.company.id
+        );
+        return userProposals;
+      } else {
+        const userProposals = [];
+        return userProposals;
+      }
     }
 
   return (
