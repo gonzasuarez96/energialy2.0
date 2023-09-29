@@ -4,9 +4,9 @@ import axios from 'axios'
 async function Propuestas() {
   
   const proposals = await axios.get('http://localhost:3001/proposals')
-  const proposalsData =  proposals.json()
+  const proposalsData =  await proposals.data  
 
-  console.log(proposalsData)
+  //console.log(proposalsData)
   return <ProposalContainer proposals={proposalsData} />;
 }
 
