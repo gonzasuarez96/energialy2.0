@@ -6,6 +6,7 @@ import {
 } from "@/app/components/Toastify";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
+import UploadthingButtonMany from "@/app/components/UploadthingButtonOnly";
 
 export default function pageCredit() {
   const router = useRouter();
@@ -97,7 +98,7 @@ export default function pageCredit() {
   };
 
   return (
-    <main className="flex justify-center items-start w-full h-screen bg-white p-3 shadow">
+    <main className="flex justify-center items-start w-full h-screen bg-white p-3 shadow overflow-y-auto">
       <div className="text-center">
         <h2 className="p-4 border-b-2 border-gray-300 font-bold">
           FINANCIAMIENTO PARA TU FACTURA DE CREDITO ELECTRONICA
@@ -221,6 +222,7 @@ export default function pageCredit() {
               </button>
             </div>
             {error && <div className="text-red-500">{error}</div>}
+        <UploadthingButtonMany />
           </form>
         </div>
       </div>
