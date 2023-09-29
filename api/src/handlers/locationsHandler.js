@@ -1,26 +1,28 @@
 const {
   getAllLocations,
   filterLocationsByName,
-  getLocationByID,
+  getLocationById,
   createLocation,
   updateLocation,
-  deleteLocation
+  deleteLocation,
 } = require('../controllers/locationsController');
 
 const getLocationsHandler = async (req, res) => {
   try {
     const { filter } = req.query;
-    const locations = filter ? await filterLocationsByName(filter) : await getAllLocations();
+    const locations = filter
+      ? await filterLocationsByName(filter)
+      : await getAllLocations();
     res.status(200).json(locations);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
   }
 };
 
-const getLocationByIDHandler = async (req, res) => {
+const getLocationByIdHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const foundLocation = await getLocationByID(id);
+    const foundLocation = await getLocationById(id);
     res.status(200).json(foundLocation);
   } catch (error) {
     res.status(error.status || 500).json({ error: error.message });
@@ -60,8 +62,8 @@ const deleteLocationHandler = async (req, res) => {
 
 module.exports = {
   getLocationsHandler,
-  getLocationByIDHandler,
+  getLocationByIdHandler,
   createLocationHandler,
   updateLocationHandler,
-  deleteLocationHandler
-}
+  deleteLocationHandler,
+};

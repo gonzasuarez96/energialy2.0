@@ -6,34 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setAccessToken, setUserData } from "../redux/features/userSlice";
+import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
 
-//Toastify module for success message
-const displaySuccessMessage = (mensaje) => {
-  toast.success(mensaje, {
-    position: 'top-right',
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-};
-
-// Toastify module for error messages
-const displayFailedMessage = (mensaje) => {
-  toast.error(mensaje, {
-    position: 'top-right',
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-};
 
 export default function Login() {
   const [email, setEmail] = useState("");

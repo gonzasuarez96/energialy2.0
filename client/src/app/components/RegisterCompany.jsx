@@ -6,33 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-// ---------------------- Toastify -------------------------//
-const displaySuccessMessage = (mensaje) => {
-  toast.success(mensaje, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
-};
+import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
 
-const displayFailedMessage = (mensaje) => {
-  toast.error(mensaje, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
-};
-//---------------------------------------------------------------//
 
 const annualRevenueOptions = [
   "No Revelado",
