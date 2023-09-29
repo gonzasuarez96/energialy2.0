@@ -18,8 +18,8 @@ function SideBar() {
   const [isOpen, setIsOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
   const userData = useSelector((state) => state.user.userData )
-  const banner = userData.company.bannerPicture || null;
-  const logo = userData.company.profilePicture || null;
+  // const banner = userData.company.bannerPicture || null;
+  // const logo = userData.company.profilePicture || null;
   //console.log(userData)
 
   const toggle = () => {
@@ -49,11 +49,11 @@ function SideBar() {
       </div>
       {/*Company Data */}
       <div className="flex flex-col items-center justify-center">
-        {banner ? <img className="-z-0" src={banner} alt="bannerProfile"/> : null}
-        {logo ? <img
+        {/* {banner ? <img className="-z-0" src={banner} alt="bannerProfile"/> : null} */}
+        {/* {logo ? <img
           src={logo}
           className={`${isOpen ? "w-[100px]" : "w-[50px] duration-300"}`}
-        />: null}
+        />: null} */}
         
       </div>
       {/*Menu Items*/}
