@@ -80,8 +80,22 @@ const createBankAccount = async (body) => {
     throw error;
   }
   const foundCompany = await Companies.findByPk(companyId, {
-    include: { model: BankAccounts },
+    include: [{ model: Documents }, { model: BankAccounts }],
   });
+  if (
+    !foundCompany.businessName ||
+    !foundCompany.fiscalAdress ||
+    !foundCompany.cuit ||
+    !foundCompany.companyEmail ||
+    !foundCompany.legalManager ||
+    !foundCompany.documents
+  ) {
+    const error = new Error(
+      `Missing required attributes of the company to create a bank account.`
+    );
+    error.status = 400;
+    throw error;
+  }
   if (foundCompany.BankAccount) {
     const error = new Error(
       `Company ${foundCompany.name} already has a bank account.`
