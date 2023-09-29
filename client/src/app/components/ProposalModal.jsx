@@ -16,6 +16,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {useSelector}  from 'react-redux'
+//import UploadthingButton from "./UploadthingButton";
 
 
 
@@ -66,6 +67,10 @@ export function ProposalModal({open, handleOpen, data}) {
     const [serviceAmount, setServiceAmount] = useState(0);
     const [receiverAmount, setReceiverAmount] = useState(0);
 
+    // console.log(data)
+    // console.log(userData)
+    // console.log(proposal)
+
     const createProposal = async (proposal) => {
       try {
         const response = await axios.post(
@@ -108,9 +113,25 @@ export function ProposalModal({open, handleOpen, data}) {
       return { serviceAmount, receiverAmount };
     
     };
+    // const validations = (proposalCompanyId, tenderCompanyId) => {
+    //   if(proposalCompanyId === tenderCompanyId) {
+    //     displayFailedMessage(
+    //       "No puede presentar propuestas a su propia Empresa"
+    //     );
+    //   }else{
+    //     return 
+    //   }
+
+    // }
+
+    // const handleSave = async (e) => {
+    //   console.log(e)
+    //   setProposal(...proposal, { proposalState: "save" });
+    //   console.log(proposal);
+    // }
 
     const handleSubmit = async (e) => {
-        
+      
         e.preventDefault();
         createProposal(proposal);
     }
@@ -155,12 +176,12 @@ export function ProposalModal({open, handleOpen, data}) {
                   Una vez enviada, no podrá ser modificada
                 </span>
               </Typography>
-              <Typography
+              {/* <Typography
                 variant="small"
                 className="mb-4 text-green-700  text-xs font-bold"
               >
                 Puedes guardar tu propuesta antes de enviarla.{" "}
-              </Typography>
+              </Typography> */}
             </div>
             <div className="flex flex-col gap-4">
               <span class="inline-block whitespace-nowrap rounded-[0.27rem] bg-info-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-info-800">
@@ -240,6 +261,7 @@ export function ProposalModal({open, handleOpen, data}) {
                   setProposal({ ...proposal, description: e.target.value })
                 }
               ></textarea>
+            {/* <UploadthingButton/> */}
             </div>
           </CardBody>
           <CardFooter className="pt-0">
@@ -247,7 +269,9 @@ export function ProposalModal({open, handleOpen, data}) {
               <Button className="bg-green-700" onClick={handleSubmit}>
                 Enviar
               </Button>
-              <Button className="bg-green-600">Guardar</Button>
+              {/* <Button className="bg-green-600" onClick={handleSave}>
+                Guardar
+              </Button> */}
               <Button className="bg-red-700" onClick={handleOpen}>
                 Cancelar
               </Button>

@@ -16,6 +16,11 @@ const tendersReducer = createSlice({
         comp.name.toLowerCase().includes(action.payload.toLowerCase())
       );
     },
+    filterTendersByCompanyId: (state, action)=> {
+      if(action.payload === tenders.company.Id) {
+        state.filterTenders = state.tenders.filter((comp) => action.payload !== comp.company.id)
+      }
+    },
     fiterTendersByLocation: (state, action) => {
       if (action.payload.length === 0) {
         state.filterTenders = [...state.tenders];
@@ -46,5 +51,6 @@ export const {
   fiterTendersByLocation,
   filterTendersByCategorie,
   filterTendersBySubcategorie,
+  filterTendersByCompanyId,
 } = tendersReducer.actions;
 export default tendersReducer.reducer;
