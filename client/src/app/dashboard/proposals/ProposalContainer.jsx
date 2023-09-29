@@ -6,7 +6,7 @@ import CardProposal from "@/app/components/CardProposal";
 function ProposalContainer({proposals}) {
     const userData = useSelector((state) => state.user.userData);
 
-    const userProposals = proposals.filter((proposal) => proposal.company.id === userData.company.id)
+    const userProposals = proposals?.filter((proposal) => proposal.company.id === userData.company.id)
 
   return (
     <div className="px-5">
