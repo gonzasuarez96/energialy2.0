@@ -6,8 +6,6 @@ function Propuestas() {
   
   const {data:proposals, isLoading} = useGetProposalsQuery()
   
-  console.log(proposals)
-  
   return (
     <>
       {isLoading ? (

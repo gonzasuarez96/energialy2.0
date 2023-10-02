@@ -6,9 +6,9 @@ import { use } from "react";
 
 function ProposalContainer({proposals}) {
 
-console.log(proposals)
+
 const userData = useSelector((state) => state.user.userData);
-console.log(userData)
+
 const createUserProposals = () => {
       if (userData.id) {
         const userProposals = proposals?.filter(
@@ -21,7 +21,7 @@ const createUserProposals = () => {
       }
     }
   const userProposals = createUserProposals();
-console.log(userProposals)
+
   return (
     <div className="px-5">
       <h2 className="text-2xl font-bold mb-3">Mis propuestas</h2>
