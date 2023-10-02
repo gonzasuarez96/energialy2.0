@@ -1,14 +1,23 @@
+'use client'
 import ProposalContainer from '@/app/dashboard/proposals/ProposalContainer'
-import axios from 'axios'
+import { useGetProposalsQuery } from '@/app/redux/services/ProposalApi'
 
-async function Propuestas() {
+function Propuestas() {
   
-  // const proposals = await axios.get('http://localhost:3001/proposals')
-  // const proposalsData =  await proposals.data  
-
-  //console.log(proposalsData)
-  //return <ProposalContainer proposals={proposalsData} />;
-  return <h1>Propuestas</h1>
+  const {data:proposals, isLoading} = useGetProposalsQuery()
+  
+  console.log(proposals)
+  
+  return (
+    <>
+      {isLoading ? (
+        <h1>"Loading..."</h1>
+      ) : (
+        <ProposalContainer proposals={proposals} />
+      )}
+    </>
+  );
+  //return <h1>Propuestas</h1>
 }
 
 export default Propuestas
