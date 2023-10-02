@@ -2,10 +2,14 @@
 
 import { useSelector } from "react-redux"
 import CardProposal from "@/app/components/CardProposal";
+import { use } from "react";
 
 function ProposalContainer({proposals}) {
-    const userData = useSelector((state) => state.user.userData);
-    const userProposals = () => {
+
+
+const userData = useSelector((state) => state.user.userData);
+
+const createUserProposals = () => {
       if (userData.id) {
         const userProposals = proposals?.filter(
           (proposal) => proposal.company.id === userData.company.id
@@ -16,6 +20,7 @@ function ProposalContainer({proposals}) {
         return userProposals;
       }
     }
+  const userProposals = createUserProposals();
 
   return (
     <div className="px-5">
