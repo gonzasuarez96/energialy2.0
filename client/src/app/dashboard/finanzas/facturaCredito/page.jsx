@@ -7,6 +7,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import UploadthingButtonMany from "@/app/components/UploadthingButtonOnly";
+import axios from 'axios'
 
 export default function pageCredit() {
   const router = useRouter();
@@ -82,7 +83,7 @@ export default function pageCredit() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/credit",
+        "http://localhost:3001/financeProducts",
         creditData
       );
       console.log("Información enviada:", creditData);
