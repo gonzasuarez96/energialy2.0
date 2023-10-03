@@ -9,8 +9,8 @@ const cleanBankAccounts = (bankAccounts) => {
   if (Array.isArray(bankAccounts)) {
     const cleanBankAccountsArray = bankAccounts.map((bankAccount) => ({
       id: bankAccount.id,
-      name: bankAccount.name,
-      attachment: bankAccount.attachment,
+      status: bankAccount.status,
+      statusMessage: bankAccount.statusMessage,
       company: bankAccount.Company,
       isActive: bankAccount.isActive,
     }));
@@ -121,7 +121,7 @@ const createBankAccount = async (body) => {
       include: { model: Documents, attributes: ['name', 'attachment'] },
     },
   });
-  return foundNewBankAccount;
+  return cleanBankAccounts(foundNewBankAccount);
 };
 
 const updateBankAccount = async (id, body) => {
@@ -175,6 +175,10 @@ const deleteBankAccount = async (id) => {
   await foundBankAccount.destroy();
   const remainingBankAccounts = await BankAccounts.findAll({
     attributes: { exclude: ['createdAt', 'updatedAt'] },
+    include: {
+      model: Companies,
+      attributes: ['id', 'name', 'profilePicture'],
+    },
   });
   return cleanBankAccounts(remainingBankAccounts);
 };
