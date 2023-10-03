@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useSelector } from "react-redux/es/hooks/useSelector";
+import { useSelector } from "react-redux";
 import axios from "axios";
 import { displayFailedMessage, displaySuccessMessage } from "@/app/components/Toastify";
 import { ToastContainer} from "react-toastify";

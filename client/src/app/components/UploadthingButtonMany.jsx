@@ -50,7 +50,7 @@ export default function UploadthingButtonMany({onFilesUpload}) {
   );
 
   return (
-    <main className="flex flex-col items-center justify-start p-24">
+    <main className="flex flex-col items-center justify-center">
       <UploadButton
         endpoint="pdfUploader"
         onClientUploadComplete={(res) => {
@@ -63,6 +63,7 @@ export default function UploadthingButtonMany({onFilesUpload}) {
               fileUrl: file.fileUrl
             }))
             handleFiles(cleanRes);
+            setAttachments(cleanRes);
           }
           // alert("Upload Completed");
         }}

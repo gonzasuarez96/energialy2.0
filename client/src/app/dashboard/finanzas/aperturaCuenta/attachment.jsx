@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import UploadthingButtonOnly from "@/app/components/UploadthingButtonOnly";
+import UploadthingButtonMany from "@/app/components/UploadthingButtonMany";
 import axios from "axios";
-import { useSelector } from "react-redux/es/hooks/useSelector";
+import { useSelector } from "react-redux";
 
 export default function Attachment(props) {
   const [files, setFiles] = useState({
@@ -122,7 +122,7 @@ export default function Attachment(props) {
               {field.label}
             </label>
             <div className="ml-4 p-2">
-              <UploadthingButtonOnly onFilesUpload={field.value} />
+              <UploadthingButtonMany onFilesUpload={field.value} />
             </div>
           </div>
         ))}
