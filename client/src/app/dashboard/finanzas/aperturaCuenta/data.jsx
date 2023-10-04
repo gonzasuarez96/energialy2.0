@@ -10,7 +10,7 @@ export default function Data(props) {
   const [envioExitoso, setEnvioExitoso] = useState(false);
   const [error, setError] = useState("");
   const [businessName, setBusinessName] = useState("");
-  const [fiscalAddress, setFiscalAddress] = useState("");
+  const [fiscalAdress, setFiscalAdress] = useState("");
   const [cuit, setCuit] = useState("");
   const [companyEmail, setCompanyEmail] = useState("");
   const [legalManager, setLegalManager] = useState({
@@ -35,8 +35,8 @@ export default function Data(props) {
         case "businessName":
           setBusinessName(value);
           break;
-        case "fiscalAddress":
-          setFiscalAddress(value);
+        case "fiscalAdress":
+          setFiscalAdress(value);
           break;
         case "cuit":
           setCuit(value);
@@ -55,14 +55,14 @@ export default function Data(props) {
 
     const accountData = {
       businessName,
-      fiscalAddress,
+      fiscalAdress,
       cuit,
       companyEmail,
       legalManager,
     };
     if (
       !businessName ||
-      !fiscalAddress ||
+      !fiscalAdress ||
       !cuit ||
       !companyEmail ||
       !legalManager
@@ -113,8 +113,8 @@ export default function Data(props) {
             <div className="mt-4 text-left">
               <input
                 type="text"
-                id="fiscalAddress"
-                value={fiscalAddress}
+                id="fiscalAdress"
+                value={fiscalAdress}
                 placeholder="Dirección Fiscal"
                 onChange={handleChange}
                 className="w-full px-3 py-3 font-bold text-lg border"
