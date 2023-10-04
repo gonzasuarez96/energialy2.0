@@ -1,5 +1,9 @@
 import { BankCard } from "@/app/components/CardBankDashboard"
-import { SortableTable } from "@/app/components/Table"
+import { SortableTable } from "@/app/components/TableFinanceProducts";
+import {financeProducts } from "@/app/dashboard/bank/financialProducts/data"
+
+
+
 
 const testingData = [
   {
@@ -17,7 +21,11 @@ const testingData = [
 ];
 
 
+
 function BankDashboard() {
+
+  
+  
   return (
     <>
       <div className="flex w-full gap-4 justify-evenly mb-4">
@@ -25,7 +33,7 @@ function BankDashboard() {
             <BankCard key={item.title} data={item} />
         ))}
       </div>
-      <SortableTable />
+      <SortableTable data={financeProducts}/>
     </>
   );
 }

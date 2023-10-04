@@ -7,15 +7,15 @@ import { useGetBankAccountQuery } from "@/app/redux/services/bankAccountApi";
 const testingData = [
   {
     title: "Solicitados",
-    quantity: 5,
+    quantity: 1,
   },
   {
     title: "Aprobados",
-    quantity: 15,
+    quantity: 1,
   },
   {
     title: "En revisión",
-    quantity: 4,
+    quantity: 0,
   },
 ];
 
@@ -59,10 +59,10 @@ function BankDashboard() {
   return (
     <>
       <div className="flex w-full gap-4 justify-evenly mb-4">
-        {isLoading ? <p>Cargando...</p> : <p>Hola</p>
-        // statusAccounts.map((item) => (
-        //   <BankCard key={item.title} data={item} />
-        // ))
+        {isLoading ? <p>Cargando...</p> : 
+        testingData.map((item) => (
+          <BankCard key={item.title} data={item} />
+        ))
         }
       </div>
       <SortableTableAccount  data={bankAccounts} isLoading={isLoading}/>
