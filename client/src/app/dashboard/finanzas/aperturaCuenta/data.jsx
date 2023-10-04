@@ -1,8 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { displayFailedMessage, displaySuccessMessage } from "@/app/components/Toastify";
+import { ToastContainer} from "react-toastify";
 
 export default function Data(props) {
   // Estados Locales
+  const [envioExitoso, setEnvioExitoso] = useState(false);
+  const [error, setError] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [fiscalAddress, setFiscalAddress] = useState("");
   const [cuit, setCuit] = useState("");
@@ -14,6 +20,7 @@ export default function Data(props) {
     position: "",
     phoneNumber: "",
   });
+  const companyId = useSelector((state) => state.user.userData.company.id);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -43,7 +50,7 @@ export default function Data(props) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const accountData = {
@@ -53,9 +60,32 @@ export default function Data(props) {
       companyEmail,
       legalManager,
     };
+    if (
+      !businessName ||
+      !fiscalAddress ||
+      !cuit ||
+      !companyEmail ||
+      !legalManager
+    ) {
+      setError("Completa todos los campos");
+      return;
+    } else {
+      setError("");
+    }
 
     console.log("Información enviada:", accountData);
-    // Agregar aquí la lógica para enviar los datos al servidor
+    try {
+      const res = await axios.put(
+        `http://localhost:3001/companies/${companyId}`,
+        accountData
+      );
+      console.log("resData server:", res);
+      setEnvioExitoso(true);
+      displaySuccessMessage('Datos enviados con exito')
+    } catch (error) {
+      console.log("errorData:", error);
+      displayFailedMessage(error.response.data.error);
+    }
   };
 
   return (
@@ -64,6 +94,7 @@ export default function Data(props) {
         <h2 className="p-4 border-b-2 border-gray-300 font-bold">
           Solicitud de Apertura de Cuenta
         </h2>
+
         <div>
           <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
             Tu Empresa
@@ -173,17 +204,34 @@ export default function Data(props) {
             </div>
           </div>
           <div className="flex justify-center">
+            {!envioExitoso && (
             <button
               className="px-4 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
               type="button"
-              onClick={props.handleNext}
+              onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
             >
-              Siguiente
+              Enviar
             </button>
+            )}
+            {envioExitoso && (
+              <button
+                className="px-4 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
+                type="button"
+                onClick={props.handleNext}
+              >
+                Siguiente
+              </button>
+            )}
           </div>
+          {error && (
+            <div className="flex justify-center text-danger mt-2 mb-2">
+              {error}
+            </div>
+          )}
         </div>
       </div>
       {/* ToastContainer y UploadthingButton van aquí si es necesario */}
+      <ToastContainer style={{ marginTop: "100px" }} />
     </main>
   );
 }

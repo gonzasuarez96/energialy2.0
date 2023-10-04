@@ -5,11 +5,28 @@ import "@uploadthing/react/styles.css";
 
 import { UploadButton } from "@uploadthing/react";
 import { useState } from "react";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import axios from 'axios';
 
 import Link from "next/link";
 
-export default function UploadthingButtonMany() {
+export default function UploadthingButtonMany({onFilesUpload}) {
   const [attachments, setAttachments] = useState([]);
+  const companyId = useSelector((state) => state.user.userData.company.id);
+
+  const handleFiles = async (cleanRes) => {
+    console.log('props:',onFilesUpload)
+    try {
+      const res = await axios.post("http://localhost:3001/documents", {
+        name: onFilesUpload,
+        attachment: cleanRes[0],
+        companyId: companyId,
+      });
+      console.log('res del servidor:',res.data)
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const title = attachments.length ? (
     <>
@@ -33,7 +50,7 @@ export default function UploadthingButtonMany() {
   );
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start p-24">
+    <main className="flex flex-col items-center justify-center">
       <UploadButton
         endpoint="pdfUploader"
         onClientUploadComplete={(res) => {
@@ -45,6 +62,7 @@ export default function UploadthingButtonMany() {
               fileKey: file.fileKey,
               fileUrl: file.fileUrl
             }))
+            handleFiles(cleanRes);
             setAttachments(cleanRes);
           }
           // alert("Upload Completed");
