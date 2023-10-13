@@ -17,9 +17,11 @@ import Select from "react-select"
 import { useState } from "react";
 
 
+
 function CreateTenderForm() {
 
   //fetch states
+  const userData = useSelector((state) => state.user.userData);
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: locations, isLoading: loadingLocations } = useGetLocationsQuery();
   //local states
@@ -33,11 +35,12 @@ function CreateTenderForm() {
     projectDuration: "",
     validityDate:"",
     locationId:"",
-    subcategories:"",
-    companyId:"",
+    subcategories:'',
+    companyId: userData.company.id,
   });
   const [categorieSelected, setCategorieSelected] = useState([]);
   const [subCatSelected, setSubCatSelected] = useState([]);
+  console.log(subCatSelected)
   const [isPrivateCheqed, setIsPrivateCheqed] = useState(false);
   const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
 
@@ -48,15 +51,16 @@ function CreateTenderForm() {
       (cat) => cat.id === e.value
     ).subcategories;
     setSubCatSelected(
-      subcategories.map((subcat) => ({ label: subcat.name, value: subcat.id }))
+      subcategories.map((subcat) => ({ name: subcat.name, value: subcat.id }))
     );
     
     setCategorieSelected(e);
   };
   const handleSubcategorieChange = (e) => {
-   
    setSubCatSelected(e)
+   
   };
+
   const handlePrivateChange = (e) => {
     if(isPrivateCheqed === false){
       setIsPrivateCheqed(true)
@@ -116,14 +120,21 @@ function CreateTenderForm() {
                 onChange={handleInputsChanges}
               />
               <div className="md:flex md:gap-3">
-                <select className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500">
+                <select
+                  className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500"
+                  onChange={handleInputsChanges}
+                  name="contractType"
+                >
                   <option>TIPO DE CONTRATACIÓN</option>
-
                   {tendersTypes.map((type) => (
                     <option>{type}</option>
                   ))}
                 </select>
-                <select className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500">
+                <select
+                  className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500"
+                  name="projectDuration"
+                  onChange={handleInputsChanges}
+                >
                   <option>DURACIÓN DE LA LICITACIÓN</option>
                   {duration.map((d) => (
                     <option>{d}</option>
@@ -131,17 +142,24 @@ function CreateTenderForm() {
                 </select>
               </div>
               <div className="md:flex md:gap-3">
-                <select className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500">
+                <select
+                  className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500"
+                  name="majorSector"
+                  onChange={handleInputsChanges}
+                >
                   <option>ETAPA</option>
-
                   {etapa.map((e) => (
                     <option>{e}</option>
                   ))}
                 </select>
-                <select className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500" >
+                <select
+                  className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500"
+                  name="showBudget"
+                  onChange={handleInputsChanges}
+                >
                   <option>¿PRESUPUESTO PÚBLICO?</option>
-                  <option>MOSTRAR</option>
-                  <option>NO MOSTRAR</option>
+                  <option value={true}>MOSTRAR</option>
+                  <option value={false}>NO MOSTRAR</option>
                 </select>
               </div>
               <div className="md:flex md:gap-3">
@@ -154,7 +172,12 @@ function CreateTenderForm() {
                 />
                 <div className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500 flex justify-between">
                   <label htmlFor="">Fecha límite para enviar Propuestas</label>
-                  <input className="focus:border-none" type="date" />
+                  <input
+                    className="focus:border-none"
+                    type="date"
+                    name="validityDate"
+                    onChange={handleInputsChanges}
+                  />
                 </div>
               </div>
             </div>
@@ -187,7 +210,8 @@ function CreateTenderForm() {
               {categoriesLoading && "Loading..."}
               <Select
                 options={subCatSelected}
-                onChange={handleSubcategorieChange}
+                onChange={handleInputsChanges}
+                name="subcategories"
                 placeholder="SUBCATEGORIA"
               />
             </div>

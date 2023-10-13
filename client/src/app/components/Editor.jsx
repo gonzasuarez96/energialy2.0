@@ -6,7 +6,10 @@ export default function EditorForm() {
   const editorRef = useRef(null);
   const log = () => {
     if (editorRef.current) {
+      const dataForm = editorRef.current.getContent()
+      console.log(dataForm)
       console.log(editorRef.current.getContent());
+      console.log(editorRef.current)
     }
   };
   return (
@@ -14,7 +17,7 @@ export default function EditorForm() {
       <Editor
         apiKey="pmg6n3xmbax2fb5hniqqejytfu1w1v0xszyln6rwlgy3yo2e"
         onInit={(evt, editor) => (editorRef.current = editor)}
-        initialValue="<p>Realiza una descripción del alcance de la Licitación.</p>"
+        initialValue="<h2>Alcance de la Licitación:</h2></br></br></br></br></br><h2>Requisitos:</h2>"
         init={{
           height: 500,
           menubar: false,
@@ -47,7 +50,12 @@ export default function EditorForm() {
             "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
         }}
       />
-      <button className="bg-primary-500 text-white p-2 rounded-sm font-semibold" onClick={log}>Guardar</button>
+      <button
+        className="bg-primary-500 text-white p-2 rounded-sm font-semibold"
+        onClick={log}
+      >
+        Guardar
+      </button>
     </>
   );
 }

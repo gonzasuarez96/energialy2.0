@@ -7,32 +7,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
+import { annualRevenueOptions, employeeCountOptions, organizationTypes} from '@/app/data/dataGeneric'
+import {handleCategoryChange, handleSubcategoryChange} from '@/app/Func/handlers'
+//import { useGetLocationsQuery } from "../redux/services/locationApi";
 
-
-const annualRevenueOptions = [
-  "No Revelado",
-  "0 - 10M U$S",
-  "10M - 100M U$D",
-  "100M - 1B U$S",
-  "+1B U$S",
-];
-
-const employeeCountOptions = [
-  "Menos de 50 empleados",
-  "De 50 a 200 empleados",
-  "De 200 a 1000 empleados",
-  "De 1000 a 5000 empleados",
-  "Mas de 5000 empleados",
-];
-
-const organizationTypes = [
-  "Organismo Público",
-  "Operadora",
-  "PyME",
-  "Cámara/Cluster/Federación",
-  "Profesional independiente",
-  "Servicios especiales",
-];
 
 const stepsForm = ["01", "02", "03", "04"];
 
@@ -54,6 +32,7 @@ export default function RegisterCompany() {
   const [organizationType, setOrganizationType] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
 
+
   //-------------- Funciones para traer las opciones del form --------------//
   const [locationsOptions, setLocationsOptions] = useState([]);
   const [subcategoriesOptions, setSubcategoriesOptions] = useState([]);
@@ -66,6 +45,8 @@ export default function RegisterCompany() {
     step4: "",
   });
   
+  //const { data: locations, isLoading } = useGetLocationsQuery();
+
 
   const getLocation = async () => {
     try {
@@ -81,6 +62,8 @@ export default function RegisterCompany() {
       throw error;
     }
   };
+
+  
 
   const getCategories = async () => {
     try {
