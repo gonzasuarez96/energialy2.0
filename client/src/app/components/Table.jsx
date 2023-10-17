@@ -163,15 +163,20 @@ export function SortableTableAccount({data, isLoading}) {
 
                         <td className={classes}>
                           <Tooltip content="Ver Adjuntos">
-                            <IconButton variant="text" onClick={()=> handleOpen(id)}>
+                            <IconButton
+                              variant="text"
+                              onClick={() => handleOpen(id)}
+                            >
                               <DocumentMagnifyingGlassIcon className="h-4 w-4 text-blue-700" />
                             </IconButton>
                           </Tooltip>
+                          {/*crear handler para realizar put a /account modificando el state */}
                           <Tooltip content="Aprobar solicitud">
                             <IconButton variant="text">
                               <CheckCircleIcon className="h-4 w-4 text-green-700" />
                             </IconButton>
                           </Tooltip>
+                          {/*crear handler para realizar put a /account modificando el state */}
                           <Tooltip content="Solicitar Revisión">
                             <IconButton variant="text">
                               <EyeIcon className="h-4 w-4 text-red-700" />

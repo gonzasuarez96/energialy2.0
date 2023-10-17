@@ -2,7 +2,7 @@
 import React, { useRef } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
-export default function EditorForm() {
+export default function EditorForm({dataSet}) {
   const editorRef = useRef(null);
   const log = () => {
     if (editorRef.current) {
@@ -10,6 +10,7 @@ export default function EditorForm() {
       console.log(dataForm)
       console.log(editorRef.current.getContent());
       console.log(editorRef.current)
+      dataSet(dataForm)
     }
   };
   return (

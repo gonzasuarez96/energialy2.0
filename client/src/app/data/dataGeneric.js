@@ -22,3 +22,19 @@ export const organizationTypes = [
   "Profesional independiente",
   "Servicios especiales",
 ];
+
+export const tendersTypes = [
+  "Licitación área (Licitación pública de área)",
+  "Servicio completo (Desarrollo total de un proyecto)",
+  "Individual (Servicio específico en un proyecto)",
+];
+
+export const duration = [
+  "Menos de una semana",
+  "Menos de un mes",
+  "De 1 a 3 meses",
+  "De 3 a 6 meses",
+  "Más de 6 meses",
+]
+
+export const etapa = ["Upstream", "Midstream", "Downstream"];

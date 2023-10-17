@@ -5,6 +5,9 @@ import PaginationComp from "./Pagination";
 import { useRouter } from "next/navigation";
 // Initialization for ES Users
 
+function FormattedString({ content }) {
+  return <div dangerouslySetInnerHTML={{__html: content}}></div>;
+}
 
 const CardTender = ({item}) => {
   const router = useRouter();
@@ -28,9 +31,10 @@ const CardTender = ({item}) => {
         <h5 class="mb-2 text-xl font-semibold leading-tight text-neutral-800 dark:text-neutral-50">
           {item.title}
         </h5>
-        <p class="mb-4 text-base font-medium text-neutral-600 dark:text-neutral-200">
+        <FormattedString content={item.description} />
+        {/* <p class="mb-4 text-base font-medium text-neutral-600 dark:text-neutral-200">
           {item.description}
-        </p>
+        </p> */}
         <div className="w-full mb-3 flex justify-start gap-3">
           {item.subcategories.map((sub) => (
             <span class="inline-block whitespace-nowrap rounded-full bg-neutral-200 p-3   text-center align-baseline text-[0.70em] font-bold leading-none text-neutral-600">
