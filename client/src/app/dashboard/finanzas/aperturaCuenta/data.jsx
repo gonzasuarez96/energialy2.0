@@ -20,7 +20,7 @@ export default function Data(props) {
     position: "",
     phoneNumber: "",
   });
-  const companyId = useSelector((state) => state.user.userData.company.id);
+  //const companyId = useSelector((state) => state.user.userData.company.id);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -52,7 +52,7 @@ export default function Data(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const companyId = useSelector((state) => state.user.userData.company.id);
     const accountData = {
       businessName,
       fiscalAdress,
