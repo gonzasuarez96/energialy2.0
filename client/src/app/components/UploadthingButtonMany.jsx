@@ -12,10 +12,11 @@ import Link from "next/link";
 
 export default function UploadthingButtonMany({onFilesUpload}) {
   const [attachments, setAttachments] = useState([]);
-  const companyId = useSelector((state) => state.user.userData.company.id);
+  //const companyId = useSelector((state) => state.user.userData.company.id);
 
   const handleFiles = async (cleanRes) => {
     console.log('props:',onFilesUpload)
+    const companyId = useSelector((state) => state.user.userData.company.id);
     try {
       const res = await axios.post("http://localhost:3001/documents", {
         name: onFilesUpload,
