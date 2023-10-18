@@ -17,6 +17,10 @@ import Select from "react-select"
 import { useState } from "react";
 import { duration, etapa, tendersTypes } from "@/app/data/dataGeneric";
 import axios from "axios";
+import {displayFailedMessage, displaySuccessMessage} from '@/app/components/Toastify'
+import ErrorMensage from "@/app/components/ErrorMensage";
+import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 
 
@@ -27,6 +31,7 @@ function CreateTenderForm() {
   const userData = useSelector((state) => state.user.userData);
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: locations, isLoading: loadingLocations } = useGetLocationsQuery();
+  const router = useRouter();
   //local states
   const [tenderData, setTenderData] = useState({
     title: "",
@@ -40,6 +45,18 @@ function CreateTenderForm() {
     locationId:"",
     subcategories:[],
     companyId: userData.company.id,
+  });
+  const [inputError, setInputError] = useState({
+    title: "",
+    description: "",
+    contractType: "",
+    budget: '',
+    majorSector: "",
+    projectDuration: "",
+    validityDate: "",
+    locationId: "",
+    subcategories: '',
+    
   });
   const [categorieSelected, setCategorieSelected] = useState([]);
   const [subCatSelected, setSubCatSelected] = useState([]);
@@ -102,50 +119,67 @@ function CreateTenderForm() {
   }
 
   const validation = (tenderData) => {
-    if (tenderData.title === "") {
-      console.log("El titulo de la Licitación no puede estar vacío")
-      return false;
-    }else if(tenderData.description === ""){
-      console.log("La Lictación debe tener una descripción");
-      return false;
-    }else if(tenderData.contractType === ""){
-      console.log("Espesifique el Tipo de Contrato");
-      return false;
-    }else if(tenderData.majorSector === ""){
-      console.log("Espesifique el Tipo de Sector");
-      return false;
-    }else if(tenderData.projectDuration === ""){
-      console.log("Espesifique la duración del proyecto");
-      return false;
-    }else if(tenderData.validityDate === ""){
-      console.log("Espesifique la fecha límite para enviar propuestas");
-      return false;
-    }else if(tenderData.locationId === ""){
-      console.log("Espesifique la ubicación del proyecto");
-      return false;
-    }else if(tenderData.subcategories.length === 0){
-      console.log("Espesifique las subcategorias del proyecto");
-      return false;
-    }else if(tenderData.budget === 0){
-      console.log("Espesifique el presupuesto del proyecto");
-      return false;
+    console.log("entro acá") 
+    console.log(tenderData)
+    const errors = {};
+
+    if(tenderData.title === ""){
+      errors.title = "El titulo de la Licitación no puede estar vacío"
     }
-    return true;
+    if (tenderData.description === "") {
+      errors.description = "La Licitación debe tener una descripción"
+    }
+    if(tenderData.contractType === ""){
+     errors.contractType= "El tipo de contrato es requerido"
+    }
+    if(tenderData.majorSector === ""){
+      errors.majorSector= "El sector es requerido"
+    }
+    if(tenderData.projectDuration === ""){
+      errors.projectDuration= "La duración del proyecto es requerida"
+    }
+    if(tenderData.validityDate === ""){
+      errors.validityDate= "La fecha límite para enviar propuestas es requerida"
+    }
+    if(tenderData.locationId === ""){
+      errors.locationId= "La ubicación del proyecto es requerida"
+    }
+    if(tenderData.subcategories.length === 0){
+      errors.subcategories= "Las subcategorias del proyecto son requeridas"
+    }
+    if(tenderData.budget === 0){
+      errors.budget= "El presupuesto del proyecto es requerido"
+    }
+
+    setInputError(errors);
+    return Object.keys(errors).length === 0;
+  
   }
 
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validation(tenderData) === false) {
-      return console.log("Error en el formulario");
-    } else {
-      const tender = await axios.post(
-        "http://localhost:3001/tenders",
-        tenderData
-      );
-      console.log(tender);
-    }
+   const hasErrors = !validation(tenderData);
+
+   if (!hasErrors) {
+     try {
+       const tender = await axios.post(
+         "http://localhost:3001/tenders",
+         tenderData
+       );
+       displaySuccessMessage("Licitación creada con éxito");
+       setTimeout(() => router.back(), 2000);
+     } catch (error) {
+       displayFailedMessage(error.response.data.error);
+     }
+     
+   }
+    
+    
+      
+      // //console.log(tender);
+    
   };
   
 
@@ -178,6 +212,9 @@ function CreateTenderForm() {
                 name="title"
                 onChange={handleInputsChanges}
               />
+              {inputError.title !== "" ? (
+                <ErrorMensage message={inputError.title} />
+              ) : null}
               <div className="md:flex md:gap-3">
                 <select
                   className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500"
@@ -189,6 +226,9 @@ function CreateTenderForm() {
                     <option>{type}</option>
                   ))}
                 </select>
+                {inputError.contractType !== "" ? (
+                  <ErrorMensage message={inputError.contractType} />
+                ) : null}
                 <select
                   className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500"
                   name="projectDuration"
@@ -199,6 +239,9 @@ function CreateTenderForm() {
                     <option>{d}</option>
                   ))}
                 </select>
+                {inputError.projectDuration !== "" ? (
+                  <ErrorMensage message={inputError.projectDuration} />
+                ) : null}
               </div>
               <div className="md:flex md:gap-3">
                 <select
@@ -211,6 +254,9 @@ function CreateTenderForm() {
                     <option>{e}</option>
                   ))}
                 </select>
+                {inputError.majorSector !== "" ? (
+                  <ErrorMensage message={inputError.majorSector} />
+                ) : null}
                 <div className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500 flex justify-between">
                   <label htmlFor="">Fecha límite para enviar Propuestas</label>
                   <input
@@ -219,6 +265,9 @@ function CreateTenderForm() {
                     name="validityDate"
                     onChange={handleInputsChanges}
                   />
+                  {inputError.validityDate !== "" ? (
+                    <ErrorMensage message={inputError.validityDate} />
+                  ) : null}
                 </div>
               </div>
               <div className="md:flex md:gap-3">
@@ -229,8 +278,10 @@ function CreateTenderForm() {
                   onChange={handleInputsChanges}
                   placeholder="Presupuesto en U$S"
                 />
+                {inputError.budget !== "" ? (
+                  <ErrorMensage message={inputError.budget} />
+                ) : null}
               </div>
-              
             </div>
             <div className="flex flex-col gap-4 mt-4">
               <div className="border-l-4 border-primary-600 flex justify-between">
@@ -293,6 +344,9 @@ function CreateTenderForm() {
                 placeholder="SUBCATEGORIA"
                 onChange={handleSubcategorieChange}
               />
+              {inputError.subcategories !== "" ? (
+                <ErrorMensage message={inputError.subcategories} />
+              ) : null}
             </div>
           </div>
           {/*Editor Data*/}
@@ -304,6 +358,9 @@ function CreateTenderForm() {
             </div>
             <div className="ml-5 flex flex-col gap-2">
               <EditorForm dataSet={handleDescriptionChange} />
+              {inputError.description !== "" ? (
+                <ErrorMensage message={inputError.description} />
+              ) : null}
             </div>
           </div>
           {/*Location Data*/}
@@ -323,6 +380,9 @@ function CreateTenderForm() {
                 placeholder="SELECCIONAR UBICACIÓN"
                 onChange={handleChangeLocation}
               />
+              {inputError.locationId !== "" ? (
+                <ErrorMensage message={inputError.locationId} />
+              ) : null}
               <input
                 className="w-full border-1 border-gray-300 rounded-md p-3"
                 type="text"
@@ -376,8 +436,14 @@ function CreateTenderForm() {
               </div>
             </div>
           </div>
-          <button className="bg-primary-600 text-white font-semibold rounded-md p-2 mt-4" onClick={handleSubmit}>Crear Licitación</button>
+          <button
+            className="bg-primary-600 text-white font-semibold rounded-md p-2 mt-4"
+            onClick={handleSubmit}
+          >
+            Crear Licitación
+          </button>
         </Card>
+        <ToastContainer style={{ marginTop: "100px" }} />
       </FormGroup>
     </>
   );
