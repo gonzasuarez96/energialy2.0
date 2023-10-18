@@ -24,7 +24,7 @@ function CreateTenderForm() {
 
   
   //fetch states
-  const userData = useSelector((state) => state.user.userData);
+  //const userData = useSelector((state) => state.user.userData);
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: locations, isLoading: loadingLocations } = useGetLocationsQuery();
   //local states
@@ -39,7 +39,7 @@ function CreateTenderForm() {
     validityDate:"",
     locationId:"",
     subcategories:[],
-    companyId: userData.company.id,
+    companyId: '',
   });
   const [categorieSelected, setCategorieSelected] = useState([]);
   const [subCatSelected, setSubCatSelected] = useState([]);
@@ -140,6 +140,8 @@ function CreateTenderForm() {
     if (validation(tenderData) === false) {
       return console.log("Error en el formulario");
     } else {
+       const userData = useSelector((state) => state.user.userData);
+      setTenderData({ ...tenderData, companyId: userData.company.id });
       const tender = await axios.post(
         "http://localhost:3001/tenders",
         tenderData
