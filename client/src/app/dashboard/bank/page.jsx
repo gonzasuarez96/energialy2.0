@@ -1,5 +1,4 @@
 import { BankCard } from "@/app/components/CardBankDashboard"
-import { SortableTable } from "@/app/components/Table"
 
 const testingData = [
   {
@@ -25,7 +24,6 @@ function BankDashboard() {
             <BankCard key={item.title} data={item} />
         ))}
       </div>
-      <SortableTable />
     </>
   );
 }
