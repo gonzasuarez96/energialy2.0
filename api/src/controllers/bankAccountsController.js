@@ -87,8 +87,8 @@ const createBankAccount = async (body) => {
     !foundCompany.fiscalAdress ||
     !foundCompany.cuit ||
     !foundCompany.companyEmail ||
-    !foundCompany.legalManager ||
-    !foundCompany.documents
+    !foundCompany.legalManager 
+    // !foundCompany.documents
   ) {
     const error = new Error(
       `Missing required attributes of the company to create a bank account.`

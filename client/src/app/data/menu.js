@@ -55,14 +55,22 @@ export const menuBar = [
         url: "/dashboard/finanzas/aperturaCuenta",
       },
       {
-        title:"Factura de credito",
+        title: "Factura de credito",
         url: "/dashboard/finanzas/facturaCredito",
-      }
+      },
     ],
   },
   {
     title: "Banco",
-    url: "/dashboard/bank",
+    //url: "/dashboard/bank",
     icon: <BiSolidBank />,
+    submenu: true,
+    submenuItems: [
+      {
+        title: "Cuentas Bancarias",
+        url: "/dashboard/bank/accounts",
+      },
+      { title: "Productos Financieros", url: "/dashboard/bank/financialProducts" },
+    ],
   },
 ];

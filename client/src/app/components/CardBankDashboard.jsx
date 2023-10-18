@@ -11,6 +11,8 @@ import {
 
 
 export function BankCard({data}) {
+
+  
   return (
     <Card className="mt-6 w-96">
       <CardBody>

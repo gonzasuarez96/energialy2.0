@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   displayFailedMessage,
   displaySuccessMessage,
@@ -7,6 +7,7 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import UploadthingButtonMany from "@/app/components/UploadthingButtonOnly";
+import axios from "axios";
 
 export default function pageCredit() {
   const router = useRouter();
@@ -14,11 +15,11 @@ export default function pageCredit() {
   const [amount, setAmount] = useState(""); // Valor
   const [paymentTerm, setPaymentTerm] = useState(""); // Plazo de Pago Negociado
   const [invoiceIssuer, setInvoiceIssuer] = useState(""); // Emisor de la Factura
-  const [invoiceTypeA, setInvoiceTypeA] = useState(false); // Factura Emitida A (booleano)
+  const [invoiceTo, setInvoiceTo] = useState(""); // Factura Emitida A (booleano)
   const [issueDate, setIssueDate] = useState(""); // Fecha de Emisión de la Factura
   const [dueDate, setDueDate] = useState(""); // Fecha de Vencimiento de la Factura
-  const [cuit, setCuit] = useState(""); // CUIT
-  const [cuil, setCuil] = useState(""); // CUIL
+  const [cuitIssuer, setCuitIssuer] = useState(""); // CUIT empresa emisora
+  const [cuitRecived, setCuilRecived] = useState(""); // CUIT empresa receptora
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -35,7 +36,7 @@ export default function pageCredit() {
         setInvoiceIssuer(value);
         break;
       case "invoiceTypeA":
-        setInvoiceTypeA(e.target.checked);
+        setInvoiceTo(value);
         break;
       case "issueDate":
         setIssueDate(value);
@@ -43,11 +44,11 @@ export default function pageCredit() {
       case "dueDate":
         setDueDate(value);
         break;
-      case "cuit":
-        setCuit(value);
+      case "cuitIssuer":
+        setCuitIssuer(value);
         break;
-      case "cuil":
-        setCuil(value);
+      case "cuitRecived":
+        setCuilRecived(value);
         break;
       default:
         break;
@@ -82,7 +83,7 @@ export default function pageCredit() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/credit",
+        "http://localhost:3001/financeProducts",
         creditData
       );
       console.log("Información enviada:", creditData);
@@ -117,100 +118,112 @@ export default function pageCredit() {
         </div>
         <div>
           <form className="p-4" onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-2 text-left">
-              <div>
-                <label className="block p-2 font-bold">
-                  Valor (Indicar en pesos AR$ o en dólares U$D)
-                </label>
-                <input
-                  type="text"
-                  id="value"
-                  value={amount}
-                  placeholder="U$D"
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-lg rounded border"
-                />
+            <div>
+              <div className="grid grid-cols-2 gap-2 text-left">
+                <div>
+                  <label className="block p-2 font-bold">
+                    Valor (Indicar en pesos AR$ o en dólares U$D)
+                  </label>
+                  <input
+                    type="text"
+                    id="value"
+                    value={amount}
+                    placeholder="U$D"
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-lg rounded border"
+                  />
+                </div>
+                <div>
+                  <label className="block p-2 font-bold">
+                    Fecha de Emisión de la Factura
+                  </label>
+                  <input
+                    type="date"
+                    id="issueDate"
+                    value={issueDate}
+                    onChange={(e) => setIssueDate(e.target.value)}
+                    className="w-full px-3 py-2 text-lg rounded border"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block p-2 font-bold">
-                  Plazo de Pago Negociado
-                </label>
-                <input
-                  type="text"
-                  id="paymentTerm"
-                  value={paymentTerm}
-                  placeholder="Ej. 30 días"
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-lg rounded border"
-                />
+              <div className="grid grid-cols-2 gap-2 text-left">
+                <div>
+                  <label className="block p-2 font-bold">
+                    Plazo de Pago Negociado
+                  </label>
+                  <input
+                    type="text"
+                    id="paymentTerm"
+                    value={paymentTerm}
+                    placeholder="Ej. 30 días"
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-lg rounded border"
+                  />
+                </div>
+                <div>
+                  <label className="block p-2 font-bold">
+                    Fecha de Vencimiento de la Factura
+                  </label>
+                  <input
+                    type="date"
+                    id="dueDate"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                    className="w-full px-3 py-2 text-lg rounded border"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block p-2 font-bold">
-                  Emisor de la Factura
-                </label>
-                <input
-                  type="text"
-                  id="invoiceIssuer"
-                  value={invoiceIssuer}
-                  placeholder="Nombre de la empresa emisora"
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-lg rounded border"
-                />
+              <div className="grid grid-cols-2 gap-2 text-left">
+                <div>
+                  <label className="block p-2 font-bold">
+                    Emisor de la Factura
+                  </label>
+                  <input
+                    type="text"
+                    id="invoiceIssuer"
+                    value={invoiceIssuer}
+                    placeholder="Nombre de la empresa emisora"
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-lg rounded border"
+                  />
+                </div>
+                <div>
+                  <label className="block p-2 font-bold">CUIT</label>
+                  <input
+                    type="text"
+                    id="cuitIssuer"
+                    value={cuitIssuer}
+                    placeholder="Ej. 30-12345678-1"
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-lg rounded border"
+                  />
+                </div>
               </div>
-              <div className="flex">
-                <label className="block p-2 font-bold">Factura Emitida A</label>
-                <input
-                  type="checkbox"
-                  id="invoiceTypeA"
-                  checked={invoiceTypeA}
-                  onChange={(e) => setInvoiceTypeA(e.target.checked)}
-                />
-              </div>
-              <div>
-                <label className="block p-2 font-bold">
-                  Fecha de Emisión de la Factura
-                </label>
-                <input
-                  type="date"
-                  id="issueDate"
-                  value={issueDate}
-                  onChange={(e) => setIssueDate(e.target.value)}
-                  className="w-full px-3 py-2 text-lg rounded border"
-                />
-              </div>
-              <div>
-                <label className="block p-2 font-bold">
-                  Fecha de Vencimiento de la Factura
-                </label>
-                <input
-                  type="date"
-                  id="dueDate"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}
-                  className="w-full px-3 py-2 text-lg rounded border"
-                />
-              </div>
-              <div>
-                <label className="block p-2 font-bold">CUIT</label>
-                <input
-                  type="text"
-                  id="cuit"
-                  value={cuit}
-                  placeholder="Ej. 30-12345678-1"
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-lg rounded border"
-                />
-              </div>
-              <div>
-                <label className="block p-2 font-bold">CUIL</label>
-                <input
-                  type="text"
-                  id="cuil"
-                  value={cuil}
-                  placeholder="Ej. 20-12345678-1"
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 text-lg rounded border"
-                />
+              <div className="grid grid-cols-2 gap-2 text-left">
+                <div>
+                  <label className="block p-2 font-bold">
+                    Factura emitida a:
+                  </label>
+                  <input
+                    type="text"
+                    id="invoiceIssuer"
+                    value={invoiceTo}
+                    placeholder="Nombre de la empresa"
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-lg rounded border"
+                  />
+                </div>
+                <div>
+                  <label className="block p-2 font-bold">CUIT</label>
+                  <input
+                    type="text"
+                    id="cuitRecived"
+                    value={cuitRecived}
+                    placeholder="Ej. 20-12345678-1"
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 text-lg rounded border"
+                  />
+                </div>
               </div>
             </div>
             <div className="flex justify-center">
@@ -222,7 +235,7 @@ export default function pageCredit() {
               </button>
             </div>
             {error && <div className="text-red-500">{error}</div>}
-        <UploadthingButtonMany />
+            <UploadthingButtonMany />
           </form>
         </div>
       </div>
