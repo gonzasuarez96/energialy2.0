@@ -6,19 +6,19 @@ module.exports = (sequelize) => {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+      defaultValue: DataTypes.UUIDV4,
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: true
-      }
+        isEmail: true,
+      },
     },
     hashedPassword: {
       type: DataTypes.STRING(64),
-      allowNull: false
+      allowNull: false,
     },
     refreshToken: {
       type: DataTypes.STRING,
@@ -34,17 +34,13 @@ module.exports = (sequelize) => {
     },
     role: {
       type: DataTypes.ENUM,
-      values: [
-        "admin",
-        "superAdmin",
-        "bank",
-      ],
+      values: ['admin', 'superAdmin', 'bank'],
       allowNull: false,
-      defaultValue: "admin"
+      defaultValue: 'admin',
     },
     isActive: {
       type: DataTypes.BOOLEAN,
-      defaultValue: true
-    }
+      defaultValue: true,
+    },
   });
 };
