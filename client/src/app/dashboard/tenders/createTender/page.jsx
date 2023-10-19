@@ -31,6 +31,8 @@ function CreateTenderForm() {
   //const userData = useSelector((state) => state.user.userData);
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: locations, isLoading: loadingLocations } = useGetLocationsQuery();
+  const userData = useSelector((state) => state.user.userData);
+  
   const router = useRouter();
   //local states
   const [tenderData, setTenderData] = useState({
@@ -44,27 +46,28 @@ function CreateTenderForm() {
     validityDate:"",
     locationId:"",
     subcategories:[],
-    companyId: '',
+    //address:"",
+    companyId: userData?.company.id,
   });
 
   const [inputError, setInputError] = useState({
     title: "",
     description: "",
     contractType: "",
-    budget: '',
+    budget: "",
     majorSector: "",
     projectDuration: "",
     validityDate: "",
     locationId: "",
-    subcategories: '',
-    
+    subcategories: "",
+    //address:""
   });
   const [categorieSelected, setCategorieSelected] = useState([]);
   const [subCatSelected, setSubCatSelected] = useState([]);
   const [isShow, setIsShow] = useState(false)
   const [isPrivateCheqed, setIsPrivateCheqed] = useState(false);
   const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
-
+  
   //Handlers
   const handleChangeCategories = (e) => {
     //crear las subcategorias para el select
@@ -148,6 +151,9 @@ function CreateTenderForm() {
     if(tenderData.subcategories.length === 0){
       errors.subcategories= "Las subcategorias del proyecto son requeridas"
     }
+     if (tenderData.address === "") {
+       errors.locationId = "La ubicación del proyecto es requerida";
+     }
     if(tenderData.budget === 0){
       errors.budget= "El presupuesto del proyecto es requerido"
     }
@@ -161,13 +167,16 @@ function CreateTenderForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
    const hasErrors = !validation(tenderData);
-
+   
+   console.log(tenderData)
+      
    if (!hasErrors) {
+    console.log(tenderData)
      try {
-       const userData = useSelector((state) => state.user.userData);
-      setTenderData({ ...tenderData, companyId: userData.company.id });
-       const tender = await axios.post(
+      
+      const tender = await axios.post(
          "http://localhost:3001/tenders",
          tenderData
        );
@@ -178,11 +187,6 @@ function CreateTenderForm() {
      }
      
    }
-    
-    
-      
-      // //console.log(tender);
-    
   };
   
 
@@ -289,14 +293,14 @@ function CreateTenderForm() {
             <div className="flex flex-col gap-4 mt-4">
               <div className="border-l-4 border-primary-600 flex justify-between">
                 <Typography variant="h6" className="ml-5 my-0">
-                  Prsupuesto Privado
+                  Presupuesto Privado
                 </Typography>
                 <div className="flex gap-4">
                   <label
                     class="inline-block pl-[0.15rem] hover:cursor-pointer"
                     for="flexSwitchCheckDefault"
                   >
-                    {isShow ? "Mostrar Prosupuesto" : "No Mostrar Presupuesto"}
+                    {isShow ? "Mostrar Presupuesto" : "No Mostrar Presupuesto"}
                   </label>
 
                   <input
@@ -389,7 +393,9 @@ function CreateTenderForm() {
               <input
                 className="w-full border-1 border-gray-300 rounded-md p-3"
                 type="text"
+                name="address"
                 placeholder="Su Dirección"
+                onChange={handleInputsChanges}
               />
             </div>
           </div>
@@ -397,7 +403,7 @@ function CreateTenderForm() {
           <div className="flex flex-col gap-4 mt-4">
             <div className="border-l-4 border-primary-600 flex justify-between">
               <Typography variant="h6" className="ml-5 my-0">
-                Licitación Desatacada
+                Licitación Destacada
               </Typography>
               <div className="flex gap-4">
                 <label
