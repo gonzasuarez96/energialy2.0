@@ -16,7 +16,7 @@ export default function Head({ onProductoClick, products }) {
         {products.map((producto, index) => (
           <button
             key={index}
-            className={`bg-${productoSeleccionado === producto ? 'secondary-600' : '[#686868]'} text-white font-bold py-2 px-4 m-2 transition duration-300`}
+            className={`bg-${productoSeleccionado === producto ? 'secondary-600' : 'primary-600'} text-white font-bold py-2 px-4 m-2 transition duration-300`}
             onClick={() => handleProductoClick(producto)}
           >
             {producto}

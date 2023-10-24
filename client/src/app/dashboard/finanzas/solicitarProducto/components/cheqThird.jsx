@@ -8,11 +8,12 @@ import {
 } from "@/app/components/Toastify";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useGetCompaniesByIdQuery } from "@/app/redux/services/companiesApi";
+import getLocalStorage from "@/app/Func/localStorage";
 
-export default function ECheq() {
+export default function CheqThird() {
   // Estados Locales
-  const companyId = useSelector((state) => state.user.userData.company.id);
-  const [bankAccountId, setBankAccountId] = useState("");
+  const {company} = getLocalStorage();
   const [envioExitoso, setEnvioExitoso] = useState(false);
   const [error, setError] = useState("");
   const [businessName, setBusinessName] = useState("");
@@ -27,15 +28,11 @@ export default function ECheq() {
   const [modo, setModo] = useState('');
   const [cheqType, setCheqType] = useState('');
   const [caracter, setCaracter] = useState('');
+  const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
+  const bankAccountId = userCompany.bankAccount.id;
+  console.log('data:',userCompany.bankAccount.id)
   
   const router = useRouter();
-
-  useEffect(() => {
-    fetch(`http://localhost:3001/companies/${companyId}`)
-      .then((response) => response.json())
-      .then((data) => setBankAccountId(data.bankAccount.id))
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
   
 
   const handleChange = (e) => {
@@ -101,23 +98,13 @@ export default function ECheq() {
       caracter,
     }
     const accountData = {
-      productName: 'E-Cheqs',
+      productName: 'Cheques a terceros',
       bankAccountId,
       additionalData
     };
     if (
-      !businessName || 
-      !docType ||
-      !dni ||
-      !beneficiaryName ||
-      !beneficiaryDocType ||
-      !beneficiaryDni ||
-      !paymentDate ||
-      !totalAmount ||
-      !concept ||
-      !modo ||
-      !cheqType ||
-      !caracter 
+      !businessName
+
     ) {
       setError("Completa todos los campos");
       return;
@@ -129,6 +116,7 @@ export default function ECheq() {
     try {
       const res = await axios.post(
         `http://localhost:3001/FinanceProducts`,
+
         accountData
       );
       console.log("resData server:", res);

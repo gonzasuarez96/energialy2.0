@@ -1,13 +1,15 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { displayFailedMessage, displaySuccessMessage } from "@/app/components/Toastify";
 import { ToastContainer} from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function GarantLoan() {
       // Estados Locales
   const companyId = useSelector((state) => state.user.userData.company.id);
+  const [bankAccountId, setBankAccountId] = useState("");
   const [envioExitoso, setEnvioExitoso] = useState(false);
   const [error, setError] = useState("");
   const [businessName, setBusinessName] = useState("");
@@ -24,6 +26,15 @@ export default function GarantLoan() {
   const [destination, setDestination] = useState("");
   const [amountToRequest, setAmountToRequest] = useState("")
   const [garantType, setGarantType] = useState("")
+
+  const router = useRouter();
+
+  useEffect(() => {
+    fetch(`http://localhost:3001/companies/${companyId}`)
+      .then((response) => response.json())
+      .then((data) => setBankAccountId(data.bankAccount.id))
+      .catch((error) => console.error("Error fetching data:", error));
+  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -64,7 +75,7 @@ export default function GarantLoan() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const accountData = {
+    const additionalData = {
       businessName,
       fiscalAdress,
       cuit,
@@ -73,6 +84,11 @@ export default function GarantLoan() {
       destination,
       amountToRequest,
       garantType,
+    }
+    const accountData = {
+      productName: 'Préstamo con garantía',
+      bankAccountId,
+      additionalData
     };
     if (
       !businessName ||
@@ -92,13 +108,16 @@ export default function GarantLoan() {
 
     console.log("Información enviada:", accountData);
     try {
-      const res = await axios.put(
-        `http://localhost:3001/companies/${companyId}`,
+      const res = await axios.post(
+        `http://localhost:3001/FinanceProducts`,
         accountData
       );
       console.log("resData server:", res);
       setEnvioExitoso(true);
       displaySuccessMessage('Datos enviados con exito')
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 2000);
     } catch (error) {
       console.log("errorData:", error);
       displayFailedMessage(error.response.data.error);

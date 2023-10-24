@@ -9,26 +9,25 @@ import {
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-export default function SoloFirmaLoan() {
+export default function OwnCheq() {
   // Estados Locales
   const companyId = useSelector((state) => state.user.userData.company.id);
   const [bankAccountId, setBankAccountId] = useState("");
   const [envioExitoso, setEnvioExitoso] = useState(false);
   const [error, setError] = useState("");
   const [businessName, setBusinessName] = useState("");
-  const [fiscalAdress, setFiscalAdress] = useState("");
-  const [cuit, setCuit] = useState("");
-  const [companyEmail, setCompanyEmail] = useState("");
-  const [legalManager, setLegalManager] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    position: "",
-    phoneNumber: "",
-  });
-  const [destination, setDestination] = useState("");
-  const [amountToRequest, setAmountToRequest] = useState("");
-
+  const [docType, setDocType] = useState("");
+  const [dni, setDni] = useState("");
+  const [beneficiaryName, setBeneficiaryName] = useState("");
+  const [beneficiaryDocType, setBeneficiaryDocType] = useState("");
+  const [beneficiaryDni, setBeneficiaryDni] = useState("");
+  const [paymentDate, setPaymentDate] = useState('');
+  const [totalAmount, setTotalAmount] = useState('');
+  const [concept, setConcept] = useState('');
+  const [modo, setModo] = useState('');
+  const [cheqType, setCheqType] = useState('');
+  const [caracter, setCaracter] = useState('');
+  
   const router = useRouter();
 
   useEffect(() => {
@@ -37,77 +36,90 @@ export default function SoloFirmaLoan() {
       .then((data) => setBankAccountId(data.bankAccount.id))
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
+  
 
   const handleChange = (e) => {
     const { id, value } = e.target;
-
-    if (id === "legalManager") {
-      setLegalManager({
-        ...legalManager,
-        [e.target.name]: value,
-      });
-    } else {
-      switch (id) {
-        case "businessName":
-          setBusinessName(value);
-          break;
-        case "fiscalAdress":
-          setFiscalAdress(value);
-          break;
-        case "cuit":
-          setCuit(value);
-          break;
-        case "companyEmail":
-          setCompanyEmail(value);
-          break;
-        case "destination":
-          setDestination(value);
-          break;
-        case "amountToRequest":
-          setAmountToRequest(value);
-          break;
-        default:
-          break;
-      }
+  
+    switch (id) {
+      case 'businessName':
+        setBusinessName(value);
+        break;
+      case 'docType':
+        setDocType(value);
+        break;
+      case 'dni':
+        setDni(value);
+        break;
+      case 'beneficiaryName':
+        setBeneficiaryName(value);
+        break;
+      case 'beneficiaryDocType':
+        setBeneficiaryDocType(value);
+        break;
+      case 'beneficiaryDni':
+        setBeneficiaryDni(value);
+        break;
+      case 'paymentDate':
+        setPaymentDate(value);
+        break;
+      case 'totalAmount':
+        setTotalAmount(value);
+        break;
+      case 'concept':
+        setConcept(value);
+        break;
+      case 'modo':
+        setModo(value);
+        break;
+      case 'cheqType':
+        setCheqType(value);
+        break;
+      case 'caracter':
+        setCaracter(value);
+        break;
+      default:
+        break;
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const additionalData = {
       businessName,
-      fiscalAdress,
-      cuit,
-      companyEmail,
-      legalManager,
-      destination,
-      amountToRequest,
-    };
-
+      docType,
+      dni,
+      beneficiaryName,
+      beneficiaryDocType,
+      beneficiaryDni,
+      paymentDate,
+      totalAmount,
+      concept,
+      modo,
+      cheqType,
+      caracter,
+    }
     const accountData = {
-      productName: "Préstamo a sola firma",
+      productName: 'Cheques propios',
       bankAccountId,
-      additionalData, // Incluimos additionalData directamente aquí
+      additionalData
     };
     if (
-      !businessName ||
-      !fiscalAdress ||
-      !cuit ||
-      !companyEmail ||
-      !legalManager ||
-      !destination ||
-      !amountToRequest
+      !businessName
+
     ) {
       setError("Completa todos los campos");
       return;
     } else {
       setError("");
-    }
+    }       
 
     console.log("Información enviada:", accountData);
     try {
       const res = await axios.post(
         `http://localhost:3001/FinanceProducts`,
+
         accountData
       );
       console.log("resData server:", res);
@@ -125,7 +137,7 @@ export default function SoloFirmaLoan() {
     <div>
       <div>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
-          Tu Empresa
+          Tus Datos
         </label>
         <div className="mt-4 text-left">
           <input
@@ -139,118 +151,128 @@ export default function SoloFirmaLoan() {
         </div>
         <div className="grid grid-cols-2 gap-2 text-left">
           <div className="mt-4 text-left">
-            <input
-              type="text"
-              id="fiscalAdress"
-              value={fiscalAdress}
-              placeholder="Dirección Fiscal"
+            <select
+              id="docType"
+              value={docType}
               onChange={handleChange}
               className="w-full px-3 py-3 font-bold text-lg border"
-            />
+            >
+              <option value="">Tipo de Documento</option>
+              <option value="DNI">DNI</option>
+              <option value="Pasaporte">Pasaporte</option>
+            </select>
           </div>
           <div className="mt-4 text-left">
             <input
               type="text"
-              id="cuit"
-              value={cuit}
-              placeholder="CUIT"
-              onChange={handleChange}
-              className="w-full px-3 py-3 font-bold text-lg border"
-            />
-          </div>
-        </div>
-        <div className="mt-4 text-left">
-          <input
-            type="email"
-            id="companyEmail"
-            value={companyEmail}
-            placeholder="Email de la Empresa"
-            onChange={handleChange}
-            className="w-full px-3 py-3 font-bold text-lg border"
-          />
-        </div>
-        <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
-          Responsable Legal de la Empresa
-        </label>
-        <div className="grid grid-cols-2 gap-2 text-left">
-          <div className="mt-4 text-left">
-            <input
-              type="text"
-              id="legalManager"
-              name="firstName"
-              value={legalManager.firstName}
-              placeholder="Nombre"
-              onChange={handleChange}
-              className="w-full px-3 py-3 font-bold text-lg border"
-            />
-          </div>
-          <div className="mt-4 text-left">
-            <input
-              type="text"
-              id="legalManager"
-              name="lastName"
-              value={legalManager.lastName}
-              placeholder="Apellido"
-              onChange={handleChange}
-              className="w-full px-3 py-3 font-bold text-lg border"
-            />
-          </div>
-        </div>
-        <div className="mt-4 text-left">
-          <input
-            type="email"
-            id="legalManager"
-            name="email"
-            value={legalManager.email}
-            placeholder="Email"
-            onChange={handleChange}
-            className="w-full px-3 py-3 font-bold text-lg border"
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-2 text-left">
-          <div className="mt-4 text-left">
-            <input
-              type="text"
-              id="legalManager"
-              name="position"
-              value={legalManager.position}
-              placeholder="Puesto Laboral"
-              onChange={handleChange}
-              className="w-full px-3 py-3 font-bold text-lg border"
-            />
-          </div>
-          <div className="mt-4 text-left">
-            <input
-              type="text"
-              id="legalManager"
-              name="phoneNumber"
-              value={legalManager.phoneNumber}
-              placeholder="Teléfono"
+              id="dni"
+              value={dni}
+              placeholder="Numero"
               onChange={handleChange}
               className="w-full px-3 py-3 font-bold text-lg border"
             />
           </div>
         </div>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
-          Prestamo a sola firma
+          Beneficiario del E-cheq
         </label>
+        <div className="mt-4 text-left">
+          <input
+            type="text"
+            id="beneficiaryName"
+            value={beneficiaryName}
+            placeholder="Nombre del beneficiario"
+            onChange={handleChange}
+            className="w-full px-3 py-3 font-bold text-lg border"
+          />
+        </div>
         <div className="grid grid-cols-2 gap-2 text-left">
           <div className="mt-4 text-left">
-            <input
-              type="text"
-              id="destination"
-              value={destination}
-              placeholder="Destino"
+            <select
+              id="beneficiaryDocType"
+              value={beneficiaryDocType}
               onChange={handleChange}
               className="w-full px-3 py-3 font-bold text-lg border"
-            />
+            >
+              <option value="">Tipo de Documento</option>
+              <option value="DNI">DNI</option>
+              <option value="Pasaporte">Pasaporte</option>
+            </select>
           </div>
           <div className="mt-4 text-left">
             <input
               type="text"
-              id="amountToRequest"
-              value={amountToRequest}
-              placeholder="Monto a solicitar"
+              id="beneficiaryDni"
+              value={beneficiaryDni}
+              placeholder="Numero"
+              onChange={handleChange}
+              className="w-full px-3 py-3 font-bold text-lg border"
+            />
+          </div>
+        </div>
+        <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
+          E-cheq
+        </label>
+        <div className="grid grid-cols-2 gap-2 text-left">
+          <div className="mt-4">
+            <input
+              type="date"
+              id="paymentDate"
+              value={paymentDate}
+              onChange={handleChange}
+              className="w-full px-3 py-3 font-bold text-lg border"
+            />
+          </div>
+          <div className="mt-4">
+            <input
+              type="text"
+              id="totalAmount"
+              value={totalAmount}
+              placeholder="Importe Total"
+              onChange={handleChange}
+              className="w-full px-3 py-3 font-bold text-lg border"
+            />
+          </div>
+          <div className="mt-4">
+            <select
+              id="concept"
+              value={concept}
+              onChange={handleChange}
+              className="w-full px-3 py-3 font-bold text-lg border"
+            >
+              <option value="">Concepto</option>
+              <option value="varios">Varios</option>
+              <option value="otros">Otros</option>
+            </select>
+          </div>
+          <div className="mt-4">
+            <input
+              type="text"
+              id="modo"
+              value={modo}
+              placeholder="Modo"
+              onChange={handleChange}
+              className="w-full px-3 py-3 font-bold text-lg border"
+            />
+          </div>
+          <div className="mt-4">
+            <select
+              id="cheqType"
+              value={cheqType}
+              onChange={handleChange}
+              className="w-full px-3 py-3 font-bold text-lg border"
+            >
+              <option value="">Tipo de Cheque</option>
+              <option value="normal">Normal</option>
+              <option value="diferido">Diferido</option>
+            </select>
+          </div>
+          <div className="mt-4">
+            <input
+              type="text"
+              id="caracter"
+              value={caracter}
+              placeholder="Caracter"
               onChange={handleChange}
               className="w-full px-3 py-3 font-bold text-lg border"
             />

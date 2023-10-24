@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { setAccessToken, setUserData } from "../redux/features/userSlice";
 import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
 
-
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,26 +47,25 @@ export default function Login() {
 
   const loginValidator = () => {
     if (!email || !password) {
-      setError('Por favor, completa ambos campos.');
+      setError("Por favor, completa ambos campos.");
       return;
     } else if (!isValidEmail(email)) {
-      setEmailError('Por favor, ingresa una dirección de correo electrónico válida.');
-      setPasswordError('');
+      setEmailError(
+        "Por favor, ingresa una dirección de correo electrónico válida."
+      );
+      setPasswordError("");
       return;
     } else if (password.length < 6) {
-      setPasswordError('La contraseña debe tener al menos 6 caracteres.');
-      setEmailError('');
+      setPasswordError("La contraseña debe tener al menos 6 caracteres.");
+      setEmailError("");
       return;
     } else {
-      setEmailError('');
-      setPasswordError('');
+      setEmailError("");
+      setPasswordError("");
     }
   };
-  
 
   const handleLogin = async () => {
-
-
     const validations = loginValidator();
     if (validations) {
       return;
@@ -89,18 +87,22 @@ export default function Login() {
         `http://localhost:3001/users?email=${email}`
       );
       const userDetails = userDetailsResponse.data;
-      console.log('Datos del usuario:', userDetails);
+      console.log("Datos del usuario:", userDetails);
 
       console.log("Respuesta del servidor:", response);
       console.log("Estado accessToken:", response.data.accessToken);
 
       displaySuccessMessage("Sesion iniciada");
-      
+
+      // Guardar en localStorage
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("user", JSON.stringify(userDetails));
+
       dispatch(setUserData(userDetails));
       dispatch(setAccessToken(accessToken));
 
       setTimeout(() => {
-        router.push("/dashboard");
+        window.location.href = '/dashboard';
       }, 2000);
     } catch (error) {
       console.log("Error:", error);
@@ -120,7 +122,7 @@ export default function Login() {
   };
 
   const handlePasswordFormClick = () => {
-    window.location.href = '/emailPassword';
+    window.location.href = "/emailPassword";
   };
 
   return (
@@ -175,13 +177,13 @@ export default function Login() {
             </label>
           </div>
           <div className="flex justify-center border-t pt-4">
-          <button
-            type="button"
-            className="px-8 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-            onClick={handleLogin}
-          >
-            Iniciar sesión
-          </button>
+            <button
+              type="button"
+              className="px-8 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
+              onClick={handleLogin}
+            >
+              Iniciar sesión
+            </button>
           </div>
           {error && (
             <div className="flex justify-center text-danger mt-2 mb-2">

@@ -4,7 +4,11 @@ import { useSelector } from "react-redux";
 import Buttons from "./components/Buttons";
 
 function DasboardPage() {
-  const user = useSelector((state) => state.user.userData);
+  
+
+  const userD = localStorage.getItem("user");
+  const user = JSON.parse(userD);
+  console.log('userPage:',user)
 
   return (
     <div className="w-full h-100 bg-[#f8f8fb] ml-4">
