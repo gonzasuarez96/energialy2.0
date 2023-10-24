@@ -7,7 +7,10 @@ export const companiesApi = createApi({
     getCompanies: builder.query({
       query: () => "/companies",
     }),
+    getCompaniesById: builder.query({
+      query: (id) =>  `/companies/${id}`,
+    })
   }),
 });
 
-export const { useGetCompaniesQuery } = companiesApi;
+export const { useGetCompaniesQuery, useGetCompaniesByIdQuery } = companiesApi;

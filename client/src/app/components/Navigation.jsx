@@ -6,20 +6,17 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Logo from "@/app/assets/Energialy Logo-01.svg";
 import UserProfile from "./UserProfile";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 
 
 import { useRouter } from "next/navigation";
 
-function isAuthenticated() {
-  return true;
-}
 
-export default function Navigation() {
-  const user = useSelector((state) => state.user);
+export default function Navigation({user}) {
+  console.log('userNav:',user)
 
   function isAuthenticated() {
-    if (user.userData.firstName) {
+    if (user?.firstName) {
       return true;
     } else {
       return false;
@@ -28,6 +25,8 @@ export default function Navigation() {
 
   let pathname = usePathname() || "/";
   const router = useRouter();
+
+
 
   return (
     <Disclosure as="nav">
@@ -49,7 +48,7 @@ export default function Navigation() {
 
                 {isAuthenticated() ? (
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                    {user.userData.company?.id ? null: <Link
+                    {user.company?.id ? null: <Link
                       href="/registerCompany"
                       prefetch
                       className={`${

@@ -1,9 +1,11 @@
+'use client'
 import './globals.css'
 import { Montserrat } from 'next/font/google'
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navigation from './components/Navigation'; 
 import Footer from './components/Footer';
 import Providers from './redux/provider';
+import getLocalStorage from './Func/localStorage';
 //import "@uploadthing/react/styles.css";
 
 
@@ -16,12 +18,16 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+  
+  const user = getLocalStorage();
+  console.log('userPage:',user) 
+
   return (
     <html lang="en">
       <Providers>
-      <body className={`${montserrat.className} bg-[#F7F7F7] flex flex-col min-h-screen`}>
+      <body className={`${montserrat.className} bg-[#F7F7F7] flex flex-col`}>
         <div className="flex-grow">
-          <Navigation />
+          <Navigation user={user}/>
           <main className="mx-auto">
             {children}
           </main>

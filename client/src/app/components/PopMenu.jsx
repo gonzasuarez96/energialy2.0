@@ -12,16 +12,18 @@ import {
 import Link from "next/link";
 import { MdSpaceDashboard } from "react-icons/md";
 import {MdOutlineLogout} from "react-icons/md";
-
-import {useSelector} from "react-redux";
+import getLocalStorage from "../Func/localStorage";
 
 
  
 export default function Example() {
+  const userData = getLocalStorage();
+  
 
-  const user = useSelector((state) => state.user);
-  const userData = user.userData
-  console.log(user.userData);
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    window.location.href = '/';
+  };
 
   return (
     <Popover placement="bottom">
@@ -30,16 +32,16 @@ export default function Example() {
           <div className="w-[50px] h-[50px] m-2">
             <img
               className="rounded-full"
-              src={userData.company?.profilePicture || "defaultImg"}
-              alt={userData.company?.name || "Default Image"}
+              src={userData?.company?.profilePicture || "defaultImg"}
+              alt={userData?.company?.name || "Default Image"}
             />
           </div>
           <div className="hidden m-2 sm:block">
             <h4 className="text-sm">
-              {userData.company?.name || "Sin empresa asociada"}
+              {userData?.company?.name || "Sin empresa asociada"}
             </h4>
             <h4 className="text-xs text-gray-600 ">
-              {userData.firstName + " " + userData.lastName}
+              {userData?.firstName + " " + userData?.lastName}
             </h4>
           </div>
         </div>
@@ -57,17 +59,15 @@ export default function Example() {
               Dashboard
             </ListItem>
           </Link>
-          <Link
-            href="/"
-            className="text-sm hover:text-primary-600 hover:font-semibold"
+          <ListItem
+            className="text-sm hover:text-primary-600 hover:font-semibold cursor-pointer"
+            onClick={handleLogout}
           >
-            <ListItem>
-              <ListItemPrefix>
-                <MdOutlineLogout />
-              </ListItemPrefix>
-              Log Out
-            </ListItem>
-          </Link>
+            <ListItemPrefix>
+              <MdOutlineLogout />
+            </ListItemPrefix>
+            Log Out
+          </ListItem>
         </List>
       </PopoverContent>
     </Popover>

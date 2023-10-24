@@ -58,6 +58,10 @@ export const menuBar = [
         title: "Factura de credito",
         url: "/dashboard/finanzas/facturaCredito",
       },
+      {
+        title: "Solicitar producto",
+        url:"/dashboard/finanzas/solicitarProducto"
+      }
     ],
   },
   {
