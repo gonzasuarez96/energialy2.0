@@ -9,16 +9,12 @@ import { useGetProposalsQuery } from "../redux/services/ProposalApi";
 import { useGetTendersQuery } from "../redux/services/tendersApi";
 
 function DasboardPage() {
-  const user = useSelector((state) => state.user.userData);
-  console.log(user)
   
-  const { data: proposals, isLoading: propsalsLoading } = useGetProposalsQuery();
-  const {data: tenders, isLoading: tendersLoading} = useGetTendersQuery();
-  console.log(tenders)
-  console.log(proposals)
-  const userProposals = proposals?.filter(proposal => proposal.company.id === user.company.id)
-  const userTenders = tenders?.filter(tender => tender.company.id === user.company.id) || []
-  console.log(userTenders)
+
+  const userD = localStorage.getItem("user");
+  const user = JSON.parse(userD);
+  console.log('userPage:',user)
+
   return (
     <div className="w-full h-100 bg-[#f8f8fb] ml-4">
       <div className="flex">
