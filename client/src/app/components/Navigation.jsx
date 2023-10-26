@@ -10,10 +10,11 @@ import React, { useEffect, useState } from "react";
 
 
 import { useRouter } from "next/navigation";
+import getLocalStorage from "../Func/localStorage";
 
 
-export default function Navigation({user}) {
-  console.log('userNav:',user)
+export default function Navigation() {
+  const user = getLocalStorage()
 
   function isAuthenticated() {
     if (user?.firstName) {
