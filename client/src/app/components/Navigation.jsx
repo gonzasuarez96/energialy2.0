@@ -14,10 +14,11 @@ import getLocalStorage from "../Func/localStorage";
 
 
 export default function Navigation() {
-  const user = getLocalStorage()
+  const [user, setUser] = useState(null);
+  
 
   function isAuthenticated() {
-    if (user?.firstName) {
+    if (user) {
       return true;
     } else {
       return false;
@@ -27,7 +28,10 @@ export default function Navigation() {
   let pathname = usePathname() || "/";
   const router = useRouter();
 
-
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user);
+  },[])
 
   return (
     <Disclosure as="nav">
