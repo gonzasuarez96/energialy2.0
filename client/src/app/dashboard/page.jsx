@@ -20,8 +20,9 @@ function DasboardPage() {
   console.log('tenders:',tenders)
   const userProposals = proposals?.filter(proposal=> proposal.company.id === user.company.id);
   console.log('userProposals:',userProposals)
+  const proposalsToUser = proposals?.filter(proposal=> proposal.tender.Company.id === user.company.id);
+  console.log("proposalsToUser:", proposalsToUser);
   const userTenders = tenders?.filter(tender=> tender.company.id === user.company.id);
-  console.log('userTenders:',userTenders)
 
   return (
     <div className="w-full h-100 bg-[#f8f8fb] ml-4">
@@ -39,12 +40,12 @@ function DasboardPage() {
           <div className="w-1/2">
             <DashboardTextCard title={"Ingresos"} content={"U$S 10500"} />
             <DashboardKpiCard
-              title={"Propuestas Recibidas En Mi Perfil"}
+              title={"Propuestas Enviadas En Otras Licitaciones"}
               content={userProposals}
             />
             <DashboardKpiCard
-              title={"Propuestas Enviadas En Otras Licitaciones "}
-              content={userTenders}
+              title={"Propuestas recibidas"}
+              content={proposalsToUser}
             />
           </div>
           {/*Rigth */}
@@ -62,8 +63,11 @@ function DasboardPage() {
           </div>
         </div>
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
-          {!loadingTenders ?  <DashboardTableData title={"MIS LICITACIONES"} data={userTenders} /> : <p>Cargando..</p> }
-         
+          {!loadingTenders ? (
+            <DashboardTableData title={"MIS LICITACIONES"} data={userTenders} />
+          ) : (
+            <p>Cargando..</p>
+          )}
         </div>
       </div>
     </div>

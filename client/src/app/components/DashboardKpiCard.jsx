@@ -4,6 +4,7 @@ function DashboardKpiCard({ title, content }) {
     const evalContent = content?.filter((item) => item.status === "sent") || [];
     const aceptContent = content?.filter((item) => item.status === "accepted") || [];
     const declineContent = content?.filter((item) => item.status === "declined") || [];
+    
   return (
     <div className="shadow-md flex flex-col w-full">
       <p className="text-sm text-gray-500 font-semibold ml-0 p-2">{title}</p>
