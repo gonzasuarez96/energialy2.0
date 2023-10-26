@@ -3,12 +3,13 @@ import PaginationOption from "./PaginationOption"
 import { setAllTenders } from "../redux/features/tenderSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import getLocalStorage from "../Func/localStorage";
 
 function TenderContainer({data}) {
     const dispatch = useDispatch()
 
     const filterTenders = useSelector((state) => state.tender.filterTenders)
-    const userData = useSelector((state) => state.user.userData);
+    const userData = getLocalStorage()
     const tenderFilteredByUser = filterTenders.filter((tender) => tender.company.id !== userData.company.id)
     
     useEffect(()=> {
