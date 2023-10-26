@@ -21,6 +21,7 @@ import {displayFailedMessage, displaySuccessMessage} from '@/app/components/Toas
 import ErrorMensage from "@/app/components/ErrorMensage";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import getLocalStorage from "@/app/Func/localStorage";
 
 
 
@@ -28,11 +29,12 @@ function CreateTenderForm() {
 
   
   //fetch states
-  //const userData = useSelector((state) => state.user.userData);
+  
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: locations, isLoading: loadingLocations } = useGetLocationsQuery();
-  const userData = useSelector((state) => state.user.userData);
   
+  const userData = getLocalStorage()
+
   const router = useRouter();
   //local states
   const [tenderData, setTenderData] = useState({
