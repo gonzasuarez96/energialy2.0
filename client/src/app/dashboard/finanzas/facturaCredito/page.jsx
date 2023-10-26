@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   displayFailedMessage,
   displaySuccessMessage,
@@ -8,10 +8,12 @@ import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import UploadthingButtonMany from "@/app/components/UploadthingButtonOnly";
 import axios from "axios";
+import getLocalStorage from "@/app/Func/localStorage";
 
 export default function pageCredit() {
   const router = useRouter();
   //----------Estados Locales ----------//
+  const [user, setUser] = useState(null);
   const [amount, setAmount] = useState(""); // Valor
   const [paymentTerm, setPaymentTerm] = useState(""); // Plazo de Pago Negociado
   const [invoiceIssuer, setInvoiceIssuer] = useState(""); // Emisor de la Factura
@@ -98,6 +100,10 @@ export default function pageCredit() {
     }
   };
 
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user);
+  },[])
   return (
     <main className="flex justify-center items-start w-full h-screen bg-white p-3 shadow overflow-y-auto">
       <div className="text-center">

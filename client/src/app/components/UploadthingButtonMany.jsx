@@ -14,18 +14,21 @@ import getLocalStorage from "../Func/localStorage";
 export default function UploadthingButtonMany({onFilesUpload}) {
   const [attachments, setAttachments] = useState([]);
   const [user, setUser] = useState(null)
+  const [company, setCompany] = useState(null)
+  console.log('user:',user)
   
   
 
   const handleFiles = async (cleanRes) => {
-    const companyId = user?.company.id;
+     
+    
     console.log('props:',onFilesUpload)
     
     try {
       const res = await axios.post("http://localhost:3001/documents", {
         name: onFilesUpload,
         attachment: cleanRes[0],
-        companyId: companyId,
+        companyId: company.id,
       });
       console.log('res del servidor:',res.data)
     } catch (error) {
@@ -57,6 +60,8 @@ export default function UploadthingButtonMany({onFilesUpload}) {
   useEffect(() => {
     const user = getLocalStorage();
     setUser(user)
+    setCompany(user.company)
+
   },[])
 
   return (
