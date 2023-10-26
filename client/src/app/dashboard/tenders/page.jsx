@@ -11,7 +11,6 @@ import getLocalStorage from "@/app/Func/localStorage";
 
 function Licitaciones() {
   const userData = getLocalStorage()
-  //const userData = useSelector((state) => state.user.userData);
   const {data:tenders, isLoading} = useGetTendersQuery()
 
   //console.log(tenders)
