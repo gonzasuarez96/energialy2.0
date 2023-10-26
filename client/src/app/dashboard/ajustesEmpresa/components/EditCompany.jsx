@@ -63,9 +63,9 @@ const organizationTypes = [
 export default function EditCompany({ option }) {
   console.log("option:", option);
   const router = useRouter();
-  const user = getLocalStorage()
 
   // ------------ Estados locales para los campos editables ---------------------//
+  const [user, setUser] = useState(null);
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -132,11 +132,7 @@ export default function EditCompany({ option }) {
     }
   };
 
-  useEffect(() => {
-    getLocation();
-    getSubcategories();
-    getCategories();
-  }, []);
+  
 
   // -------- Handlers de campos ----------------- //
 
@@ -320,6 +316,14 @@ export default function EditCompany({ option }) {
   };
 
   // ------------------------------------------------------------------------ //
+
+  useEffect(() => {
+    const user = getLocalStorage()
+    setUser(user)
+    getLocation();
+    getSubcategories();
+    getCategories();
+  }, []);
 
   return (
     <div className="p-5 m-2">

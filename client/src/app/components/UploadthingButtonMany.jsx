@@ -4,7 +4,7 @@
 import "@uploadthing/react/styles.css";
 
 import { UploadButton } from "@uploadthing/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from 'axios';
 
@@ -13,7 +13,8 @@ import getLocalStorage from "../Func/localStorage";
 
 export default function UploadthingButtonMany({onFilesUpload}) {
   const [attachments, setAttachments] = useState([]);
-  const user = getLocalStorage()
+  const [user, setUser] = useState(null)
+  
   const companyId = user.company.id;
 
   const handleFiles = async (cleanRes) => {
@@ -51,6 +52,11 @@ export default function UploadthingButtonMany({onFilesUpload}) {
       </ul>
     </>
   );
+
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user)
+  },[])
 
   return (
     <main className="flex flex-col items-center justify-center">
