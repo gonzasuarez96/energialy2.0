@@ -5,10 +5,10 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
 import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
 import { annualRevenueOptions, employeeCountOptions, organizationTypes} from '@/app/data/dataGeneric'
 import {handleCategoryChange, handleSubcategoryChange} from '@/app/Func/handlers'
+import getLocalStorage from "../Func/localStorage";
 //import { useGetLocationsQuery } from "../redux/services/locationApi";
 
 
@@ -16,7 +16,7 @@ const stepsForm = ["01", "02", "03", "04"];
 
 export default function RegisterCompany() {
   const router = useRouter();
-  const user = useSelector((state) => state.user.userData);
+  const user = getLocalStorage();
 
   // ------------ Estados Locales ---------------------//
   const [step, setStep] = useState(1);
