@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Montserrat } from "next/font/google";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -66,6 +66,7 @@ export default function EditCompany({ option }) {
 
   // ------------ Estados locales para los campos editables ---------------------//
   const [user, setUser] = useState(null);
+  console.log(user)
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -336,8 +337,8 @@ export default function EditCompany({ option }) {
             <input
               type="text"
               id="name"
-              placeholder={user.company?.name}
-              value={name}
+              //placeholder={user.company?.name}
+              value={user?.company.name}
               onChange={(e) => handleInputChange(e, "name")}
               className="w-full px-3 py-2 text-lg rounded border"
             />
