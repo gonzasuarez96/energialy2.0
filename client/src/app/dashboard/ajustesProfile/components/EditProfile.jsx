@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { setUserData } from "@/app/redux/actions";
+import getLocalStorage from "@/app/Func/localStorage";
 
 // ---------------------- Toastify -------------------------//
 const displaySuccessMessage = (mensaje) => {
@@ -37,7 +37,7 @@ const displaySuccessMessage = (mensaje) => {
   //---------------------------------------------------------------//
 
 export default function EditProfile({ option }) {
-  const user = useSelector((state) => state.user.userData);
+  const user = getLocalStorage()
 
   // Estados locales para los campos editables
   const [firstName, setFirstName] = useState(user.firstName);

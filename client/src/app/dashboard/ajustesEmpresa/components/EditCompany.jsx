@@ -5,7 +5,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import getLocalStorage from "@/app/Func/localStorage";
 
 // ---------------------- Toastify -------------------------//
 const displaySuccessMessage = (mensaje) => {
@@ -63,7 +63,7 @@ const organizationTypes = [
 export default function EditCompany({ option }) {
   console.log("option:", option);
   const router = useRouter();
-  const user = useSelector((state) => state.user.userData);
+  const user = getLocalStorage()
 
   // ------------ Estados locales para los campos editables ---------------------//
   const [step, setStep] = useState(1);
