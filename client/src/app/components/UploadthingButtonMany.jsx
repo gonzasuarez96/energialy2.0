@@ -18,7 +18,7 @@ export default function UploadthingButtonMany({onFilesUpload}) {
   
 
   const handleFiles = async (cleanRes) => {
-    const companyId = user.company.id;
+    const companyId = user?.company.id;
     console.log('props:',onFilesUpload)
     
     try {
