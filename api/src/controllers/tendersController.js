@@ -5,8 +5,8 @@ const {
   Locations,
   Categories,
   Subcategories,
-} = require('../db');
-const { Op } = require('sequelize');
+} = require("../db");
+const { Op } = require("sequelize");
 
 const cleanTenders = (tenders) => {
   if (Array.isArray(tenders)) {
@@ -20,7 +20,6 @@ const cleanTenders = (tenders) => {
       showBudget: tender.showBudget,
       public: tender.public,
       status: tender.status,
-      validityDate: tender.validityDate,
       contractType: tender.contractType,
       location: tender.Location,
       majorSector: tender.majorSector,
@@ -39,7 +38,6 @@ const cleanTenders = (tenders) => {
       showBudget: tenders.showBudget,
       public: tenders.public,
       status: tenders.status,
-      validityDate: tender.validityDate,
       contractType: tenders.contractType,
       location: tenders.Location,
       address: tenders.address,
@@ -62,23 +60,23 @@ const getAllTenders = async () => {
     include: [
       {
         model: Companies,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Subcategories,
-        attributes: ['id', 'name', 'CategoryId'],
+        attributes: ["id", "name", "CategoryId"],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Proposals,
-        attributes: ['id', 'totalAmount', 'status'],
+        attributes: ["id", "totalAmount", "status"],
         include: {
           model: Companies,
-          attributes: ['id', 'name'],
+          attributes: ["id", "name"],
         },
       },
     ],
@@ -96,23 +94,23 @@ const filterTendersByName = async (name) => {
     include: [
       {
         model: Companies,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Subcategories,
-        attributes: ['id', 'name', 'CategoryId'],
+        attributes: ["id", "name", "CategoryId"],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Proposals,
-        attributes: ['id', 'totalAmount', 'status'],
+        attributes: ["id", "totalAmount", "status"],
         include: {
           model: Companies,
-          attributes: ['id', 'name'],
+          attributes: ["id", "name"],
         },
       },
     ],
@@ -125,28 +123,28 @@ const getTenderById = async (id) => {
     include: [
       {
         model: Companies,
-        attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+        attributes: ["id", "name", "profilePicture", "bannerPicture"],
       },
       {
         model: Categories,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ['id', 'name', 'CategoryId'],
+        attributes: ["id", "name", "CategoryId"],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Proposals,
-        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
         include: {
           model: Companies,
-          attributes: ['id', 'name'],
+          attributes: ["id", "name"],
         },
       },
     ],
@@ -184,7 +182,7 @@ const createTender = async (body) => {
     !subcategories ||
     !companyId
   ) {
-    const error = new Error('Missing required attributes.');
+    const error = new Error("Missing required attributes.");
     error.status = 400;
     throw error;
   }
@@ -205,28 +203,28 @@ const createTender = async (body) => {
     include: [
       {
         model: Companies,
-        attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+        attributes: ["id", "name", "profilePicture", "bannerPicture"],
       },
       {
         model: Categories,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ['id', 'name', 'CategoryId'],
+        attributes: ["id", "name", "CategoryId"],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Proposals,
-        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
         include: {
           model: Companies,
-          attributes: ['id', 'name'],
+          attributes: ["id", "name"],
         },
       },
     ],
@@ -276,28 +274,28 @@ const updateTender = async (id, body) => {
     include: [
       {
         model: Companies,
-        attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+        attributes: ["id", "name", "profilePicture", "bannerPicture"],
       },
       {
         model: Categories,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ['id', 'name', 'CategoryId'],
+        attributes: ["id", "name", "CategoryId"],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Proposals,
-        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
+        attributes: ["id", "totalAmount", "projectDuration", "status"],
         include: {
           model: Companies,
-          attributes: ['id', 'name'],
+          attributes: ["id", "name"],
         },
       },
     ],
@@ -317,23 +315,23 @@ const deleteTender = async (id) => {
     include: [
       {
         model: Companies,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Subcategories,
-        attributes: ['id', 'name', 'CategoryId'],
+        attributes: ["id", "name", "CategoryId"],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name"],
       },
       {
         model: Proposals,
-        attributes: ['id', 'totalAmount', 'status'],
+        attributes: ["id", "totalAmount", "status"],
         include: {
           model: Companies,
-          attributes: ['id', 'name'],
+          attributes: ["id", "name"],
         },
       },
     ],

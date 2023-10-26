@@ -1,4 +1,3 @@
-'use client'
 import './globals.css'
 import { Montserrat } from 'next/font/google'
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -19,15 +18,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   
-  const user = getLocalStorage();
-  console.log('userPage:',user) 
+  // const user = getLocalStorage();
+  // console.log('userPage:',user) 
 
   return (
     <html lang="en">
       <Providers>
       <body className={`${montserrat.className} bg-[#F7F7F7] flex flex-col`}>
         <div className="flex-grow">
-          <Navigation user={user}/>
+          <Navigation/>
           <main className="mx-auto">
             {children}
           </main>

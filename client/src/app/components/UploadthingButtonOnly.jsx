@@ -12,6 +12,7 @@ import Link from "next/link";
 
 export default function UploadthingButtonOnly({onFilesUpload}) {
   const [attachments, setAttachments] = useState([]);
+  const companyId = useSelector((state) => state.user.userData.company.id);
   
 
   const handleFiles = async (cleanRes) => {

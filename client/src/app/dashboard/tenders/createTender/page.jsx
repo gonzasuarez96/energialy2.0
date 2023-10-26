@@ -102,6 +102,11 @@ function CreateTenderForm() {
     }
   };
 
+  // const handleBudgetChange = (e) => {
+  //   const budgetNumber = parseInt(e.target.value);
+  //   setTenderData({ ...tenderData, budget: budgetNumber });
+  // }
+
   const handleShowChange = (e) => {
     if(isShow === false){
       setIsShow(true);
@@ -119,7 +124,7 @@ function CreateTenderForm() {
 
   const handleInputsChanges = (e) => {
     setTenderData({ ...tenderData, [e.target.name]: e.target.value });
-    //console.log(tenderData);
+    console.log(tenderData);
   }
 
   const validation = (tenderData) => {
@@ -183,6 +188,7 @@ function CreateTenderForm() {
        displaySuccessMessage("Licitación creada con éxito");
        setTimeout(() => router.back(), 2000);
      } catch (error) {
+      console.log(error)
        displayFailedMessage(error.response.data.error);
      }
      
