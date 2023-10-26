@@ -4,12 +4,14 @@ import { useGetTendersQuery } from "@/app/redux/services/tendersApi";
 import { useSelector } from "react-redux";
 import CardTender from "@/app/components/CardTender";
 import CardUserTender from "@/app/components/CardUserTender";
+import getLocalStorage from "@/app/Func/localStorage";
 
 
 
 
 function Licitaciones() {
-  const userData = useSelector((state) => state.user.userData);
+  const userData = getLocalStorage()
+  //const userData = useSelector((state) => state.user.userData);
   const {data:tenders, isLoading} = useGetTendersQuery()
 
   //console.log(tenders)
