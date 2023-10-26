@@ -1,19 +1,27 @@
 'use client'
 import React from "react";
-import { useSelector } from "react-redux";
 import Buttons from "./components/Buttons";
 import DashboardTextCard from '@/app/components/DashboardTextCard'
 import DashboardKpiCard from "@/app/components/DashboardKpiCard";
 import DashboardTableData from "@/app/components/DashboardTableData";
 import { useGetProposalsQuery } from "../redux/services/ProposalApi";
 import { useGetTendersQuery } from "../redux/services/tendersApi";
+import getLocalStorage from "../Func/localStorage";
 
 function DasboardPage() {
   
-
-  const userD = localStorage.getItem("user");
-  const user = JSON.parse(userD);
+  const user = getLocalStorage()
   console.log('userPage:',user)
+
+  const {data:proposals, isLoading:loadingProposals} = useGetProposalsQuery()
+  const {data: tenders, isLoading:loadingTenders} = useGetTendersQuery()
+
+  console.log('proposals:',proposals)
+  console.log('tenders:',tenders)
+  const userProposals = proposals?.filter(proposal=> proposal.company.id === user.company.id);
+  console.log('userProposals:',userProposals)
+  const userTenders = tenders?.filter(tender=> tender.company.id === user.company.id);
+  console.log('userTenders:',userTenders)
 
   return (
     <div className="w-full h-100 bg-[#f8f8fb] ml-4">
@@ -36,7 +44,7 @@ function DasboardPage() {
             />
             <DashboardKpiCard
               title={"Propuestas Enviadas En Otras Licitaciones "}
-              content={userProposals}
+              content={userTenders}
             />
           </div>
           {/*Rigth */}
@@ -54,7 +62,8 @@ function DasboardPage() {
           </div>
         </div>
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
-          <DashboardTableData title={"MIS LICITACIONES"} data={userTenders} />
+          {!loadingTenders ?  <DashboardTableData title={"MIS LICITACIONES"} data={userTenders} /> : <p>Cargando..</p> }
+         
         </div>
       </div>
     </div>
