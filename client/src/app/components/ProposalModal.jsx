@@ -15,7 +15,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {useSelector}  from 'react-redux'
+import getLocalStorage from "../Func/localStorage";
 //import UploadthingButton from "./UploadthingButton";
 
 
@@ -62,7 +62,7 @@ export function ProposalModal({open, handleOpen, data}) {
       companyId: "",
       // attachments: [],
     });
-    const userData = useSelector((state) => state.user.userData);
+    const userData = getLocalStorage();
     const [serviceFeePercentage, setServiceFeePercentage] = useState(1);
     const [serviceAmount, setServiceAmount] = useState(0);
     const [receiverAmount, setReceiverAmount] = useState(0);

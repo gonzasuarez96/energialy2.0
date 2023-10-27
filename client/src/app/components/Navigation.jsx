@@ -10,13 +10,15 @@ import React, { useEffect, useState } from "react";
 
 
 import { useRouter } from "next/navigation";
+import getLocalStorage from "../Func/localStorage";
 
 
-export default function Navigation({user}) {
-  console.log('userNav:',user)
+export default function Navigation() {
+  const [user, setUser] = useState(null);
+  
 
   function isAuthenticated() {
-    if (user?.firstName) {
+    if (user) {
       return true;
     } else {
       return false;
@@ -26,7 +28,10 @@ export default function Navigation({user}) {
   let pathname = usePathname() || "/";
   const router = useRouter();
 
-
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user);
+  },[])
 
   return (
     <Disclosure as="nav">

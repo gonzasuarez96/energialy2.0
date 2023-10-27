@@ -4,24 +4,31 @@
 import "@uploadthing/react/styles.css";
 
 import { UploadButton } from "@uploadthing/react";
-import { useState } from "react";
-import { useSelector } from "react-redux/es/hooks/useSelector";
+import { useEffect, useState } from "react";
+
 import axios from 'axios';
 
 import Link from "next/link";
+import getLocalStorage from "../Func/localStorage";
 
 export default function UploadthingButtonMany({onFilesUpload}) {
   const [attachments, setAttachments] = useState([]);
-  //const companyId = useSelector((state) => state.user.userData.company.id);
+  const [user, setUser] = useState(null)
+  const [company, setCompany] = useState(null)
+  console.log('user:',user)
+  
+  
 
   const handleFiles = async (cleanRes) => {
+     
+    
     console.log('props:',onFilesUpload)
-    const companyId = useSelector((state) => state.user.userData.company.id);
+    
     try {
       const res = await axios.post("http://localhost:3001/documents", {
         name: onFilesUpload,
         attachment: cleanRes[0],
-        companyId: companyId,
+        companyId: company.id,
       });
       console.log('res del servidor:',res.data)
     } catch (error) {
@@ -49,6 +56,13 @@ export default function UploadthingButtonMany({onFilesUpload}) {
       </ul>
     </>
   );
+
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user)
+    setCompany(user.company)
+
+  },[])
 
   return (
     <main className="flex flex-col items-center justify-center">

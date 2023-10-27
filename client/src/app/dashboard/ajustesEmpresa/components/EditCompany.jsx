@@ -1,11 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { Montserrat } from "next/font/google";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import getLocalStorage from "@/app/Func/localStorage";
 
 // ---------------------- Toastify -------------------------//
 const displaySuccessMessage = (mensaje) => {
@@ -63,9 +63,10 @@ const organizationTypes = [
 export default function EditCompany({ option }) {
   console.log("option:", option);
   const router = useRouter();
-  const user = useSelector((state) => state.user.userData);
 
   // ------------ Estados locales para los campos editables ---------------------//
+  const [user, setUser] = useState(null);
+  console.log(user)
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -132,11 +133,7 @@ export default function EditCompany({ option }) {
     }
   };
 
-  useEffect(() => {
-    getLocation();
-    getSubcategories();
-    getCategories();
-  }, []);
+  
 
   // -------- Handlers de campos ----------------- //
 
@@ -321,6 +318,14 @@ export default function EditCompany({ option }) {
 
   // ------------------------------------------------------------------------ //
 
+  useEffect(() => {
+    const user = getLocalStorage()
+    setUser(user)
+    getLocation();
+    getSubcategories();
+    getCategories();
+  }, []);
+
   return (
     <div className="p-5 m-2">
       {(!option || option === 0 || typeof option === 'undefined') && (
@@ -332,8 +337,8 @@ export default function EditCompany({ option }) {
             <input
               type="text"
               id="name"
-              placeholder={user.company?.name}
-              value={name}
+              //placeholder={user.company?.name}
+              value={user?.company.name}
               onChange={(e) => handleInputChange(e, "name")}
               className="w-full px-3 py-2 text-lg rounded border"
             />

@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { setUserData } from "@/app/redux/actions";
+import getLocalStorage from "@/app/Func/localStorage";
 
 // ---------------------- Toastify -------------------------//
 const displaySuccessMessage = (mensaje) => {
@@ -37,11 +37,14 @@ const displaySuccessMessage = (mensaje) => {
   //---------------------------------------------------------------//
 
 export default function EditProfile({ option }) {
-  const user = useSelector((state) => state.user.userData);
+  const [user, setUser] = useState(null);
+  console.log('user:',user)
+  
+  
 
   // Estados locales para los campos editables
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState("");
   const [isEdited, setIsEdited] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -106,6 +109,12 @@ export default function EditProfile({ option }) {
     }
   };
   
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user);
+    setFirstName(user.firstName)
+    setLastName(user.lastName)
+  },[])
 
   return (
     <div className="min-h-screen flex flex-col justify-start shadow-md">

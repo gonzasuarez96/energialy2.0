@@ -3,11 +3,12 @@
 import { useSelector } from "react-redux"
 import CardProposal from "@/app/components/CardProposal";
 import { use } from "react";
+import getLocalStorage from "@/app/Func/localStorage";
 
 function ProposalContainer({proposals}) {
 
 
-const userData = useSelector((state) => state.user.userData);
+const userData = getLocalStorage()
 
 const createUserProposals = () => {
       if (userData.id) {
