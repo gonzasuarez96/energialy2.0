@@ -10,9 +10,9 @@ module.exports = (sequelize) => {
     productName: {
       type: DataTypes.ENUM,
       values: [
+        'Home Banking',
         'CC en pesos $',
         'CC en dólares u$s',
-        'Home Banking',
         'Tarjeta de crédito',
         'Cheques propios',
         'Cheques a terceros',

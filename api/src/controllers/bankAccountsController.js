@@ -20,8 +20,8 @@ const cleanBankAccounts = (bankAccounts) => {
       id: bankAccounts.id,
       status: bankAccounts.status,
       statusMessage: bankAccounts.statusMessage,
-      company: bankAccounts.Company,
       financeProducts: bankAccounts.FinanceProducts,
+      company: bankAccounts.Company,
       isActive: bankAccounts.isActive,
       createdAt: bankAccounts.createdAt,
       updatedAt: bankAccounts.updatedAt,
@@ -45,6 +45,10 @@ const getBankAccountById = async (id) => {
   const foundBankAccount = await BankAccounts.findByPk(id, {
     include: [
       {
+        model: FinanceProducts,
+        attributes: ['id', 'productName', 'status'],
+      },
+      {
         model: Companies,
         attributes: [
           'id',
@@ -57,10 +61,6 @@ const getBankAccountById = async (id) => {
           'legalManager',
         ],
         include: { model: Documents, attributes: ['name', 'attachment'] },
-      },
-      {
-        model: FinanceProducts,
-        attributes: ['id', 'productName', 'status', 'additionalData'],
       },
     ],
   });
@@ -87,7 +87,7 @@ const createBankAccount = async (body) => {
     !foundCompany.fiscalAdress ||
     !foundCompany.cuit ||
     !foundCompany.companyEmail ||
-    !foundCompany.legalManager 
+    !foundCompany.legalManager
     // !foundCompany.documents
   ) {
     const error = new Error(
@@ -103,65 +103,110 @@ const createBankAccount = async (body) => {
     error.status = 400;
     throw error;
   }
-  const newBankAccount = await BankAccounts.create();
+  const newBankAccount = await BankAccounts.create(body);
   await newBankAccount.setCompany(foundCompany);
   const foundNewBankAccount = await BankAccounts.findByPk(newBankAccount.id, {
-    include: {
-      model: Companies,
-      attributes: [
-        'id',
-        'name',
-        'profilePicture',
-        'businessName',
-        'fiscalAdress',
-        'cuit',
-        'companyEmail',
-        'legalManager',
-      ],
-      include: { model: Documents, attributes: ['name', 'attachment'] },
-    },
+    include: [
+      {
+        model: Companies,
+        attributes: [
+          'id',
+          'name',
+          'profilePicture',
+          'businessName',
+          'fiscalAdress',
+          'cuit',
+          'companyEmail',
+          'legalManager',
+        ],
+        include: { model: Documents, attributes: ['name', 'attachment'] },
+      },
+      {
+        model: FinanceProducts,
+        attributes: ['id', 'productName', 'status'],
+      },
+    ],
   });
   return cleanBankAccounts(foundNewBankAccount);
 };
 
 const updateBankAccount = async (id, body) => {
-  const { status } = body;
   const foundBankAccount = await BankAccounts.findByPk(id, {
-    include: {
-      model: Companies,
-      attributes: [
-        'id',
-        'name',
-        'profilePicture',
-        'businessName',
-        'fiscalAdress',
-        'cuit',
-        'companyEmail',
-        'legalManager',
-      ],
-      include: { model: Documents, attributes: ['name', 'attachment'] },
-    },
+    include: [
+      {
+        model: FinanceProducts,
+        attributes: ['id', 'productName', 'status'],
+      },
+      {
+        model: Companies,
+        attributes: [
+          'id',
+          'name',
+          'profilePicture',
+          'businessName',
+          'fiscalAdress',
+          'cuit',
+          'companyEmail',
+          'legalManager',
+        ],
+        include: { model: Documents, attributes: ['name', 'attachment'] },
+      },
+    ],
   });
   if (!foundBankAccount) {
     const error = new Error(`BankAccount with id ${id} not found.`);
     error.status = 404;
     throw error;
   }
-  if (status === 'open') {
-    if (
-      !foundBankAccount.Company.businessName ||
-      !foundBankAccount.Company.fiscalAdress ||
-      !foundBankAccount.Company.cuit ||
-      !foundBankAccount.Company.companyEmail ||
-      !foundBankAccount.Company.legalManager ||
-      !foundBankAccount.Company.Documents
-    ) {
-      const error = new Error(`Missing info to open bank account.`);
-      error.status = 400;
+  if (body.status === 'open') {
+    if (foundBankAccount.status === 'open') {
+      const error = new Error(`BankAccount with id ${id} already open.`);
+      error.status = 404;
       throw error;
     }
+    await foundBankAccount.update(body);
+    await foundBankAccount.update({ statusMessage: null });
+    const openHomebanking = await FinanceProducts.create({
+      productName: 'Home Banking',
+      status: 'accepted',
+    });
+    const openPesoSavingsAccount = await FinanceProducts.create({
+      productName: 'CC en pesos $',
+      status: 'accepted',
+    });
+    const openUSDSavingsAccount = await FinanceProducts.create({
+      productName: 'CC en dólares u$s',
+      status: 'accepted',
+    });
+    await openHomebanking.setBankAccount(foundBankAccount);
+    await openPesoSavingsAccount.setBankAccount(foundBankAccount);
+    await openUSDSavingsAccount.setBankAccount(foundBankAccount);
+    const foundAgainBankAccount = await BankAccounts.findByPk(id, {
+      include: [
+        {
+          model: FinanceProducts,
+          attributes: ['id', 'productName', 'status'],
+        },
+        {
+          model: Companies,
+          attributes: [
+            'id',
+            'name',
+            'profilePicture',
+            'businessName',
+            'fiscalAdress',
+            'cuit',
+            'companyEmail',
+            'legalManager',
+          ],
+          include: { model: Documents, attributes: ['name', 'attachment'] },
+        },
+      ],
+    });
+    return cleanBankAccounts(foundAgainBankAccount);
+  } else {
+    await foundBankAccount.update(body);
   }
-  await foundBankAccount.update(body);
   return cleanBankAccounts(foundBankAccount);
 };
 
