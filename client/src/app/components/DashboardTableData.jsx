@@ -2,6 +2,30 @@ import React from 'react'
 
 function DashboardTableData({title, data}) {
     console.log(data)
+
+    const proposalWineer = (item) => {
+      const winner = item.proposals.find(proposal => proposal.status === "accepted")
+      console.log(winner)
+      if(winner !== undefined){
+        return winner.Company.name;
+      }else{
+        return "No Adjudicada"
+      }
+    }
+
+    const amountWinnerProposal = (item) => {
+      const winner = item.proposals.find(
+        (proposal) => proposal.status === "accepted"
+      );
+      console.log(winner);
+      if (winner !== undefined) {
+        return winner.totalAmount;
+      } else {
+        return "No Adjudicada";
+      }
+    }
+
+
   return (
     <div className="w-full">
       <div>{title} </div>
@@ -39,26 +63,40 @@ function DashboardTableData({title, data}) {
                     ) : (
                       data?.map((item) => (
                         <tr
-                          className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                          className={`border-b transition duration-300 ease-in-out 
+                           ${
+                             item.status === "working"
+                               ? "bg-green-300 hover:bg-green-200"
+                               : item.status === "completed"
+                               ? "bg-green-800 hover:bg-green-500"
+                               : item.status === "expired"
+                               ? "bg-red-300 hover:bg-red-200"
+                               : "hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                           }`}
                           key={item.id}
                         >
                           <td className="whitespace-nowrap px-6 py-4 font-medium">
                             {item.title}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
-                            {item.title}
+                            {proposalWineer(item)}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
-                            U$S: {item.budget}
+                            {item.budget}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
-                            @{item.title}
+                            {amountWinnerProposal(item)}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
                             {item.status === "published"
                               ? "Publicado"
-                              : item.status === "expired" ? "Vencido" : item.status === 'working' ? "En ejecución" : item.statu === 'completed' ? "Finalizado" : null}
-                            
+                              : item.status === "expired"
+                              ? "Vencido"
+                              : item.status === "working"
+                              ? "En ejecución"
+                              : item.statu === "completed"
+                              ? "Finalizado"
+                              : null}
                           </td>
                         </tr>
                       ))

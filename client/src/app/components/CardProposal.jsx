@@ -102,20 +102,23 @@ const CardProposal = ({item}) => {
           <span className="inline-block whitespace-nowrap rounded-[0.27rem] bg-info-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-info-800">
             U$S: {item.totalAmount}
           </span>
-          
-            <p className="text-xs font-medium text-neutral-600">
-              Estado Propuesta
-            </p>
-            {item.status === "sent" ? (
-              <span className="inline-block whitespace-nowrap rounded-lg bg-green-400 p-2   text-center align-baseline text-[0.80em] font-bold leading-none text-neutral-200">
-                Enviada
-              </span>
-            ) : (
-              <span className="inline-block whitespace-nowrap rounded-lg bg-red-400 p-2   text-center align-baseline text-[0.80em] font-bold leading-none text-neutral-300">
-                Cerrada
-              </span>
-            )}
-          
+
+          <p className="text-xs font-medium text-neutral-600">
+            Estado Propuesta
+          </p>
+          {item.status === "sent" ? (
+            <span className="inline-block whitespace-nowrap rounded-lg bg-green-400 p-2   text-center align-baseline text-[0.80em] font-bold leading-none text-neutral-200">
+              Enviada
+            </span>
+          ) : item.status === "accepted" ? (
+            <span className="inline-block whitespace-nowrap rounded-lg bg-green-400 p-2   text-center align-baseline text-[0.80em] font-bold leading-none text-white">
+              Adjudicada
+            </span>
+          ) : (
+            <span className="inline-block whitespace-nowrap rounded-lg bg-red-400 p-2   text-center align-baseline text-[0.80em] font-bold leading-none text-neutral-300">
+              Cerrada
+            </span>
+          )}
         </div>
       </div>
     </div>

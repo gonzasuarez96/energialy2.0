@@ -11,11 +11,16 @@ import getLocalStorage from "../Func/localStorage";
 function DasboardPage() {
   
   const [user, setUser] = useState(null);
- 
+  console.log(user)
+  
   const {data:proposals, isLoading:loadingProposals} = useGetProposalsQuery()
   const {data: tenders, isLoading:loadingTenders} = useGetTendersQuery()
-  const userProposals = proposals?.filter(proposal=> proposal.company.id === user.company.id);
-  const proposalsToUser = proposals?.filter(proposal=> proposal.tender.Company.id === user.company.id);
+  
+    const userProposals = proposals?.filter(proposal=> proposal.company.id === user.company.id);
+    
+    const proposalsToUser = proposals?.filter(proposal=> proposal.tender.Company.id === user.company.id);
+    
+  
   const userTenders = tenders?.filter(tender=> tender.company.id === user.company.id);
 
   useEffect(() => {
