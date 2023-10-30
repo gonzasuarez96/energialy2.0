@@ -1,16 +1,16 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
 import axios from "axios";
 import { displayFailedMessage, displaySuccessMessage } from "@/app/components/Toastify";
 import { ToastContainer} from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useGetCompaniesByIdQuery } from "@/app/redux/services/companiesApi";
+import getLocalStorage from "@/app/Func/localStorage";
+
 
 export default function GarantLoan() {
       // Estados Locales
-  const companyId = useSelector((state) => state.user.userData.company.id);
-  const [bankAccountId, setBankAccountId] = useState("");
-  const [envioExitoso, setEnvioExitoso] = useState(false);
+  const {company} = getLocalStorage();
   const [error, setError] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [fiscalAdress, setFiscalAdress] = useState("");
@@ -26,15 +26,10 @@ export default function GarantLoan() {
   const [destination, setDestination] = useState("");
   const [amountToRequest, setAmountToRequest] = useState("")
   const [garantType, setGarantType] = useState("")
+  const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
+  const bankAccountId = userCompany?.bankAccount.id;
 
   const router = useRouter();
-
-  useEffect(() => {
-    fetch(`http://localhost:3001/companies/${companyId}`)
-      .then((response) => response.json())
-      .then((data) => setBankAccountId(data.bankAccount.id))
-      .catch((error) => console.error("Error fetching data:", error));
-  }, []);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -269,7 +264,6 @@ export default function GarantLoan() {
           />
         </div>
         <div className="flex justify-end">
-          {!envioExitoso && (
             <button
               className="px-10 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
               type="button"
@@ -277,7 +271,6 @@ export default function GarantLoan() {
             >
               Siguiente
             </button>
-          )}
         </div>
         {error && (
           <div className="flex justify-center text-danger mt-2 mb-2">

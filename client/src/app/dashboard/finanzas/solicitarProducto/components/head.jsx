@@ -11,7 +11,7 @@ export default function Head({ onProductoClick, products }) {
   return (
     <div className="pl-4 m-2">
       <label className="font-bold w-full p-4 mb-2 text-xl">Solicitud de Productos</label>
-      <label className="w-full p-4 mb-2">Seleccionar: </label>
+      <label className="w-full p-3 mb-2">Seleccionar: </label>
       <div className="">
         {products.map((producto, index) => (
           <button
