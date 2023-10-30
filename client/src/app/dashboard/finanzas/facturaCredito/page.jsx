@@ -241,7 +241,7 @@ export default function pageCredit() {
               </button>
             </div>
             {error && <div className="text-red-500">{error}</div>}
-            <UploadthingButtonMany />
+            <UploadthingButtonMany company={user}/>
           </form>
         </div>
       </div>
