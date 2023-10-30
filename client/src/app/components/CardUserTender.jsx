@@ -1,10 +1,11 @@
 'use client'
-
+import Link from "next/link";
 
 
 function CardUserTender({item}) {
     console.log(item)
     const totalProposal = item.proposals.length
+   const id = item.id
   return (
     <div className="rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:min-w-[1000px] mb-4 flex justify-between text-sm">
       <div className="md:min-w-[800px]">
@@ -48,10 +49,18 @@ function CardUserTender({item}) {
         <span class="inline-block whitespace-nowrap rounded-[0.27rem] bg-red-500 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-info-200">
           Vence: {item.validityDate}
         </span>
-        <div className="rounded-full bg-primary-900 text-white flex justify-center items-center flex-col p-3 cursor-pointer"
-        onClick={() => totalProposal > 0 ? router.push(`/tenders/tenderProposals`) : alert('No hay propuestas para mostrar')}
-        >
-          Propuestas <span className="text-3xl font-bold">{totalProposal}</span>
+        <div className="flex flex-col items-center gap-2">
+          <p>Total de Propuestas</p>
+          <Link
+            href={`tenders/tenderProposals/${id}`}
+            className="text-white"
+          >
+            <div className="border-3 border-red-500 w-16 h-16 rounded-full flex justify-center items-center cursor-pointer">
+              <span className="text-red-500 font-semibold">
+                {totalProposal.length > 0 ? totalProposal.length : "0"}
+              </span>
+            </div>
+          </Link>
         </div>
       </div>
     </div>

@@ -49,10 +49,16 @@ function DashboardTableData({title, data}) {
                             {item.title}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
-                            {item.title}
+                            U$S: {item.budget}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
                             @{item.title}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.status === "published"
+                              ? "Publicado"
+                              : item.status === "expired" ? "Vencido" : item.status === 'working' ? "En ejecución" : item.statu === 'completed' ? "Finalizado" : null}
+                            
                           </td>
                         </tr>
                       ))
