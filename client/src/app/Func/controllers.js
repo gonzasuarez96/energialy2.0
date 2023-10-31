@@ -13,3 +13,8 @@ export async function changeProposalState(id, status) {
         console.log(error)
     }
 }
+
+export function filterAccount(bankAccounts, status) {
+    const filteredAccounts = bankAccounts.filter((account) => account.status === status)
+    return filteredAccounts
+}

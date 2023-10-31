@@ -22,7 +22,9 @@ function FilterBar() {
   const [search, setSearch] = useState("");
   const [categorieSelected, setCategorieSelected] = useState([])
   const [subCatSelected, setSubCatSelected] = useState([])
-  
+
+
+
   const handleSearch = (e) => {
     const name = e.target.value;
     setSearch(name);
@@ -82,7 +84,9 @@ function FilterBar() {
       <div className="bg-white p-8 mb-4">
         <div className="p-2 border-b-2 border-gray-300 mb-4">
           <h3 className="text-base inline-flex mr-1">Categoria: </h3>
-          <span className="inline-flex mr-1 text-xs">{categorieSelected.label}</span>
+          <span className="inline-flex mr-1 text-xs">
+            {categorieSelected.label}
+          </span>
         </div>
         <div>
           {categoriesLoading && "Loading..."}

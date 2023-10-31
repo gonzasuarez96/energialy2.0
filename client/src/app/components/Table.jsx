@@ -35,12 +35,16 @@ const TABS = [
     value: "all",
   },
   {
+    label: "Pendientes",
+    value: "waiting approval",
+  },
+  {
     label: "Aprobados",
-    value: "evaluated",
+    value: "open",
   },
   {
     label: "Revisión Solicitada",
-    value: "unevaluated",
+    value: "require changes",
   },
 ];
 

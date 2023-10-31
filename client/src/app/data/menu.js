@@ -36,6 +36,7 @@ export const menuBar = [
       {
         title: "Mis Licitaciones",
         url: "/dashboard/tenders",
+        //auth: ['admin', 'superAdmin'],
       },
       { title: "Mis Propuestas", url: "/dashboard/proposals" },
     ],
@@ -60,8 +61,8 @@ export const menuBar = [
       },
       {
         title: "Solicitar producto",
-        url:"/dashboard/finanzas/solicitarProducto"
-      }
+        url: "/dashboard/finanzas/solicitarProducto",
+      },
     ],
   },
   {
@@ -74,7 +75,10 @@ export const menuBar = [
         title: "Cuentas Bancarias",
         url: "/dashboard/bank/accounts",
       },
-      { title: "Productos Financieros", url: "/dashboard/bank/financialProducts" },
+      {
+        title: "Productos Financieros",
+        url: "/dashboard/bank/financialProducts",
+      },
     ],
   },
 ];
