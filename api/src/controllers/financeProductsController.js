@@ -28,13 +28,13 @@ const cleanFinanceProducts = (financeProducts) => {
 
 const getAllFinanceProducts = async () => {
   const allFinanceProducts = await FinanceProducts.findAll({
-    attributes: { exclude: ['createdAt', 'updatedAt'] },
+    attributes: { exclude: ["createdAt", "updatedAt"] },
     include: {
       model: BankAccounts,
-      attributes: ['id', 'status'],
+      attributes: ["id", "status"],
       include: {
         model: Companies,
-        attributes: ['id', 'name'],
+        attributes: ["id", "name", "profilePicture"],
       },
     },
   });

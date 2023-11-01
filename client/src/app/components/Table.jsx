@@ -24,8 +24,13 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AttachmentsModal } from "./AttachmentsModal";
+import { filterAccount } from "../Func/controllers";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import BankModal from "./Modals/BankModal";
+import TextModal from "./Modals/TextModal";
 
 
 
@@ -50,16 +55,48 @@ const TABS = [
 
 
 export function SortableTableAccount({data, isLoading}) {
+  const router = useRouter()
   console.log(data)
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openTextModal, setOpenTextModal] = useState(false);
   const [idAttachments, setIdAttachments] = useState('')
+  const [filteredData, setFilteredData] = useState(null)
+  const [modalData, setModalData] = useState(null)
   console.log(idAttachments)
+  console.log(filteredData)
+  
+  const handleFilter = (status) => {
+      if(status === 'all') {
+        setFilteredData(data)
+        return
+      }
+      const filtered = filterAccount(data, status)
+      setFilteredData(filtered)
+  }
+  
 
   const handleOpen = (id) => {
-    console.log(id)
     setIdAttachments(id)
     setOpen((cur) => !cur)
   }; 
+
+  const handleOpenModal = (id, company) => {
+    setModalData({id: id, company: company})
+    setOpenModal((cur) => !cur)
+  }
+
+  const handleOpenTextModal = (id, company) => {
+    setModalData({ id: id, company: company });
+    setOpenTextModal((cur) => !cur);
+  };
+
+  useEffect(()=> {
+    setFilteredData(data)
+  }, [])
+
+
+
   return (
     <>
       {isLoading ? (
@@ -95,7 +132,12 @@ export function SortableTableAccount({data, isLoading}) {
                 <Tabs value="all" className="md:w-full">
                   <TabsHeader className="w-full">
                     {TABS.map(({ label, value }) => (
-                      <Tab key={value} value={value} className="w-full">
+                      <Tab
+                        key={value}
+                        value={value}
+                        className="w-full cursor-pointer"
+                        onClick={() => handleFilter(value)}
+                      >
                         &nbsp;&nbsp;{label}&nbsp;&nbsp;
                       </Tab>
                     ))}
@@ -106,90 +148,138 @@ export function SortableTableAccount({data, isLoading}) {
             <CardBody className="overflow-scroll px-0">
               <table className="mt-4 w-full min-w-max table-auto text-left">
                 <thead>
-                  <tr className="bg-gray-300">
-                    <th>Empresa</th>
-                    <th>Tipo de Cuenta</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+                  <tr className="bg-gray-100">
+                    <th className="py-2 px-3">Empresa</th>
+                    <th className="py-2 px-3">Tipo de Cuenta</th>
+                    <th className="py-2 px-3">Estado</th>
+                    <th className="py-2 px-3">Acciones</th>
+                    <th className="py-2 px-3">Mensajes</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map(({ id, company, status }, index) => {
-                    const isLast = index === data.length - 1;
-                    const classes = isLast
-                      ? "p-4"
-                      : "p-4 border-b border-blue-gray-50";
+                  {filteredData?.map(
+                    ({ id, company, status, statusMessage }, index) => {
+                      const isLast = index === data.length - 1;
+                      const classes = isLast
+                        ? "p-4"
+                        : "p-4 border-b border-blue-gray-50";
 
-                    return (
-                      <tr
-                        key={company.name}
-                        className={`${
-                          status === "open"
-                            ? "bg-green-200"
-                            : status === "require changes"
-                            ? "bg-red-200"
-                            : "bg-gray-50"
-                        }`}
-                      >
-                        <td className={classes}>
-                          <div className="flex items-center gap-3 align-middle">
-                            <Avatar
-                              src={company.profilePicture}
-                              alt={company.name}
-                              size="sm"
-                            />
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              {company.name}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            >
-                              Cuenta Empresa
-                              {/* {product} */}
-                            </Typography>
-                          </div>
-                        </td>
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Chip variant="ghost" size="sm" value={status} />
-                          </div>
-                        </td>
+                      return (
+                        <tr
+                          key={company.name}
+                          className={`${
+                            status === "open"
+                              ? "bg-green-200"
+                              : status === "require changes"
+                              ? "bg-red-200"
+                              : "bg-gray-50"
+                          }`}
+                        >
+                          <td className={classes}>
+                            <div className="flex items-center gap-3 align-middle">
+                              <Avatar
+                                src={company.profilePicture}
+                                alt={company.name}
+                                size="sm"
+                              />
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-bold"
+                              >
+                                {company.name}
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-bold"
+                              >
+                                Cuenta Empresa
+                              </Typography>
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <div className="w-max">
+                              <Chip
+                                variant="ghost"
+                                size="sm"
+                                value={
+                                  status === "open"
+                                    ? "Abierta"
+                                    : status === "waiting approval"
+                                    ? "Pendiente"
+                                    : "En Revisión"
+                                }
+                              />
+                            </div>
+                          </td>
 
-                        <td className={classes}>
-                          <Tooltip content="Ver Adjuntos">
-                            <IconButton
-                              variant="text"
-                              onClick={() => handleOpen(id)}
-                            >
-                              <DocumentMagnifyingGlassIcon className="h-4 w-4 text-blue-700" />
-                            </IconButton>
-                          </Tooltip>
-                          {/*crear handler para realizar put a /account modificando el state */}
-                          <Tooltip content="Aprobar solicitud">
-                            <IconButton variant="text">
-                              <CheckCircleIcon className="h-4 w-4 text-green-700" />
-                            </IconButton>
-                          </Tooltip>
-                          {/*crear handler para realizar put a /account modificando el state */}
-                          <Tooltip content="Solicitar Revisión">
-                            <IconButton variant="text">
-                              <EyeIcon className="h-4 w-4 text-red-700" />
-                            </IconButton>
-                          </Tooltip>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                          <td className={classes}>
+                            <Tooltip content="Ver Adjuntos">
+                              <IconButton
+                                variant="text"
+                                onClick={() => handleOpen(id)}
+                              >
+                                <DocumentMagnifyingGlassIcon className="h-4 w-4 text-blue-700" />
+                              </IconButton>
+                            </Tooltip>
+                            {/*crear handler para realizar put a /account modificando el state */}
+                            <Tooltip content="Aprobar solicitud">
+                              <IconButton
+                                variant="text"
+                                onClick={() => {
+                                  handleOpenModal(id, company.name);
+                                  //handleChangeStatus(id, { status: "open" });
+                                }}
+                                className={`disabled: ${
+                                  status === "open"
+                                    ? "pointer-events-none opacity-50"
+                                    : null
+                                }`}
+                              >
+                                <CheckCircleIcon className="h-4 w-4 text-green-700" />
+                              </IconButton>
+                            </Tooltip>
+                            {/*crear handler para realizar put a /account modificando el state */}
+                            <Tooltip content="Solicitar Revisión">
+                              <IconButton
+                                variant="text"
+                                onClick={() => {
+                                  handleOpenTextModal(id, company.name);
+                                  // handleChangeStatus(id, {
+                                  //   status: "require changes",
+                                  // });
+                                }}
+                                className={`disabled: ${
+                                  status === "open" ||
+                                  status === "require changes"
+                                    ? "pointer-events-none opacity-50"
+                                    : null
+                                }`}
+                              >
+                                <EyeIcon className="h-4 w-4 text-red-700" />
+                              </IconButton>
+                            </Tooltip>
+                          </td>
+                          <td className={classes}>
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-bold"
+                              >
+                                {statusMessage ? statusMessage : "Sin Mensajes"}
+                              </Typography>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
                 </tbody>
               </table>
             </CardBody>
@@ -211,7 +301,31 @@ export function SortableTableAccount({data, isLoading}) {
               </div>
             </CardFooter>
           </Card>
-          {open && <AttachmentsModal open={open} handleOpen={handleOpen} data={idAttachments} />}
+          {open && (
+            <AttachmentsModal
+              open={open}
+              handleOpen={handleOpen}
+              data={idAttachments}
+            />
+          )}
+          {openModal && (
+            <BankModal
+              open={openModal}
+              handleOpen={handleOpenModal}
+              status="open"
+              id={modalData?.id}
+              company={modalData?.company}
+            />
+          )}
+          {openTextModal && (
+            <TextModal
+              open={openTextModal}
+              handleOpen={handleOpenTextModal}
+              status="require changes"
+              id={modalData?.id}
+              company={modalData?.company}
+            />
+          )}
         </>
       )}
     </>

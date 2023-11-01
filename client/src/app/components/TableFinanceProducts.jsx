@@ -49,7 +49,8 @@ const TABLE_HEAD = [
   "Acciones",
 ];
 
-export function SortableTable({ data }) {
+export function SortableTableProducts({ data }) {
+  console.log(data)
   const changeStatus = (id) => {
     alert("Se cambio el estado del producto con id: " + id + " a aprobado");
   };
@@ -115,7 +116,7 @@ export function SortableTable({ data }) {
             </tr>
           </thead>
           <tbody>
-            {data.map(
+            {data?.map(
               (
                 {
                   id,

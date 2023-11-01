@@ -1,8 +1,9 @@
 'use client';
 
 const buttonsOptions = [
-    'PUBLICAR LICITACION',
-    'SOLICITAR FINANCIAMIENTO',
+    'INVITAR EMPRESAS',
+    'CREAR LICITACION',
+    'FINANCIAMIENTO'
 ];
 
 export default function Buttons() {

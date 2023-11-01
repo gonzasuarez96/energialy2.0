@@ -2,13 +2,13 @@
 import { useGetTenderByIdQuery } from "@/app/redux/services/tendersApi"
 import getLocalStorage from "@/app/Func/localStorage"
 import { useRouter } from "next/navigation";
-import { changeProposalState } from "@/app/Func/controllers";
+import { handleChangeStatus } from "@/app/Func/controllers";
 
 function page({params}) {
   console.log(params)
   const { data:tender, isLoading, isError } = useGetTenderByIdQuery(params.id);
   console.log(tender)
-  
+  const endpoint = 'proposals'
   const router = useRouter()
   const backPage = () => {
     router.back()
@@ -67,7 +67,11 @@ function page({params}) {
                         : null
                     }`}
                     onClick={() =>
-                      changeProposalState(proposal.id, { status: "accepted" })
+                      handleChangeStatus(
+                        proposal.id,
+                        { status: "accepted" },
+                        endpoint
+                      )
                     }
                   >
                     Aceptar
@@ -79,7 +83,11 @@ function page({params}) {
                         : null
                     }`}
                     onClick={() =>
-                      changeProposalState(proposal.id, { status: "declined" })
+                      handleChangeStatus(
+                        proposal.id,
+                        { status: "declined" },
+                        endpoint
+                      )
                     }
                   >
                     Declinar

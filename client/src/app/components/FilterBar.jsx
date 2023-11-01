@@ -1,9 +1,12 @@
 'use client'
 import LocationFilter from "./LocationFilter";
 import { useDispatch } from "react-redux";
-import {filterCompaniesByName, filterCompaniesByCategorie, filterCompaniesBySubcategorie } from "@/app/redux/features/companieSlice";
+import {filterCompaniesByName, filterCompaniesByCategorie, filterCompaniesBySubcategorie, resetFilter } from "@/app/redux/features/companieSlice";
 import { useGetCategoriesQuery } from '../redux/services/categoriesApi';
 import Select from 'react-select';
+
+
+
 
 import { useState } from "react";
 
@@ -23,8 +26,14 @@ function FilterBar() {
   const [categorieSelected, setCategorieSelected] = useState([])
   const [subCatSelected, setSubCatSelected] = useState([])
 
+  const optionsCategories = categories?.map((cat) => ({
+              value: cat.id,
+              label: cat.name,
+            }))
 
-
+  
+  
+  
   const handleSearch = (e) => {
     const name = e.target.value;
     setSearch(name);
@@ -32,6 +41,8 @@ function FilterBar() {
 
   const handleChangeCategories = (e) => {
     //crear las subcategorias para el select
+    
+    
     const subcategories = categories?.find(cat => cat.id === e.value).subcategories
     setSubCatSelected(subcategories.map(subcat => ({label:subcat.name, value:subcat.id})))      
     //mandar a redux las categorias seleccionada para modificar el filterCompanies
@@ -41,6 +52,7 @@ function FilterBar() {
   }
   
   const handleSubcategorieChange = (e) => {
+    if(categorieSelected.length === 0) return
     dispatch(filterCompaniesBySubcategorie(e.value))
     // setSubCatSelected(e)
   }
@@ -90,13 +102,15 @@ function FilterBar() {
         </div>
         <div>
           {categoriesLoading && "Loading..."}
+          {/* <AsyncSelect
+            loadOptions={}
+            onChange={handleChangeCategories}
+          /> */}
           <Select
             defaultInputValue={"Elige una categoria"}
-            options={categories?.map((cat) => ({
-              value: cat.id,
-              label: cat.name,
-            }))}
+            options={optionsCategories}
             onChange={handleChangeCategories}
+            defaultValue={"todas"}
           />
         </div>
       </div>

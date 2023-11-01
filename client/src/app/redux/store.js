@@ -24,7 +24,7 @@ const store = configureStore({
     [tendersApi.reducerPath]: tendersApi.reducer,
     [proposalsApi.reducerPath]: proposalsApi.reducer,
     [bankAccountApi.reducerPath]: bankAccountApi.reducer,
-    // [financeProductsApi.reducerPath]: financeProductsApi.reducer,
+    [financeProductsApi.reducerPath]: financeProductsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -34,7 +34,7 @@ const store = configureStore({
       tendersApi.middleware,
       proposalsApi.middleware,
       bankAccountApi.middleware,
-      // financeProductsApi.middleware
+      financeProductsApi.middleware
     ),
 });
 

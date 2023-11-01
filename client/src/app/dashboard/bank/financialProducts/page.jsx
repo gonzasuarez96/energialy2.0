@@ -1,41 +1,37 @@
-import { BankCard } from "@/app/components/CardBankDashboard"
-import { SortableTable } from "@/app/components/TableFinanceProducts";
-import {financeProducts } from "@/app/dashboard/bank/financialProducts/data"
+"use client";
+import { BankCard } from "@/app/components/CardBankDashboard";
+import { SortableTableProducts } from "@/app/components/TableFinanceProducts";
+import { useGetFinanceProductsQuery } from "@/app/redux/services/financeProductsApi";
+import { useGetBankAccountQuery } from "@/app/redux/services/bankAccountApi";
 
+function FinanceProductsPage() {
+  const { data: financeProducts, isLoading } = useGetFinanceProductsQuery();
 
-
-
-const testingData = [
-  {
-    title: "Solicitados",
-    quantity: 5,
-  },
-  {
-    title: "Aprobados",
-    quantity: 15,
-  },
-  {
-    title: "En revisión",
-    quantity: 4,
-  },
-];
-
-
-
-function BankDashboard() {
-
-  
-  
   return (
     <>
       <div className="flex w-full gap-4 justify-evenly mb-4">
-        {testingData.map((item) => (
-            <BankCard key={item.title} data={item} />
-        ))}
+        {isLoading ? (
+          <p>Cargando...</p>
+        ) : (
+          
+          <div className="flex justify-between w-full">
+            <BankCard
+              data={financeProducts}
+              title="Pendientes"
+              status="waiting approval"
+            />
+            <BankCard data={financeProducts} title="Aprobados" status="accepted" />
+            <BankCard
+              data={financeProducts}
+              title="En revisión"
+              status="require changes"
+            />
+          </div>
+        )}
       </div>
-      <SortableTable data={financeProducts}/>
+      <SortableTableProducts data={financeProducts} />
     </>
   );
 }
 
-export default BankDashboard
+export default FinanceProductsPage;
