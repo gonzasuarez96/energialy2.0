@@ -115,17 +115,17 @@ export function SortableTableAccount({data, isLoading}) {
                   </Typography>
                 </div>
                 <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                  <Button variant="outlined" size="sm">
+                  {/* <Button variant="outlined" size="sm">
                     Ver Todos
-                  </Button>
-                  <div className="w-full md:w-72 rounded-md  border-1 border-gray-300 p-2 flex items-center justify-between">
+                  </Button> */}
+                  {/* <div className="w-full md:w-72 rounded-md  border-1 border-gray-300 p-2 flex items-center justify-between">
                     <input
                       className="focus:border-none"
                       label="Search"
                       placeholder="Buscar..."
                     />
                     <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="flex flex-col items-center justify-between gap-5 md:flex-row md:w-full">
