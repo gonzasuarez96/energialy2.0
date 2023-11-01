@@ -26,7 +26,7 @@ import {
 } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { AttachmentsModal } from "./AttachmentsModal";
-import { filterAccount } from "../Func/controllers";
+import { filterData } from "../Func/controllers";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import BankModal from "./Modals/BankModal";
@@ -71,7 +71,7 @@ export function SortableTableAccount({data, isLoading}) {
         setFilteredData(data)
         return
       }
-      const filtered = filterAccount(data, status)
+      const filtered = filterData(data, status)
       setFilteredData(filtered)
   }
   

@@ -6,13 +6,13 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
-import { filterAccount } from "@/app/Func/controllers";
+import { filterData } from "@/app/Func/controllers";
 
 
 
 export function BankCard({data, title, status}) {
 
-  const filteredData = filterAccount(data, status)
+  const filteredData = filterData(data, status)
   
   return (
     <Card className="mt-6 w-96">

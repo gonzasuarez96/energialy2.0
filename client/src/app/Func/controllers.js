@@ -2,9 +2,9 @@ import axios from "axios";
 
 
 
-export function filterAccount(bankAccounts, status) {
-    const filteredAccounts = bankAccounts.filter((account) => account.status === status)
-    return filteredAccounts
+export function filterData(data, status) {
+    const filteredData= data.filter((item) => item.status === status)
+    return filteredData;
 }
 
 export const handleChangeStatus = async (id, status, endpoint) => {
