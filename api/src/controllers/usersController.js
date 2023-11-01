@@ -9,9 +9,9 @@ const cleanUsers = (users) => {
       email: user.email,
       role: user.role,
       company: user.Company,
-      isActive: user.isActive
-  }));
-  return cleanUsersArray;
+      isActive: user.isActive,
+    }));
+    return cleanUsersArray;
   } else {
     const cleanUserDetail = {
       id: users.id,
@@ -25,18 +25,18 @@ const cleanUsers = (users) => {
       company: users.Company,
       isActive: users.isActive,
       createdAt: users.createdAt,
-      updatedAt: users.updatedAt
+      updatedAt: users.updatedAt,
     };
     return cleanUserDetail;
   }
-}
+};
 
 const getAllUsers = async () => {
   const allUsers = await Users.findAll({
     include: {
       model: Companies,
-      attributes: ["id", "name"]
-    }
+      attributes: ['id', 'name'],
+    },
   });
   return cleanUsers(allUsers);
 };
@@ -45,8 +45,8 @@ const getUserById = async (id) => {
   const foundUser = await Users.findByPk(id, {
     include: {
       model: Companies,
-      attributes: ["id", "name", "profilePicture", "bannerPicture"]
-    }
+      attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+    },
   });
   if (!foundUser) {
     const error = new Error(`User with id ${id} not found.`);
@@ -61,8 +61,8 @@ const getUserByEmail = async (email) => {
     where: { email: email },
     include: {
       model: Companies,
-      attributes: ["id", "name", "profilePicture", "bannerPicture"]
-    }
+      attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+    },
   });
   if (!foundUser) {
     const error = new Error(`User with email ${email} not found.`);
@@ -76,8 +76,8 @@ const updateUserProfile = async (id, newData) => {
   const foundUser = await Users.findByPk(id, {
     include: {
       model: Companies,
-      attributes: ["id", "name", "profilePicture", "bannerPicture"]
-    }
+      attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+    },
   });
   if (!foundUser) {
     const error = new Error(`User with id ${id} not found.`);
@@ -90,14 +90,12 @@ const updateUserProfile = async (id, newData) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const { email } = req.params; 
-    const { newPassword } = req.body; 
+    const { email } = req.params;
+    const { newPassword } = req.body;
 
-    
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     console.log('Hashed Password:', hashedPassword);
 
- 
     const user = await Users.findOne({ where: { email } });
     console.log('User:', user);
 
@@ -105,7 +103,6 @@ const resetPassword = async (req, res) => {
       return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
 
-  
     user.hashedPassword = hashedPassword;
     await user.save();
     console.log('Password updated');
@@ -122,6 +119,5 @@ module.exports = {
   updateUserProfile,
   resetPassword,
   getUserById,
-  getUserByEmail
+  getUserByEmail,
 };
-

@@ -1,9 +1,4 @@
-const {
-  BankAccounts,
-  Companies,
-  Documents,
-  FinanceProducts,
-} = require('../db');
+const { BankAccounts, Companies, Documents, FinanceProducts } = require('../db');
 
 const cleanBankAccounts = (bankAccounts) => {
   if (Array.isArray(bankAccounts)) {
@@ -50,16 +45,7 @@ const getBankAccountById = async (id) => {
       },
       {
         model: Companies,
-        attributes: [
-          'id',
-          'name',
-          'profilePicture',
-          'businessName',
-          'fiscalAdress',
-          'cuit',
-          'companyEmail',
-          'legalManager',
-        ],
+        attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
         include: { model: Documents, attributes: ['name', 'attachment'] },
       },
     ],
@@ -90,16 +76,12 @@ const createBankAccount = async (body) => {
     !foundCompany.legalManager
     // !foundCompany.documents
   ) {
-    const error = new Error(
-      `Missing required attributes of the company to create a bank account.`
-    );
+    const error = new Error(`Missing required attributes of the company to create a bank account.`);
     error.status = 400;
     throw error;
   }
   if (foundCompany.BankAccount) {
-    const error = new Error(
-      `Company ${foundCompany.name} already has a bank account.`
-    );
+    const error = new Error(`Company ${foundCompany.name} already has a bank account.`);
     error.status = 400;
     throw error;
   }
@@ -109,16 +91,7 @@ const createBankAccount = async (body) => {
     include: [
       {
         model: Companies,
-        attributes: [
-          'id',
-          'name',
-          'profilePicture',
-          'businessName',
-          'fiscalAdress',
-          'cuit',
-          'companyEmail',
-          'legalManager',
-        ],
+        attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
         include: { model: Documents, attributes: ['name', 'attachment'] },
       },
       {
@@ -139,16 +112,7 @@ const updateBankAccount = async (id, body) => {
       },
       {
         model: Companies,
-        attributes: [
-          'id',
-          'name',
-          'profilePicture',
-          'businessName',
-          'fiscalAdress',
-          'cuit',
-          'companyEmail',
-          'legalManager',
-        ],
+        attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
         include: { model: Documents, attributes: ['name', 'attachment'] },
       },
     ],
@@ -189,16 +153,7 @@ const updateBankAccount = async (id, body) => {
         },
         {
           model: Companies,
-          attributes: [
-            'id',
-            'name',
-            'profilePicture',
-            'businessName',
-            'fiscalAdress',
-            'cuit',
-            'companyEmail',
-            'legalManager',
-          ],
+          attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
           include: { model: Documents, attributes: ['name', 'attachment'] },
         },
       ],

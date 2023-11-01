@@ -63,9 +63,7 @@ const createDocument = async (body) => {
   const documents = foundCompany.Documents;
   const documentExists = documents.some((document) => document.name === name);
   if (documentExists) {
-    const error = new Error(
-      `${foundCompany.name} already has ${name} document.`
-    );
+    const error = new Error(`${foundCompany.name} already has ${name} document.`);
     error.status = 400;
     throw error;
   }

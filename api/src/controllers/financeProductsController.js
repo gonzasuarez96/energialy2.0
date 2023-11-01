@@ -71,37 +71,26 @@ const createFinanceProduct = async (body) => {
     include: { model: FinanceProducts },
   });
   const financeProducts = foundBankAccount.FinanceProducts;
-  if (
-    productName === 'CC en pesos $' ||
-    productName === 'CC en dólares u$s' ||
-    productName === 'Home Banking'
-  ) {
-    const financeProductExist = financeProducts.some(
-      (financeProduct) => financeProduct.productName === productName
-    );
+  if (productName === 'CC en pesos $' || productName === 'CC en dólares u$s' || productName === 'Home Banking') {
+    const financeProductExist = financeProducts.some((financeProduct) => financeProduct.productName === productName);
     if (financeProductExist) {
-      const error = new Error(
-        `This bank account already have a ${productName}`
-      );
+      const error = new Error(`This bank account already have a ${productName}`);
       error.status = 400;
       throw error;
     }
   }
   const newFinanceProduct = await FinanceProducts.create(body);
   await newFinanceProduct.setBankAccount(foundBankAccount);
-  const foundNewFinanceProduct = await FinanceProducts.findByPk(
-    newFinanceProduct.id,
-    {
+  const foundNewFinanceProduct = await FinanceProducts.findByPk(newFinanceProduct.id, {
+    include: {
+      model: BankAccounts,
+      attributes: ['id', 'status'],
       include: {
-        model: BankAccounts,
-        attributes: ['id', 'status'],
-        include: {
-          model: Companies,
-          attributes: ['id', 'name'],
-        },
+        model: Companies,
+        attributes: ['id', 'name'],
       },
-    }
-  );
+    },
+  });
   return cleanFinanceProducts(foundNewFinanceProduct);
 };
 

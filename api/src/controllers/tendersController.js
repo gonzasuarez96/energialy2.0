@@ -1,12 +1,5 @@
-const {
-  Tenders,
-  Proposals,
-  Companies,
-  Locations,
-  Categories,
-  Subcategories,
-} = require("../db");
-const { Op } = require("sequelize");
+const { Tenders, Proposals, Companies, Locations, Categories, Subcategories } = require('../db');
+const { Op } = require('sequelize');
 
 const cleanTenders = (tenders) => {
   if (Array.isArray(tenders)) {
@@ -60,23 +53,23 @@ const getAllTenders = async () => {
     include: [
       {
         model: Companies,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId"],
+        attributes: ['id', 'name', 'CategoryId'],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "status"],
+        attributes: ['id', 'totalAmount', 'status'],
         include: {
           model: Companies,
-          attributes: ["id", "name"],
+          attributes: ['id', 'name'],
         },
       },
     ],
@@ -94,23 +87,23 @@ const filterTendersByName = async (name) => {
     include: [
       {
         model: Companies,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId"],
+        attributes: ['id', 'name', 'CategoryId'],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "status"],
+        attributes: ['id', 'totalAmount', 'status'],
         include: {
           model: Companies,
-          attributes: ["id", "name"],
+          attributes: ['id', 'name'],
         },
       },
     ],
@@ -123,28 +116,28 @@ const getTenderById = async (id) => {
     include: [
       {
         model: Companies,
-        attributes: ["id", "name", "profilePicture", "bannerPicture"],
+        attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
       },
       {
         model: Categories,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId"],
+        attributes: ['id', 'name', 'CategoryId'],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
         include: {
           model: Companies,
-          attributes: ["id", "name"],
+          attributes: ['id', 'name'],
         },
       },
     ],
@@ -158,40 +151,16 @@ const getTenderById = async (id) => {
 };
 
 const createTender = async (body) => {
-  const {
-    title,
-    description,
-    contractType,
-    majorSector,
-    projectDuration,
-    budget,
-    validityDate,
-    locationId,
-    subcategories,
-    companyId,
-  } = body;
-  if (
-    !title ||
-    !description ||
-    !contractType ||
-    !majorSector ||
-    !projectDuration ||
-    !budget ||
-    !validityDate ||
-    !locationId ||
-    !subcategories ||
-    !companyId
-  ) {
-    const error = new Error("Missing required attributes.");
+  const { title, description, contractType, majorSector, projectDuration, budget, validityDate, locationId, subcategories, companyId } = body;
+  if (!title || !description || !contractType || !majorSector || !projectDuration || !budget || !validityDate || !locationId || !subcategories || !companyId) {
+    const error = new Error('Missing required attributes.');
     error.status = 400;
     throw error;
   }
   const newTender = await Tenders.create(body);
   for (const subcategoryId of subcategories) {
     const foundSubcategory = await Subcategories.findByPk(subcategoryId);
-    const foundParentCategory = await Categories.findByPk(
-      foundSubcategory.CategoryId
-    );
+    const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
     await newTender.addSubcategory(foundSubcategory);
     await newTender.addCategory(foundParentCategory);
   }
@@ -203,28 +172,28 @@ const createTender = async (body) => {
     include: [
       {
         model: Companies,
-        attributes: ["id", "name", "profilePicture", "bannerPicture"],
+        attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
       },
       {
         model: Categories,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId"],
+        attributes: ['id', 'name', 'CategoryId'],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
         include: {
           model: Companies,
-          attributes: ["id", "name"],
+          attributes: ['id', 'name'],
         },
       },
     ],
@@ -235,12 +204,7 @@ const createTender = async (body) => {
 const updateTender = async (id, body) => {
   const { locationId, subcategories } = body;
   const foundTender = await Tenders.findByPk(id, {
-    include: [
-      { model: Companies },
-      { model: Categories },
-      { model: Subcategories },
-      { model: Locations },
-    ],
+    include: [{ model: Companies }, { model: Categories }, { model: Subcategories }, { model: Locations }],
   });
   if (!foundTender) {
     const error = new Error(`Tender with id ${id} not found.`);
@@ -255,17 +219,13 @@ const updateTender = async (id, body) => {
   if (subcategories) {
     for (const subcategory of foundTender.Subcategories) {
       const foundSubcategory = await Subcategories.findByPk(subcategory.id);
-      const foundParentCategory = await Categories.findByPk(
-        foundSubcategory.CategoryId
-      );
+      const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
       await foundTender.removeSubcategory(foundSubcategory);
       await foundTender.removeCategory(foundParentCategory);
     }
     for (const subcategoryId of subcategories) {
       const foundSubcategory = await Subcategories.findByPk(subcategoryId);
-      const foundParentCategory = await Categories.findByPk(
-        foundSubcategory.CategoryId
-      );
+      const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
       await foundTender.addSubcategory(foundSubcategory);
       await foundTender.addCategory(foundParentCategory);
     }
@@ -274,28 +234,28 @@ const updateTender = async (id, body) => {
     include: [
       {
         model: Companies,
-        attributes: ["id", "name", "profilePicture", "bannerPicture"],
+        attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
       },
       {
         model: Categories,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
         through: { attributes: [] },
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId"],
+        attributes: ['id', 'name', 'CategoryId'],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "projectDuration", "status"],
+        attributes: ['id', 'totalAmount', 'projectDuration', 'status'],
         include: {
           model: Companies,
-          attributes: ["id", "name"],
+          attributes: ['id', 'name'],
         },
       },
     ],
@@ -315,23 +275,23 @@ const deleteTender = async (id) => {
     include: [
       {
         model: Companies,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Subcategories,
-        attributes: ["id", "name", "CategoryId"],
+        attributes: ['id', 'name', 'CategoryId'],
         through: { attributes: [] },
       },
       {
         model: Locations,
-        attributes: ["id", "name"],
+        attributes: ['id', 'name'],
       },
       {
         model: Proposals,
-        attributes: ["id", "totalAmount", "status"],
+        attributes: ['id', 'totalAmount', 'status'],
         include: {
           model: Companies,
-          attributes: ["id", "name"],
+          attributes: ['id', 'name'],
         },
       },
     ],

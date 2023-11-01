@@ -1,5 +1,5 @@
-const { Proposals, Tenders, Companies, Locations } = require("../db");
-const { Op } = require("sequelize");
+const { Proposals, Tenders, Companies, Locations } = require('../db');
+const { Op } = require('sequelize');
 
 const cleanProposals = (proposals) => {
   if (Array.isArray(proposals)) {
@@ -48,24 +48,15 @@ const getAllProposals = async () => {
     include: [
       {
         model: Tenders,
-        attributes: [
-          "id",
-          "title",
-          "budget",
-          "description",
-          "contractType",
-          "majorSector",
-          "validityDate",
-          "status",
-        ],
+        attributes: ['id', 'title', 'budget', 'description', 'contractType', 'majorSector', 'validityDate', 'status'],
         include: {
           model: Companies,
-          attributes: ["id", "name"],
+          attributes: ['id', 'name'],
         },
       },
       {
         model: Companies,
-        attributes: ["id", "name", "profilePicture"],
+        attributes: ['id', 'name', 'profilePicture'],
       },
     ],
   });
@@ -77,23 +68,23 @@ const getProposalById = async (id) => {
     include: [
       {
         model: Tenders,
-        attributes: ["id", "title", "budget", "majorSector", "projectDuration"],
+        attributes: ['id', 'title', 'budget', 'majorSector', 'projectDuration'],
         include: [
           {
             model: Locations,
-            attributes: ["name"],
+            attributes: ['name'],
           },
           {
             model: Companies,
-            attributes: ["id", "name"],
+            attributes: ['id', 'name'],
           },
-        ]
+        ],
       },
       {
         model: Companies,
-        attributes: ["id", "name"]
-      }
-    ]
+        attributes: ['id', 'name'],
+      },
+    ],
   });
   if (!foundProposal) {
     const error = new Error(`Proposal with id ${id} not found.`);
@@ -106,18 +97,17 @@ const getProposalById = async (id) => {
 const createProposal = async (body) => {
   const { totalAmount, projectDuration, description, tenderId, companyId, attachments } = body;
   if (!totalAmount || !projectDuration || !description || !tenderId || !companyId) {
-    console.log(totalAmount, projectDuration, description, tenderId, companyId)
-    const error = new Error("Missing required attributes.");
+    const error = new Error('Missing required attributes.');
     error.status = 400;
     throw error;
   }
   const { serviceAmount, receiverAmount } = calculateFee(totalAmount, 1); // Hardcoded serviceFee; hay que ajustar el fee conforme la suscripción del usuario
-  
+
   const foundTender = await Tenders.findByPk(tenderId, {
     include: {
       model: Companies,
-      attributes: ["id", "name"]
-    }
+      attributes: ['id', 'name'],
+    },
   });
   const foundCompany = await Companies.findByPk(companyId);
   if (foundTender.Company.id === companyId) {
@@ -125,32 +115,32 @@ const createProposal = async (body) => {
     error.status = 400;
     throw error;
   }
-  const newProposal = await Proposals.create({ totalAmount,  serviceAmount, receiverAmount, projectDuration, description, attachments });
+  const newProposal = await Proposals.create({ totalAmount, serviceAmount, receiverAmount, projectDuration, description, attachments });
   await newProposal.setTender(foundTender);
   await newProposal.setCompany(foundCompany);
   const createdProposal = await Proposals.findByPk(newProposal.id, {
     include: [
       {
         model: Tenders,
-        attributes: ["id", "title", "budget", "majorSector", "projectDuration"],
+        attributes: ['id', 'title', 'budget', 'majorSector', 'projectDuration'],
         include: [
           {
             model: Locations,
-            attributes: ["name"],
+            attributes: ['name'],
           },
           {
             model: Companies,
-            attributes: ["id", "name"],
+            attributes: ['id', 'name'],
           },
-        ]
+        ],
       },
       {
         model: Companies,
-        attributes: ["id", "name"]
-      }
-    ]
+        attributes: ['id', 'name'],
+      },
+    ],
   });
-  return createdProposal;
+  return cleanProposals(createdProposal);
 };
 
 const updateProposal = async (id, body) => {
@@ -159,23 +149,23 @@ const updateProposal = async (id, body) => {
     include: [
       {
         model: Tenders,
-        attributes: ["id", "title", "budget", "status", "majorSector", "projectDuration"],
+        attributes: ['id', 'title', 'budget', 'status', 'majorSector', 'projectDuration'],
         include: [
           {
             model: Locations,
-            attributes: ["name"],
+            attributes: ['name'],
           },
           {
             model: Companies,
-            attributes: ["id", "name"],
+            attributes: ['id', 'name'],
           },
-        ]
+        ],
       },
       {
         model: Companies,
-        attributes: ["id", "name"]
-      }
-    ]
+        attributes: ['id', 'name'],
+      },
+    ],
   });
   if (!foundProposal) {
     const error = new Error(`Proposal with id ${id} not found.`);
@@ -183,15 +173,15 @@ const updateProposal = async (id, body) => {
     throw error;
   }
   await foundProposal.update(body);
-  if (status === "accepted") {
+  if (status === 'accepted') {
     const foundTender = await Tenders.findByPk(foundProposal.TenderId, {
-      include: { model: Proposals }
+      include: { model: Proposals },
     });
-    await foundTender.update({ status: "working" });
+    await foundTender.update({ status: 'working' });
     const filteredProposals = foundTender.Proposals.filter((proposal) => proposal.id !== foundProposal.id);
     for (const proposal of filteredProposals) {
       const proposalInstance = await Proposals.findByPk(proposal.id);
-      await proposalInstance.update({ status: "declined" });
+      await proposalInstance.update({ status: 'declined' });
     }
   }
   return cleanProposals(foundProposal);
@@ -209,23 +199,23 @@ const deleteProposal = async (id) => {
     include: [
       {
         model: Tenders,
-        attributes: ["id", "title", "budget", "majorSector", "projectDuration"],
+        attributes: ['id', 'title', 'budget', 'majorSector', 'projectDuration'],
         include: [
           {
             model: Locations,
-            attributes: ["name"],
+            attributes: ['name'],
           },
           {
             model: Companies,
-            attributes: ["id", "name"],
+            attributes: ['id', 'name'],
           },
-        ]
+        ],
       },
       {
         model: Companies,
-        attributes: ["id", "name"]
-      }
-    ]
+        attributes: ['id', 'name'],
+      },
+    ],
   });
   return cleanProposals(remainingProposals);
 };
@@ -235,5 +225,5 @@ module.exports = {
   getProposalById,
   createProposal,
   updateProposal,
-  deleteProposal
+  deleteProposal,
 };

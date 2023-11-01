@@ -45,13 +45,7 @@ const getLocationById = async (id) => {
   const foundLocation = await Locations.findByPk(id, {
     include: {
       model: Companies,
-      attributes: [
-        'id',
-        'name',
-        'foundationYear',
-        'annualRevenue',
-        'employeeCount',
-      ],
+      attributes: ['id', 'name', 'foundationYear', 'annualRevenue', 'employeeCount'],
       through: { attributes: [] },
     },
   });
@@ -77,13 +71,7 @@ const updateLocation = async (id, name, isActive) => {
   const foundLocation = await Locations.findByPk(id, {
     include: {
       model: Companies,
-      attributes: [
-        'id',
-        'name',
-        'foundationYear',
-        'annualRevenue',
-        'employeeCount',
-      ],
+      attributes: ['id', 'name', 'foundationYear', 'annualRevenue', 'employeeCount'],
       through: { attributes: [] },
     },
   });
