@@ -1,5 +1,6 @@
-const { Proposals, Tenders, Companies, Locations } = require('../db');
+const { Proposals, Tenders, Companies, Locations, Users } = require('../db');
 const { Op } = require('sequelize');
+const { sendEmployerEmailProposalReceived, sendSupplierEmailProposalAccepted, sendSupplierEmailProposalDeclined } = require('../services/resend');
 
 const cleanProposals = (proposals) => {
   if (Array.isArray(proposals)) {
@@ -131,6 +132,10 @@ const createProposal = async (body) => {
           {
             model: Companies,
             attributes: ['id', 'name'],
+            include: {
+              model: Users,
+              attributes: ['id', 'email', 'firstName', 'lastName', 'role'],
+            },
           },
         ],
       },
@@ -140,6 +145,13 @@ const createProposal = async (body) => {
       },
     ],
   });
+  const employerEmail = createdProposal.Tender.Company.Users[0].email;
+  const employerName = createdProposal.Tender.Company.Users[0].firstName;
+  const supplierCompanyName = createdProposal.Company.name;
+  const tenderTitle = createdProposal.Tender.title;
+  const proposalAmount = createdProposal.totalAmount;
+  const proposalDuration = createdProposal.projectDuration;
+  await sendEmployerEmailProposalReceived(employerEmail, employerName, supplierCompanyName, tenderTitle, proposalAmount, proposalDuration);
   return cleanProposals(createdProposal);
 };
 
@@ -164,6 +176,10 @@ const updateProposal = async (id, body) => {
       {
         model: Companies,
         attributes: ['id', 'name'],
+        include: {
+          model: Users,
+          attributes: ['id', 'email', 'firstName', 'lastName', 'role'],
+        },
       },
     ],
   });
@@ -180,9 +196,44 @@ const updateProposal = async (id, body) => {
     await foundTender.update({ status: 'working' });
     const filteredProposals = foundTender.Proposals.filter((proposal) => proposal.id !== foundProposal.id);
     for (const proposal of filteredProposals) {
-      const proposalInstance = await Proposals.findByPk(proposal.id);
+      const proposalInstance = await Proposals.findByPk(proposal.id, {
+        include: [
+          {
+            model: Tenders,
+            attributes: ['id', 'title', 'budget', 'status', 'majorSector', 'projectDuration'],
+            include: [
+              {
+                model: Locations,
+                attributes: ['name'],
+              },
+              {
+                model: Companies,
+                attributes: ['id', 'name'],
+              },
+            ],
+          },
+          {
+            model: Companies,
+            attributes: ['id', 'name'],
+            include: {
+              model: Users,
+              attributes: ['id', 'email', 'firstName', 'lastName', 'role'],
+            },
+          },
+        ],
+      });
       await proposalInstance.update({ status: 'declined' });
+      const receiver = proposalInstance.Company.Users[0].email;
+      const supplierName = proposalInstance.Company.Users[0].firstName;
+      const employerCompanyName = proposalInstance.Tender.Company.name;
+      const tenderTitle = proposalInstance.Tender.title;
+      await sendSupplierEmailProposalDeclined(receiver, supplierName, employerCompanyName, tenderTitle);
     }
+    const receiver = foundProposal.Company.Users[0].email;
+    const supplierName = foundProposal.Company.Users[0].firstName;
+    const employerCompanyName = foundProposal.Tender.Company.name;
+    const tenderTitle = foundProposal.Tender.title;
+    await sendSupplierEmailProposalAccepted(receiver, supplierName, employerCompanyName, tenderTitle);
   }
   return cleanProposals(foundProposal);
 };

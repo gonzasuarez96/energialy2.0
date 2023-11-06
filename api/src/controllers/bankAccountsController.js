@@ -1,4 +1,5 @@
-const { BankAccounts, Companies, Documents, FinanceProducts } = require('../db');
+const { BankAccounts, Companies, Users, Documents, FinanceProducts } = require('../db');
+const { sendBankEmailNewBankAccount, sendCompanyEmailBankAccountOpen, sendCompanyEmailBankAccountRequireChanges } = require('../services/resend');
 
 const cleanBankAccounts = (bankAccounts) => {
   if (Array.isArray(bankAccounts)) {
@@ -100,6 +101,9 @@ const createBankAccount = async (body) => {
       },
     ],
   });
+  const receiver = 'energialy@bancodecomercio.com.ar';
+  const companyName = foundNewBankAccount.Company.name;
+  await sendBankEmailNewBankAccount(receiver, companyName);
   return cleanBankAccounts(foundNewBankAccount);
 };
 
@@ -113,7 +117,16 @@ const updateBankAccount = async (id, body) => {
       {
         model: Companies,
         attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
-        include: { model: Documents, attributes: ['name', 'attachment'] },
+        include: [
+          {
+            model: Documents,
+            attributes: ['name', 'attachment'],
+          },
+          {
+            model: Users,
+            attributes: ['id', 'firstName', 'lastName', 'email'],
+          },
+        ],
       },
     ],
   });
@@ -154,11 +167,30 @@ const updateBankAccount = async (id, body) => {
         {
           model: Companies,
           attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
-          include: { model: Documents, attributes: ['name', 'attachment'] },
+          include: [
+            {
+              model: Documents,
+              attributes: ['name', 'attachment'],
+            },
+            {
+              model: Users,
+              attributes: ['id', 'firstName', 'lastName', 'email'],
+            },
+          ],
         },
       ],
     });
+    const receiver = foundAgainBankAccount.Company.Users[0].email;
+    const companyOwnerName = foundAgainBankAccount.Company.Users[0].firstName;
+    const companyName = foundAgainBankAccount.Company.name;
+    await sendCompanyEmailBankAccountOpen(receiver, companyOwnerName, companyName);
     return cleanBankAccounts(foundAgainBankAccount);
+  } else if (body.status === 'require changes') {
+    await foundBankAccount.update(body);
+    const receiver = foundBankAccount.Company.Users[0].email;
+    const companyOwnerName = foundBankAccount.Company.Users[0].firstName;
+    const companyName = foundBankAccount.Company.name;
+    await sendCompanyEmailBankAccountRequireChanges(receiver, companyOwnerName, companyName);
   } else {
     await foundBankAccount.update(body);
   }
