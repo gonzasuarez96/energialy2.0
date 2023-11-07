@@ -1,11 +1,10 @@
 import React from 'react'
 
 function DashboardTableData({title, data}) {
-    console.log(data)
 
     const proposalWineer = (item) => {
       const winner = item.proposals.find(proposal => proposal.status === "accepted")
-      console.log(winner)
+     
       if(winner !== undefined){
         return winner.Company.name;
       }else{
@@ -17,7 +16,6 @@ function DashboardTableData({title, data}) {
       const winner = item.proposals.find(
         (proposal) => proposal.status === "accepted"
       );
-      console.log(winner);
       if (winner !== undefined) {
         return winner.totalAmount;
       } else {
