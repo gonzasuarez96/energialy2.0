@@ -95,8 +95,8 @@ export default function Login() {
       displaySuccessMessage("Sesion iniciada");
 
       // Guardar en localStorage
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("user", JSON.stringify(userDetails));
+      sessionStorage.setItem("accessToken", accessToken);
+      sessionStorage.setItem("user", JSON.stringify(userDetails));
 
       dispatch(setUserData(userDetails));
       dispatch(setAccessToken(accessToken));

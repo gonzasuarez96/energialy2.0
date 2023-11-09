@@ -21,7 +21,7 @@ export default function Example() {
   
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     window.location.href = '/';
   };
 
