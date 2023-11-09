@@ -257,7 +257,7 @@ export function SortableTableProducts({ data, isLoading }) {
                                   handleOpenModal(id, bankAccount.Company.name);
                                 }}
                                 className={`disabled: ${
-                                  status === "open"
+                                  status === "accepted"
                                     ? "pointer-events-none opacity-50"
                                     : null
                                 }`}
@@ -275,8 +275,7 @@ export function SortableTableProducts({ data, isLoading }) {
                                   );
                                 }}
                                 className={`disabled: ${
-                                  status === "open" ||
-                                  status === "require changes"
+                                  status === "accepted" || status === "declined"
                                     ? "pointer-events-none opacity-50"
                                     : null
                                 }`}
@@ -293,7 +292,7 @@ export function SortableTableProducts({ data, isLoading }) {
               </table>
             </CardBody>
             <CardFooter className="flex flex-col items-center justify-between border-t border-blue-gray-50 p-4">
-              <Typography
+              {/* <Typography
                 variant="small"
                 color="blue-gray"
                 className="font-normal"
@@ -307,7 +306,7 @@ export function SortableTableProducts({ data, isLoading }) {
                 <Button variant="outlined" size="sm">
                   Siguiente
                 </Button>
-              </div>
+              </div> */}
             </CardFooter>
           </Card>
           {open && (
