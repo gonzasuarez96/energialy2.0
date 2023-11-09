@@ -104,11 +104,6 @@ function CreateTenderForm() {
     }
   };
 
-  // const handleBudgetChange = (e) => {
-  //   const budgetNumber = parseInt(e.target.value);
-  //   setTenderData({ ...tenderData, budget: budgetNumber });
-  // }
-
   const handleShowChange = (e) => {
     if(isShow === false){
       setIsShow(true);

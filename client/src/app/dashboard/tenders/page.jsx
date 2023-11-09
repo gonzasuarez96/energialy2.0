@@ -5,22 +5,37 @@ import { useSelector } from "react-redux";
 import CardTender from "@/app/components/CardTender";
 import CardUserTender from "@/app/components/CardUserTender";
 import getLocalStorage from "@/app/Func/localStorage";
+import PaginationComponent from "@/app/components/PaginationComponent";
+import { useState } from "react";
+
 
 
 
 
 function Licitaciones() {
-  const userData = getLocalStorage()
-  const {data:tenders, isLoading} = useGetTendersQuery()
+  const userData = getLocalStorage();
+  const { data: tenders, isLoading } = useGetTendersQuery();
+  const [currentPage, setCurrentPage] = useState(1);
 
   //console.log(tenders)
-  const userTenders = !isLoading ? tenders.filter(tender => tender.company.id === userData.company.id) : []
-    
-  console.log(userTenders)
+  const userTenders = !isLoading
+    ? tenders.filter((tender) => tender.company.id === userData.company.id)
+    : [];
 
+  const itemsPerPage = 4;
+  const totalPages = Math.ceil(userTenders.length / itemsPerPage);
+  console.log(userTenders);
+  // Calcula las compañías que se mostrarán en la página actual
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const tendersUserToShow = userTenders.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
       {!isLoading ? (
         <div className="flex flex-col justify-center items-center text-3xl font-bold mt-10 mb-5 gap-4">
           {userTenders.length === 0 ? (
@@ -47,7 +62,7 @@ function Licitaciones() {
                 </button>
               </Link>
               <div>
-                {userTenders.map((tender) => (
+                {tendersUserToShow.map((tender) => (
                   <CardUserTender item={tender} />
                 ))}
               </div>
@@ -57,6 +72,11 @@ function Licitaciones() {
       ) : (
         <h1>Cargando...</h1>
       )}
+      <PaginationComponent
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

@@ -31,6 +31,10 @@ const companiesReducer = createSlice({
     },
     filterCompaniesBySubcategorie: (state, action) => {
       state.filterCompanies = state.companies.filter((comp) => comp.subcategories.some((subcat) => subcat.id === action.payload))
+    },
+    resetFilter: (state) => {
+      state.companies = [],
+      state.filterCompanies = []
     }
   },
 });
@@ -41,6 +45,7 @@ export const {
   fiterCompaniesByLocation,
   filterCompaniesByCategorie,
   filterCompaniesBySubcategorie,
+  resetFilter
 } = companiesReducer.actions;
 export default companiesReducer.reducer;
 

@@ -1,15 +1,24 @@
 import axios from "axios";
 
-export async function changeProposalState(id, status) {
-    console.log("id:", id)
-    console.log("state:", status)
-    try {
-        const proposalChange = await axios.put(
-          `http://localhost:3001/proposals/${id}`,
-          status
-        );
-        console.log(proposalChange.data)
-    } catch (error) {
-        console.log(error)
-    }
+
+
+export function filterData(data, status) {
+    const filteredData= data.filter((item) => item.status === status)
+    return filteredData;
 }
+
+export const handleChangeStatus = async (id, status, endpoint) => {
+  console.log(endpoint)
+  console.log(status)
+  try {
+    const accountChange = await axios.put(
+      `http://localhost:3001/${endpoint}/${id}`,
+      status
+    );
+    
+    console.log(accountChange)
+  } catch (error) {
+    
+    console.log(error);
+  }
+};
