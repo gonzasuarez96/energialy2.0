@@ -51,6 +51,10 @@ export const menuBar = [
         url: "/dashboard/finanzas/facturas",
       },
       {
+        title: "Mis Solicitudes",
+        url: "/dashboard/finanzas/solicitudes",
+      },
+      {
         title: "Apertura de cuenta",
         url: "/dashboard/finanzas/aperturaCuenta",
       },
