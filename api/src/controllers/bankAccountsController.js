@@ -1,9 +1,5 @@
-const {
-  BankAccounts,
-  Companies,
-  Documents,
-  FinanceProducts,
-} = require('../db');
+const { BankAccounts, Companies, Users, Documents, FinanceProducts } = require('../db');
+const { sendBankEmailNewBankAccount, sendCompanyEmailBankAccountOpen, sendCompanyEmailBankAccountRequireChanges } = require('../services/resend');
 
 const cleanBankAccounts = (bankAccounts) => {
   if (Array.isArray(bankAccounts)) {
@@ -50,16 +46,7 @@ const getBankAccountById = async (id) => {
       },
       {
         model: Companies,
-        attributes: [
-          'id',
-          'name',
-          'profilePicture',
-          'businessName',
-          'fiscalAdress',
-          'cuit',
-          'companyEmail',
-          'legalManager',
-        ],
+        attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
         include: { model: Documents, attributes: ['name', 'attachment'] },
       },
     ],
@@ -90,16 +77,12 @@ const createBankAccount = async (body) => {
     !foundCompany.legalManager
     // !foundCompany.documents
   ) {
-    const error = new Error(
-      `Missing required attributes of the company to create a bank account.`
-    );
+    const error = new Error(`Missing required attributes of the company to create a bank account.`);
     error.status = 400;
     throw error;
   }
   if (foundCompany.BankAccount) {
-    const error = new Error(
-      `Company ${foundCompany.name} already has a bank account.`
-    );
+    const error = new Error(`Company ${foundCompany.name} already has a bank account.`);
     error.status = 400;
     throw error;
   }
@@ -109,16 +92,7 @@ const createBankAccount = async (body) => {
     include: [
       {
         model: Companies,
-        attributes: [
-          'id',
-          'name',
-          'profilePicture',
-          'businessName',
-          'fiscalAdress',
-          'cuit',
-          'companyEmail',
-          'legalManager',
-        ],
+        attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
         include: { model: Documents, attributes: ['name', 'attachment'] },
       },
       {
@@ -127,6 +101,9 @@ const createBankAccount = async (body) => {
       },
     ],
   });
+  const receiver = 'energialy@bancodecomercio.com.ar';
+  const companyName = foundNewBankAccount.Company.name;
+  await sendBankEmailNewBankAccount(receiver, companyName);
   return cleanBankAccounts(foundNewBankAccount);
 };
 
@@ -139,17 +116,17 @@ const updateBankAccount = async (id, body) => {
       },
       {
         model: Companies,
-        attributes: [
-          'id',
-          'name',
-          'profilePicture',
-          'businessName',
-          'fiscalAdress',
-          'cuit',
-          'companyEmail',
-          'legalManager',
+        attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
+        include: [
+          {
+            model: Documents,
+            attributes: ['name', 'attachment'],
+          },
+          {
+            model: Users,
+            attributes: ['id', 'firstName', 'lastName', 'email'],
+          },
         ],
-        include: { model: Documents, attributes: ['name', 'attachment'] },
       },
     ],
   });
@@ -189,21 +166,31 @@ const updateBankAccount = async (id, body) => {
         },
         {
           model: Companies,
-          attributes: [
-            'id',
-            'name',
-            'profilePicture',
-            'businessName',
-            'fiscalAdress',
-            'cuit',
-            'companyEmail',
-            'legalManager',
+          attributes: ['id', 'name', 'profilePicture', 'businessName', 'fiscalAdress', 'cuit', 'companyEmail', 'legalManager'],
+          include: [
+            {
+              model: Documents,
+              attributes: ['name', 'attachment'],
+            },
+            {
+              model: Users,
+              attributes: ['id', 'firstName', 'lastName', 'email'],
+            },
           ],
-          include: { model: Documents, attributes: ['name', 'attachment'] },
         },
       ],
     });
+    const receiver = foundAgainBankAccount.Company.Users[0].email;
+    const companyOwnerName = foundAgainBankAccount.Company.Users[0].firstName;
+    const companyName = foundAgainBankAccount.Company.name;
+    await sendCompanyEmailBankAccountOpen(receiver, companyOwnerName, companyName);
     return cleanBankAccounts(foundAgainBankAccount);
+  } else if (body.status === 'require changes') {
+    await foundBankAccount.update(body);
+    const receiver = foundBankAccount.Company.Users[0].email;
+    const companyOwnerName = foundBankAccount.Company.Users[0].firstName;
+    const companyName = foundBankAccount.Company.name;
+    await sendCompanyEmailBankAccountRequireChanges(receiver, companyOwnerName, companyName);
   } else {
     await foundBankAccount.update(body);
   }

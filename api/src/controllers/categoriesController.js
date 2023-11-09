@@ -3,13 +3,13 @@ const { Op } = require('sequelize');
 
 const cleanCategories = (categories) => {
   if (Array.isArray(categories)) {
-    const cleanCategoriesArray = categories.map(category => ({
+    const cleanCategoriesArray = categories.map((category) => ({
       id: category.id,
       name: category.name,
       subcategories: category.Subcategories,
       isActive: category.isActive,
       createdAt: category.createdAt,
-      updatedAt: category.updatedAt
+      updatedAt: category.updatedAt,
     }));
     return cleanCategoriesArray;
   } else {
@@ -20,19 +20,19 @@ const cleanCategories = (categories) => {
       companies: categories.Companies,
       isActive: categories.isActive,
       createdAt: categories.createdAt,
-      updatedAt: categories.updatedAt
+      updatedAt: categories.updatedAt,
     };
     return cleanCategoryObj;
-  };
+  }
 };
 
 const getAllCategories = async () => {
   const allCategories = await Categories.findAll({
-    attributes: { exclude: ["createdAt", "updatedAt"] },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {
       model: Subcategories,
-      attributes: ["id", "name", "isActive"]
-    }
+      attributes: ['id', 'name', 'isActive'],
+    },
   });
   return cleanCategories(allCategories);
 };
@@ -41,13 +41,13 @@ const filterCategoriesByName = async (name) => {
   const filteredCategories = await Categories.findAll({
     where: {
       name: {
-        [Op.iLike]: `%${name}%`
-      }
+        [Op.iLike]: `%${name}%`,
+      },
     },
     include: {
       model: Subcategories,
-      attributes: ["id", "name", "isActive"]
-    }
+      attributes: ['id', 'name', 'isActive'],
+    },
   });
   return cleanCategories(filteredCategories);
 };
@@ -57,29 +57,29 @@ const getCategoryByID = async (id) => {
     include: [
       {
         model: Subcategories,
-        attributes: ["id", "name", "isActive"]
+        attributes: ['id', 'name', 'isActive'],
       },
       {
         model: Companies,
-        attributes: ["id", "name", "foundationYear", "annualRevenue", "employeeCount", "isActive"],
-        through: { attributes: [] }
-      }
-    ]
+        attributes: ['id', 'name', 'foundationYear', 'annualRevenue', 'employeeCount', 'isActive'],
+        through: { attributes: [] },
+      },
+    ],
   });
   if (!foundCategory) {
     const error = new Error(`Category with id ${id} not found.`);
     error.status = 404;
     throw error;
-  };
+  }
   return cleanCategories(foundCategory);
 };
 
 const createCategory = async (name) => {
   if (!name) {
-    const error = new Error("Missing required attributes.");
+    const error = new Error('Missing required attributes.');
     error.status = 400;
     throw error;
-  };
+  }
   const newCategory = await Categories.create({ name });
   return cleanCategories(newCategory);
 };
@@ -88,8 +88,8 @@ const updateCategory = async (id, name, isActive) => {
   const foundCategory = await Categories.findByPk(id, {
     include: {
       model: Subcategories,
-      attributes: ["id", "name", "isActive"]
-    }
+      attributes: ['id', 'name', 'isActive'],
+    },
   });
   if (!foundCategory) {
     const error = new Error(`Category with id ${id} not found.`);
@@ -120,8 +120,8 @@ const deleteCategory = async (id) => {
   const remainingCategories = await Categories.findAll({
     include: {
       model: Subcategories,
-      attributes: ["id", "name", "isActive"]
-    }
+      attributes: ['id', 'name', 'isActive'],
+    },
   });
   return cleanCategories(remainingCategories);
 };
@@ -132,5 +132,5 @@ module.exports = {
   getCategoryByID,
   createCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
 };

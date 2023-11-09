@@ -1,14 +1,4 @@
-const {
-  Companies,
-  Users,
-  Locations,
-  Categories,
-  Subcategories,
-  Tenders,
-  Proposals,
-  Documents,
-  BankAccounts,
-} = require('../db');
+const { Companies, Users, Locations, Categories, Subcategories, Tenders, Proposals, Documents, BankAccounts } = require('../db');
 const { Op } = require('sequelize');
 
 const cleanCompanies = (companies) => {
@@ -68,17 +58,7 @@ const cleanCompanies = (companies) => {
 
 const getAllCompanies = async () => {
   const allCompanies = await Companies.findAll({
-    attributes: [
-      'id',
-      'name',
-      'profilePicture',
-      'bannerPicture',
-      'foundationYear',
-      'annualRevenue',
-      'employeeCount',
-      'organizationType',
-      'isActive',
-    ],
+    attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'foundationYear', 'annualRevenue', 'employeeCount', 'organizationType', 'isActive'],
     include: [
       {
         model: Locations,
@@ -152,16 +132,7 @@ const getCompanyById = async (id) => {
       },
       {
         model: Tenders,
-        attributes: [
-          'id',
-          'title',
-          'description',
-          'majorSector',
-          'budget',
-          'projectDuration',
-          'status',
-          'showBudget',
-        ],
+        attributes: ['id', 'title', 'description', 'majorSector', 'budget', 'projectDuration', 'status', 'showBudget'],
       },
       {
         model: Proposals,
@@ -190,32 +161,8 @@ const getCompanyById = async (id) => {
 };
 
 const createCompany = async (body) => {
-  const {
-    name,
-    description,
-    locations,
-    subcategories,
-    profilePicture,
-    bannerPicture,
-    foundationYear,
-    annualRevenue,
-    employeeCount,
-    cuit,
-    userId,
-  } = body;
-  if (
-    !name ||
-    !description ||
-    !locations ||
-    !subcategories ||
-    !profilePicture ||
-    !bannerPicture ||
-    !foundationYear ||
-    !annualRevenue ||
-    !employeeCount ||
-    !cuit ||
-    !userId
-  ) {
+  const { name, description, locations, subcategories, profilePicture, bannerPicture, foundationYear, annualRevenue, employeeCount, cuit, userId } = body;
+  if (!name || !description || !locations || !subcategories || !profilePicture || !bannerPicture || !foundationYear || !annualRevenue || !employeeCount || !cuit || !userId) {
     const error = new Error('Missing required attributes.');
     error.status = 400;
     throw error;
@@ -231,9 +178,7 @@ const createCompany = async (body) => {
   for (const subcategoryId of subcategories) {
     const foundSubcategory = await Subcategories.findByPk(subcategoryId);
     if (!foundSubcategory) {
-      const error = new Error(
-        `Subcategory with id ${subcategoryId} not found.`
-      );
+      const error = new Error(`Subcategory with id ${subcategoryId} not found.`);
       error.status = 404;
       throw error;
     }
@@ -250,9 +195,7 @@ const createCompany = async (body) => {
 
   for (const subcategoryId of subcategories) {
     const foundSubcategory = await Subcategories.findByPk(subcategoryId);
-    const foundParentCategory = await Categories.findByPk(
-      foundSubcategory.CategoryId
-    );
+    const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
     await newCompany.addSubcategory(foundSubcategory);
     await newCompany.addCategory(foundParentCategory);
   }
@@ -294,11 +237,7 @@ const createCompany = async (body) => {
 const updateCompany = async (id, body) => {
   const { locations, subcategories } = body;
   const foundCompany = await Companies.findByPk(id, {
-    include: [
-      { model: Categories },
-      { model: Subcategories },
-      { model: Locations },
-    ],
+    include: [{ model: Categories }, { model: Subcategories }, { model: Locations }],
   });
   if (!foundCompany) {
     const error = new Error(`Company with id ${id} not found.`);
@@ -319,9 +258,7 @@ const updateCompany = async (id, body) => {
     for (const subcategoryId of subcategories) {
       const foundSubcategory = await Subcategories.findByPk(subcategoryId);
       if (!foundSubcategory) {
-        const error = new Error(
-          `Subcategory with id ${subcategoryId} not found.`
-        );
+        const error = new Error(`Subcategory with id ${subcategoryId} not found.`);
         error.status = 404;
         throw error;
       }
@@ -345,18 +282,14 @@ const updateCompany = async (id, body) => {
     if (foundCompany.Subcategories) {
       for (const subcategory of foundCompany.Subcategories) {
         const foundSubcategory = await Subcategories.findByPk(subcategory.id);
-        const foundParentCategory = await Categories.findByPk(
-          foundSubcategory.CategoryId
-        );
+        const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
         await foundCompany.removeSubcategory(foundSubcategory);
         await foundCompany.removeCategory(foundParentCategory);
       }
     }
     for (const subcategoryId of subcategories) {
       const foundSubcategory = await Subcategories.findByPk(subcategoryId);
-      const foundParentCategory = await Categories.findByPk(
-        foundSubcategory.CategoryId
-      );
+      const foundParentCategory = await Categories.findByPk(foundSubcategory.CategoryId);
       await foundCompany.addSubcategory(foundSubcategory);
       await foundCompany.addCategory(foundParentCategory);
     }

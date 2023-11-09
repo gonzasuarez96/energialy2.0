@@ -1,4 +1,5 @@
-const { FinanceProducts, BankAccounts, Companies } = require('../db');
+const { FinanceProducts, BankAccounts, Companies, Users } = require('../db');
+const { sendBankEmailNewFinanceProduct, sendCompanyEmailFinanceProductAccepted, sendCompanyEmailFinanceProductDeclined } = require('../services/resend');
 
 const cleanFinanceProducts = (financeProducts) => {
   if (Array.isArray(financeProducts)) {
@@ -71,37 +72,29 @@ const createFinanceProduct = async (body) => {
     include: { model: FinanceProducts },
   });
   const financeProducts = foundBankAccount.FinanceProducts;
-  if (
-    productName === 'CC en pesos $' ||
-    productName === 'CC en dólares u$s' ||
-    productName === 'Home Banking'
-  ) {
-    const financeProductExist = financeProducts.some(
-      (financeProduct) => financeProduct.productName === productName
-    );
+  if (productName === 'CC en pesos $' || productName === 'CC en dólares u$s' || productName === 'Home Banking') {
+    const financeProductExist = financeProducts.some((financeProduct) => financeProduct.productName === productName);
     if (financeProductExist) {
-      const error = new Error(
-        `This bank account already have a ${productName}`
-      );
+      const error = new Error(`This bank account already have a ${productName}`);
       error.status = 400;
       throw error;
     }
   }
   const newFinanceProduct = await FinanceProducts.create(body);
   await newFinanceProduct.setBankAccount(foundBankAccount);
-  const foundNewFinanceProduct = await FinanceProducts.findByPk(
-    newFinanceProduct.id,
-    {
+  const foundNewFinanceProduct = await FinanceProducts.findByPk(newFinanceProduct.id, {
+    include: {
+      model: BankAccounts,
+      attributes: ['id', 'status'],
       include: {
-        model: BankAccounts,
-        attributes: ['id', 'status'],
-        include: {
-          model: Companies,
-          attributes: ['id', 'name'],
-        },
+        model: Companies,
+        attributes: ['id', 'name'],
       },
-    }
-  );
+    },
+  });
+  const receiver = 'energialy@bancodecomercio.com.ar';
+  const companyName = foundNewFinanceProduct.BankAccount.Company.name;
+  await sendBankEmailNewFinanceProduct(receiver, companyName);
   return cleanFinanceProducts(foundNewFinanceProduct);
 };
 
@@ -113,6 +106,10 @@ const updateFinanceProduct = async (id, body) => {
       include: {
         model: Companies,
         attributes: ['id', 'name'],
+        include: {
+          model: Users,
+          attributes: ['id', 'firstName', 'lastName', 'email'],
+        },
       },
     },
   });
@@ -121,7 +118,31 @@ const updateFinanceProduct = async (id, body) => {
     error.status = 404;
     throw error;
   }
-  await foundFinanceProduct.update(body);
+  if (body.status === 'accepted') {
+    if (foundFinanceProduct.status === 'accepted') {
+      const error = new Error(`Finance product with id ${id} already accepted.`);
+      error.status = 404;
+      throw error;
+    }
+    await foundFinanceProduct.update(body);
+    const receiver = foundFinanceProduct.BankAccount.Company.Users[0].email;
+    const companyOwnerName = foundFinanceProduct.BankAccount.Company.Users[0].firstName;
+    const companyName = foundFinanceProduct.BankAccount.Company.name;
+    await sendCompanyEmailFinanceProductAccepted('juancruz.roldan19@gmail.com', companyOwnerName, companyName);
+  } else if (body.status === 'declined') {
+    if (foundFinanceProduct.status === 'declined') {
+      const error = new Error(`Finance product with id ${id} already declined.`);
+      error.status = 404;
+      throw error;
+    }
+    await foundFinanceProduct.update(body);
+    const receiver = foundFinanceProduct.BankAccount.Company.Users[0].email;
+    const companyOwnerName = foundFinanceProduct.BankAccount.Company.Users[0].firstName;
+    const companyName = foundFinanceProduct.BankAccount.Company.name;
+    await sendCompanyEmailFinanceProductDeclined('juancruz.roldan19@gmail.com', companyOwnerName, companyName);
+  } else {
+    await foundFinanceProduct.update(body);
+  }
   return cleanFinanceProducts(foundFinanceProduct);
 };
 
