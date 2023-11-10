@@ -12,8 +12,8 @@ const tendersReducer = createSlice({
       state.filterTenders = action.payload;
     },
     filterTendersByName: (state, action) => {
-      state.filterTenders = state.tenders.filter((comp) =>
-        comp.name.toLowerCase().includes(action.payload.toLowerCase())
+      state.filterTenders = state.tenders.filter((tender) =>
+        tender.company.name.toLowerCase().includes(action.payload.toLowerCase())
       );
     },
     filterTendersByCompanyId: (state, action)=> {
@@ -25,21 +25,20 @@ const tendersReducer = createSlice({
       if (action.payload.length === 0) {
         state.filterTenders = [...state.tenders];
       } else {
-        state.filterTenders = state.tenders.filter((comp) =>
-          action.payload.every((locId) =>
-            comp.locations.some((loc) => loc.id === locId)
-          )
+        state.filterTenders = state.tenders.filter((tender) =>
+          action.payload.every((locId) => tender.location.id === locId)
         );
       }
     },
     filterTendersByCategorie: (state, action) => {
-      state.filterTenders = state.companies.filter((comp) =>
-        comp.categories.some((cat) => cat.id === action.payload)
+      state.filterTenders = state.tenders.filter((tender) =>
+        tender.subcategories.CategoryId === action.payload
+        
       );
     },
     filterTendersBySubcategorie: (state, action) => {
-      state.filterTenders = state.tenders.filter((comp) =>
-        comp.subcategories.some((subcat) => subcat.id === action.payload)
+      state.filterTenders = state.tenders.filter((tender) =>
+        tender.subcategories.some((subcat) => subcat.id === action.payload)
       );
     },
   },
