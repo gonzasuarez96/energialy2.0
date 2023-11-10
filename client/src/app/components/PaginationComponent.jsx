@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from '@/app/components/icons/icons'
 
 function PaginationComponent({ currentPage, totalPages, onPageChange }) {
   
+
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   
