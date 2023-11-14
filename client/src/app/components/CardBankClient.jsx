@@ -18,16 +18,14 @@ export function BankCardClient({ data, handleSelectedOption }) {
   return (
     <Card className="mt-6 w-96">
       <CardBody>
-        <Typography variant="h5" color="blue-gray" className="mb-2">
+        <Typography variant="h5" color="blue-gray" className="flex justify-center mb-2">
              {data.title}
         </Typography>
-        <Typography className="text-3xl font-bold">
+        <Typography className="flex justify-center text-3xl font-bold">
              {data.quantity}
         </Typography>
       </CardBody>
-      <CardFooter className="pt-0">
-        <Button className="bg-primary-700 text-white" onClick={handleOption}>Ver todos</Button>
-      </CardFooter>
+
     </Card>
   );
 }

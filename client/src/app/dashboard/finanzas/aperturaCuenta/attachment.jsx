@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import UploadthingButtonMany from "@/app/components/UploadthingButtonMany";
 import axios from "axios";
 
 export default function Attachment(props) {
@@ -102,12 +101,33 @@ export default function Attachment(props) {
     },
   ];
 
-  const handleFileChange = (cleanRes) => {
-    setFiles({
-      ...files,
-      [fieldName]: cleanRes,
-    });
-    console.log("cleanRes:", cleanRes);
+  const uploadFile = async (e, fieldName) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "tu_upload_preset"); // Reemplaza 'tu_upload_preset' con tu propio upload preset de Cloudinary
+
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dbraa6jpj/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const fileUrl = res.data.secure_url;
+      console.log("URL del archivo subido:", fileUrl);
+
+      setFiles((prevFiles) => ({
+        ...prevFiles,
+        [fieldName]: fileUrl,
+      }));
+    } catch (error) {
+      console.error("Error al cargar el archivo:", error);
+    }
   };
 
   return (
@@ -122,7 +142,13 @@ export default function Attachment(props) {
               {field.label}
             </label>
             <div className="ml-4 p-2">
-              <UploadthingButtonMany onFilesUpload={field.value} />
+              <input
+                type="file"
+                id={index}
+                accept="image/*,.pdf"
+                onChange={(e) => uploadFile(e, field.value)}
+                className="w-full border rounded px-2 py-1"
+              />
             </div>
           </div>
         ))}

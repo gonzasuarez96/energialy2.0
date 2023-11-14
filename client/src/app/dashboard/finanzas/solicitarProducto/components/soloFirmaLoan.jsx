@@ -117,6 +117,7 @@ export default function SoloFirmaLoan() {
   };
   return (
     <div>
+      <label className="flex justify-center font-bold w-full p-4 mb-2 text-xl">Prestamo a Sola Firma</label>
       <div>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
           Tu Empresa

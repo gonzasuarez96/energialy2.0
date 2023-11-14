@@ -89,7 +89,7 @@ export default function Data(props) {
   };
 
   return (
-    <main className="flex justify-center items-start w-full h-screen bg-white p-3 shadow overflow-y-auto">
+    <main className="flex justify-center items-start w-full  bg-white p-3 shadow">
       <div className="w-full text-center">
         <h2 className="p-4 border-b-2 border-gray-300 font-bold">
           Solicitud de Apertura de Cuenta

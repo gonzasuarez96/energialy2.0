@@ -48,20 +48,12 @@ export const menuBar = [
     submenu: true,
     submenuItems: [
       {
-        title: "Mis Facturas",
-        url: "/dashboard/finanzas/facturas",
-      },
-      {
         title: "Mis Solicitudes",
         url: "/dashboard/finanzas/solicitudes",
       },
       {
         title: "Apertura de cuenta",
         url: "/dashboard/finanzas/aperturaCuenta",
-      },
-      {
-        title: "Factura de credito",
-        url: "/dashboard/finanzas/facturaCredito",
       },
       {
         title: "Solicitar producto",

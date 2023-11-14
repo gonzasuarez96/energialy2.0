@@ -11,7 +11,7 @@ function BankDashboard() {
   const { company } = getLocalStorage();
   const [bankAccountId, setbankAccountId] = useState(null);
   const [financeProducts, setFinanceProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState("");
+
   const [groupedData, setGroupedData] = useState([
     { title: "Aprobados", quantity: 0, status: "accepted" },
     { title: "Solicitados", quantity: 0, status: "sent" },
@@ -56,12 +56,7 @@ function BankDashboard() {
     }
   }, [bankAccount]);
 
-  const handleSelectedOption = (option) => {
-    setFilteredProducts(
-      financeProducts.filter((product) => product.status === option)
-    );
-    console.log(filteredProducts);
-  };
+
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -78,12 +73,12 @@ function BankDashboard() {
           <BankCardClient
             key={item.title}
             data={item}
-            handleSelectedOption={handleSelectedOption}
           />
         ))}
       </div>
       <SortableTableClient
-        data={filteredProducts ? filteredProducts : financeProducts}
+        data={financeProducts}
+        isLoading={isLoading}
       />
     </>
   );
