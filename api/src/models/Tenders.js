@@ -13,7 +13,7 @@ module.exports = (sequelize) => {
       unique: true,
     },
     description: {
-      type: DataTypes.STRING(1234),
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     contractType: {

@@ -7,15 +7,18 @@ export const menuBar = [
   {
     title: "Dashboard",
     url: "/dashboard",
+    auth: ["admin", "superAdmin", "bank"],
     icon: <MdSpaceDashboard />,
   },
   {
     title: "Inbox",
+    auth: ["admin", "superAdmin", "bank"],
     url: "/dashboard/inbox",
     icon: <BiSolidMessageRounded />,
   },
   {
     title: "Perfiles",
+    auth: ["admin", "superAdmin", "bank"],
     url: "",
     icon: <MdAccountBox />,
     submenu: true,
@@ -28,7 +31,7 @@ export const menuBar = [
   {
     title: "Licitaciones",
     // url: "/dashboard/licitaciones",
-    //auth: ['admin', 'superAdmin'],
+    auth: ["admin", "superAdmin"],
     spacing: true,
     icon: <FaBriefcase />,
     submenu: true,
@@ -44,6 +47,7 @@ export const menuBar = [
   {
     title: "Financiamiento",
     url: "/dashboard/finanzas",
+    auth: ["admin", "superAdmin"],
     icon: <BiSolidBank />,
     submenu: true,
     submenuItems: [
@@ -72,6 +76,7 @@ export const menuBar = [
   {
     title: "Banco",
     //url: "/dashboard/bank",
+    auth: ["bank"],
     icon: <BiSolidBank />,
     submenu: true,
     submenuItems: [

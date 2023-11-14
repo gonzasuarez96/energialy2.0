@@ -37,6 +37,10 @@ module.exports = {
           900: "#0d2822",
         },
       },
+      fontFamily: {
+        monse: ["var(--montserrat"],
+        jose:["var(--josefin)"]
+      },
     },
     dialogBody: {
       defaultProps: {
