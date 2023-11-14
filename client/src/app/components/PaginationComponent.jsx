@@ -22,7 +22,7 @@ function PaginationComponent({ currentPage, totalPages, onPageChange }) {
           onClick={() => onPageChange(page)}
           className={`${
             currentPage === page ? "bg-primary-600" : "bg-secondary-600"
-          }  text-white font-semibold w-6 h-6 flex justify-center items-center rounded-full`}
+          }  text-white font-semibold w-6 h-6 flex justify-center items-center rounded-md`}
         >
           {page}
         </button>
@@ -30,6 +30,7 @@ function PaginationComponent({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
+        
       >
         <ChevronRight />
       </button>

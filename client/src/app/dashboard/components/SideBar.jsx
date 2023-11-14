@@ -1,4 +1,6 @@
 'use client'
+
+
 import Link from "next/link";
 import Image from "next/image";
 //import Banner from "@/app/assets/banner.jpg";
@@ -7,19 +9,25 @@ import { MdMoney } from "react-icons/md";
 import {MdPointOfSale} from 'react-icons/md'
 import {MdOutlineArrowDropDown} from 'react-icons/md'
 import {AiOutlineMenu} from 'react-icons/ai'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MenuItem from "./MenuItem";
-import { useSelector } from "react-redux";
+import  getLocalStorage  from "../../Func/localStorage";
+
+import Loader from "@/app/components/Loader";
 
 import { menuBar } from "@/app/data/menu";
 
 
 function SideBar() {
+   const [user, setUser] = useState(null);
+   console.log(user)
   const [isOpen, setIsOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
-  const userData = useSelector((state) => state.user.userData )
-  // const banner = userData.company.bannerPicture || null;
-  // const logo = userData.company.profilePicture || null;
+  const [itemMenu, setItemMenu] = useState(menuBar);
+  
+  const banner = user?.company?.bannerPicture || null;
+  const logo = user?.company?.profilePicture || null;
+  console.log(banner)
   //console.log(userData)
 
   const toggle = () => {
@@ -27,8 +35,14 @@ function SideBar() {
   };
 
   
-  //console.log(banner)
-  //console.log(logo);
+  console.log(itemMenu)
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user);
+    const itemUserRole = menuBar.filter((item) => item.auth.includes(user.role));
+    setItemMenu(itemUserRole);
+  }, []);
+  
 
   return (
     <div
@@ -49,12 +63,15 @@ function SideBar() {
       </div>
       {/*Company Data */}
       <div className="flex flex-col items-center justify-center">
-{/*         {banner ? <img className="-z-0" src={banner} alt="bannerProfile"/> : null} */}
-{/*         {logo ? <img
-          src={logo}
-          className={`${isOpen ? "w-[100px]" : "w-[50px] duration-300"}`}
-        />: null} */}
-        
+        {banner ? (
+          <img className="-z-0" src={banner} alt="bannerProfile" />
+        ) : null}
+        {logo ? (
+          <img
+            src={logo}
+            className={`${isOpen ? "w-[100px]" : "w-[50px] duration-300"}`}
+          />
+        ) : null}
       </div>
       {/*Menu Items*/}
       <div
@@ -63,9 +80,17 @@ function SideBar() {
         } `}
       >
         <ul className="pt-2 w-full items-center ">
-          {menuBar.map((menuItem, index) => (
-            <MenuItem menuItem={menuItem} key={index} isOpen={isOpen} />
-          ))}
+          {itemMenu.length === 0 
+            ? (<Loader/>)
+            : ( itemMenu.map((menuItem, index) => (
+            <MenuItem
+              menuItem={menuItem}
+              key={index}
+              isOpen={isOpen}
+              user={user}
+            />
+          )))}
+         
         </ul>
       </div>
     </div>

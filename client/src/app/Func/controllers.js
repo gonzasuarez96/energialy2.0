@@ -22,3 +22,12 @@ export const handleChangeStatus = async (id, status, endpoint) => {
     console.log(error);
   }
 };
+
+
+export const chekAuth = async (item, role) => {
+
+  console.log(item)
+  console.log(role)
+  const showItem = await item.auth.includes(role)
+  return showItem;
+}

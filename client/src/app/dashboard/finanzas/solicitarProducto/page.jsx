@@ -6,6 +6,7 @@ import GarantLoan from './components/garantLoan';
 import ECheq from './components/eCheq';
 import CheqThird from './components/cheqThird';
 import OwnCheq from './components/ownCheq';
+import FacturaCredito from './components/facturaCreditoElect';
 
 const productos = [
     "Prestamo a sola firma",
@@ -13,6 +14,7 @@ const productos = [
     "E-Cheqs",
     "Cheques a Terceros",
     "Cheques Propios",
+    "Factura de Credito Electronica"
 ];
 
 export default function ProductosPage() {
@@ -32,6 +34,7 @@ export default function ProductosPage() {
                 {productoSeleccionado === "E-Cheqs" && <ECheq />}
                 {productoSeleccionado === "Cheques a Terceros" && <CheqThird />}
                 {productoSeleccionado === "Cheques Propios" && <OwnCheq />}
+                {productoSeleccionado === "Factura de Credito Electronica" && <FacturaCredito />}
             </div>
         </main>
     )
