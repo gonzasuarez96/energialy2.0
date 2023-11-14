@@ -24,7 +24,7 @@ export default function Data(props) {
     position: "",
     phoneNumber: "",
   });
-  const { company } = getLocalStorage();
+  const user = getLocalStorage();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -56,7 +56,7 @@ export default function Data(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const companyId = company.id;
+    const companyId = user?.company.id;
     const accountData = {
       businessName,
       fiscalAdress,
