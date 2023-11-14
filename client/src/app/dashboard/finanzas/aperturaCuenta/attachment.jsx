@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import axios from "axios";
+import getLocalStorage from "@/app/Func/localStorage";
 
 export default function Attachment(props) {
   const [files, setFiles] = useState({
@@ -20,10 +20,12 @@ export default function Attachment(props) {
     constanciaUIF: null,
     compreNeuquino: null,
   });
-  const companyId = useSelector((state) => state.user.userData.company.id);
+  const user = getLocalStorage();
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const companyId = user.company.id
     try {
       const res = await axios.post("http://localhost:3001/bankAccounts", {
         companyId,
@@ -105,7 +107,7 @@ export default function Attachment(props) {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "tu_upload_preset"); // Reemplaza 'tu_upload_preset' con tu propio upload preset de Cloudinary
+    formData.append("upload_preset", "energialy_users"); // Reemplaza 'tu_upload_preset' con tu propio upload preset de Cloudinary
 
     try {
       const res = await axios.post(
@@ -125,13 +127,14 @@ export default function Attachment(props) {
         ...prevFiles,
         [fieldName]: fileUrl,
       }));
+      console.log('files:',files)
     } catch (error) {
       console.error("Error al cargar el archivo:", error);
     }
   };
 
   return (
-    <main className="flex justify-center items-start w-full h-screen bg-white p-3 shadow overflow-y-auto">
+    <main className="flex justify-center items-start w-full  bg-white p-3 shadow ">
       <form onSubmit={handleSubmit}>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
           Informacion y Documentacion del Cliente
@@ -147,7 +150,7 @@ export default function Attachment(props) {
                 id={index}
                 accept="image/*,.pdf"
                 onChange={(e) => uploadFile(e, field.value)}
-                className="w-full border rounded px-2 py-1"
+                className="w-full border rounded "
               />
             </div>
           </div>

@@ -41,7 +41,7 @@ export default function FacturaCredito() {
       case "invoiceIssuer":
         setInvoiceIssuer(value);
         break;
-      case "invoiceTypeA":
+      case "invoiceTo":
         setInvoiceTo(value);
         break;
       case "issueDate":
@@ -210,8 +210,8 @@ export default function FacturaCredito() {
                   </label>
                   <input
                     type="text"
-                    id="invoiceIssuer"
-                    value={invoiceIssuer}
+                    id="invoiceTo"
+                    value={invoiceTo}
                     placeholder="Nombre de la empresa"
                     onChange={handleChange}
                     className="w-full px-3 py-2 text-lg rounded border"
