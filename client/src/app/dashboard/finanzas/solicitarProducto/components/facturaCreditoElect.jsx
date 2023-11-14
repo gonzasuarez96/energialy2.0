@@ -6,14 +6,16 @@ import {
 } from "@/app/components/Toastify";
 import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
-import UploadthingButtonMany from "@/app/components/UploadthingButtonOnly";
 import axios from "axios";
 import getLocalStorage from "@/app/Func/localStorage";
+import { useGetCompaniesByIdQuery } from "@/app/redux/services/companiesApi";
 
-export default function pageCredit() {
+
+export default function FacturaCredito() {
   const router = useRouter();
   //----------Estados Locales ----------//
   const [user, setUser] = useState(null);
+  const {company} = getLocalStorage();
   const [amount, setAmount] = useState(""); // Valor
   const [paymentTerm, setPaymentTerm] = useState(""); // Plazo de Pago Negociado
   const [invoiceIssuer, setInvoiceIssuer] = useState(""); // Emisor de la Factura
@@ -23,6 +25,8 @@ export default function pageCredit() {
   const [cuitIssuer, setCuitIssuer] = useState(""); // CUIT empresa emisora
   const [cuitRecived, setCuilRecived] = useState(""); // CUIT empresa receptora
   const [error, setError] = useState("");
+  const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
+  const bankAccountId = userCompany?.bankAccount.id;
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -37,7 +41,7 @@ export default function pageCredit() {
       case "invoiceIssuer":
         setInvoiceIssuer(value);
         break;
-      case "invoiceTypeA":
+      case "invoiceTo":
         setInvoiceTo(value);
         break;
       case "issueDate":
@@ -59,15 +63,21 @@ export default function pageCredit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const creditData = {
+    const additionalData = {
       amount: amount,
       paymentTerm: paymentTerm,
       invoiceIssuer: invoiceIssuer,
-      invoiceTypeA: invoiceTypeA,
+      invoiceTo: invoiceTo,
       issueDate: issueDate,
       dueDate: dueDate,
-      cuit: cuit,
-      cuil: cuil,
+      cuitIssuer: cuitIssuer,
+      cuitRecived: cuitRecived
+    };
+
+    const accountData = {
+      productName: 'Factura de crédito electrónica',
+      bankAccountId,
+      additionalData
     };
 
     if (
@@ -76,19 +86,18 @@ export default function pageCredit() {
       !invoiceIssuer ||
       !issueDate ||
       !dueDate ||
-      !cuit ||
-      !cuil
+      !cuitIssuer
     ) {
       setError("Completa todos los campos por favor.");
       return;
     }
-
+    console.log("Información enviada:", accountData);
     try {
       const response = await axios.post(
         "http://localhost:3001/financeProducts",
-        creditData
+        accountData
       );
-      console.log("Información enviada:", creditData);
+      console.log("Información enviada:", accountData);
       console.log("Respuesta del servidor:", response.data);
       displaySuccessMessage("La solicitud se envió con éxito");
       setTimeout(() => {
@@ -105,23 +114,12 @@ export default function pageCredit() {
     setUser(user);
   },[])
   return (
-    <main className="flex justify-center items-start w-full h-screen bg-white p-3 shadow overflow-y-auto">
+   
+   
       <div className="text-center">
         <h2 className="p-4 border-b-2 border-gray-300 font-bold">
           FINANCIAMIENTO PARA TU FACTURA DE CREDITO ELECTRONICA
         </h2>
-        <div className="border-b-2 border-gray-300">
-          <p className="mt-4 text-left">
-            Al crear este proyecto de financiamiento, las empresas financieras
-            podrán enviarte distintas tasas de descuento para que elijas la que
-            mejor se ajuste a tu empresa.
-          </p>
-          <p className="text-left">
-            Los datos del siguiente formulario son privados y no aparecerán en
-            listados públicos. Únicamente las empresas financieras invitadas
-            podrán enviarte una propuesta.
-          </p>
-        </div>
         <div>
           <form className="p-4" onSubmit={handleSubmit}>
             <div>
@@ -212,7 +210,7 @@ export default function pageCredit() {
                   </label>
                   <input
                     type="text"
-                    id="invoiceIssuer"
+                    id="invoiceTo"
                     value={invoiceTo}
                     placeholder="Nombre de la empresa"
                     onChange={handleChange}
@@ -241,11 +239,9 @@ export default function pageCredit() {
               </button>
             </div>
             {error && <div className="text-red-500">{error}</div>}
-            <UploadthingButtonMany company={user}/>
           </form>
         </div>
+        <ToastContainer style={{ marginTop: "100px" }} />
       </div>
-      <ToastContainer style={{ marginTop: "100px" }} />
-    </main>
   );
 }

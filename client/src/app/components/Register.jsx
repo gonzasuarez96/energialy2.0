@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
 //Toastify module for success message
 const displaySuccessMessage = (mensaje) => {
@@ -43,6 +44,7 @@ export default function Register() {
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -69,24 +71,22 @@ export default function Register() {
     const regex = /^[a-zA-Z\s]+$/;
     return regex.test(name);
   };
-  
 
   const handleFirstNameBlur = () => {
     if (!isValidName(firstName)) {
       setFirstNameError("Por favor, ingresa un nombre válido.");
     } else {
-      setFirstNameError('');
+      setFirstNameError("");
     }
   };
 
-  const handleLastNameBlur = () => {  
+  const handleLastNameBlur = () => {
     if (!isValidName(lastName)) {
       setLastNameError("Por favor, ingresa un apellido válido.");
     } else {
-      setLastNameError('');
+      setLastNameError("");
     }
   };
-  
 
   const handleEmailBlur = () => {
     if (!isValidEmail(email)) {
@@ -99,8 +99,13 @@ export default function Register() {
   };
 
   const handlePasswordBlur = () => {
-    if (password.length < 6) {
-      setPasswordError("La contraseña debe tener al menos 6 caracteres.");
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%*?&.,]{6,}$/;
+
+    if (!passwordRegex.test(password)) {
+      setPasswordError(
+        "La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula, y un carácter especial."
+      );
     } else {
       setPasswordError("");
     }
@@ -157,41 +162,41 @@ export default function Register() {
         <form className="mb-2 pl-4 pr-4 pt-4">
           {/* Campo de Correo Electrónico */}
           <div className="grid grid-cols-2 gap-2">
-          <div className="mb-3">
-            <label htmlFor="firstName" className="form-label w-40">
-              Nombre
-            </label>
-            <input
-              type="firstName"
-              className="form-control"
-              id="firstName"
-              value={firstName}
-              onChange={handleFirstNameChange}
-              onBlur={handleFirstNameBlur}
-              required
-            />
-            {firstNameError && (
-              <div className="text-danger mb-2">{firstNameError}</div>
-            )}
-          </div>
+            <div className="mb-3">
+              <label htmlFor="firstName" className="form-label w-40">
+                Nombre
+              </label>
+              <input
+                type="firstName"
+                className="form-control"
+                id="firstName"
+                value={firstName}
+                onChange={handleFirstNameChange}
+                onBlur={handleFirstNameBlur}
+                required
+              />
+              {firstNameError && (
+                <div className="text-danger mb-2">{firstNameError}</div>
+              )}
+            </div>
 
-          <div className="mb-3">
-            <label htmlFor="lastName" className="form-label w-40">
-              Apellido
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="lastName"
-              value={lastName}
-              onChange={handleLastName}
-              onBlur={handleLastNameBlur} // Reutilizamos la misma función
-              required
-            />
-            {lastNameError && (
-              <div className="text-danger mb-2">{lastNameError}</div>
-            )}
-          </div>
+            <div className="mb-3">
+              <label htmlFor="lastName" className="form-label w-40">
+                Apellido
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="lastName"
+                value={lastName}
+                onChange={handleLastName}
+                onBlur={handleLastNameBlur} // Reutilizamos la misma función
+                required
+              />
+              {lastNameError && (
+                <div className="text-danger mb-2">{lastNameError}</div>
+              )}
+            </div>
           </div>
 
           <div className="mb-3">
@@ -215,29 +220,38 @@ export default function Register() {
             <label htmlFor="password" className="form-label w-40">
               Contraseña
             </label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              value={password}
-              onChange={handlePasswordChange}
-              onBlur={handlePasswordBlur}
-              required
-            />
+            <div className="flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="form-control pr-10"
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+                onBlur={handlePasswordBlur}
+                required
+              />
+              <button
+                type="button"
+                className="focus:outline-none ml-2"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
+              </button>
+            </div>
             {passwordError && (
-              <div className="text-danger mt- mb-2">{passwordError}</div>
+              <div className="text-danger mt-2">{passwordError}</div>
             )}
           </div>
 
           {/* Botón de Registro */}
           <div className="flex justify-center border-t pt-4">
-          <button
-            type="button"
-            className="px-8 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-            onClick={handleRegister}
-          >
-            Registrarse
-          </button>
+            <button
+              type="button"
+              className="px-8 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
+              onClick={handleRegister}
+            >
+              Registrarse
+            </button>
           </div>
 
           {error && (
