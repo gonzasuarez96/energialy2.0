@@ -2,9 +2,10 @@
 import LocationFilter from "./LocationFilter";
 import { useDispatch } from "react-redux";
 import {filterCompaniesByName, filterCompaniesByCategorie, filterCompaniesBySubcategorie, resetFilter } from "@/app/redux/features/companieSlice";
+import {filterTendersByName, filterTendersByCategorie, fiterTendersByLocation, filterTendersBySubcategorie} from "@/app/redux/features/tenderSlice"
 import { useGetCategoriesQuery } from '../redux/services/categoriesApi';
 import Select from 'react-select';
-
+import { usePathname } from "next/navigation";
 
 
 
@@ -20,6 +21,7 @@ const employerNumber = [
 
 function FilterBar() {
   const dispatch = useDispatch();
+  const path = usePathname()
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const [search, setSearch] = useState("");
@@ -41,25 +43,39 @@ function FilterBar() {
 
   const handleChangeCategories = (e) => {
     //crear las subcategorias para el select
-    
-    
     const subcategories = categories?.find(cat => cat.id === e.value).subcategories
     setSubCatSelected(subcategories.map(subcat => ({label:subcat.name, value:subcat.id})))      
+      
     //mandar a redux las categorias seleccionada para modificar el filterCompanies
-    dispatch(filterCompaniesByCategorie(e.value))
+    if(path.includes("directory")){
+      dispatch(filterCompaniesByCategorie(e.value))
+    }
+    // if(path.includes("tenders")){
+    //   dispatch(filterTendersByCategorie(e.value))
+    // }
     //setear su propio estado para no perder la referencia
     setCategorieSelected(e)
   }
   
   const handleSubcategorieChange = (e) => {
     if(categorieSelected.length === 0) return
-    dispatch(filterCompaniesBySubcategorie(e.value))
+    if(path.includes("directory")){
+      dispatch(filterCompaniesBySubcategorie(e.value))
+    }
+    if(path.includes("tenders")){
+      dispatch(filterTendersBySubcategorie(e.value))
+    }
     // setSubCatSelected(e)
   }
   
 
   const searchCompanies = () => {
-    dispatch(filterCompaniesByName(search));
+    if(path.includes("directory")){
+      dispatch(filterCompaniesByName(search));
+    }
+    if(path.includes('tenders')){
+      dispatch(filterTendersByName(search));
+    }
   };
 
   return (

@@ -29,6 +29,7 @@ import { useEffect, useState } from "react";
 import { filterData } from "../Func/controllers";
 import BankModal from "./Modals/BankModal";
 import TextModal from "./Modals/TextModal";
+import PaginationComponent from "./PaginationComponent";
 
 
 
@@ -61,32 +62,52 @@ const TABLE_HEAD = [
 ];
 
 export function SortableTableProducts({ data, isLoading }) {
-  console.log(data)
+  
+  const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openTextModal, setOpenTextModal] = useState(false);
   const [filteredData, setFilteredData] = useState(null);
   const [modalData, setModalData] = useState(null);
-   const handleFilter = (status) => {
-     if (status === "all") {
-       setFilteredData(data);
-       return;
-     }
-     const filtered = filterData(data, status);
-     setFilteredData(filtered);
-   };
 
-   const handleOpenModal = (id, company) => {
-     setModalData({ id: id, company: company });
-     setOpenModal((cur) => !cur);
-   };
-
-   const handleOpenTextModal = (id, company) => {
-     setModalData({ id: id, company: company });
-     setOpenTextModal((cur) => !cur);
-   };
+  //---- Logica de Paginación ----//
 
   
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+ 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const financialProductsToShow = filteredData?.slice(startIndex, endIndex);
+
+  
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  //---- fin logica de paginación ----//
+
+  const handleFilter = (status) => {
+    if (status === "all") {
+      setFilteredData(data);
+      return;
+    }
+    const filtered = filterData(data, status);
+    setFilteredData(filtered);
+  };
+
+  const handleOpenModal = (id, company) => {
+    setModalData({ id: id, company: company });
+    setOpenModal((cur) => !cur);
+  };
+
+  const handleOpenTextModal = (id, company) => {
+    setModalData({ id: id, company: company });
+    setOpenTextModal((cur) => !cur);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -104,19 +125,7 @@ export function SortableTableProducts({ data, isLoading }) {
                     Listado de productos solicitados por las empresas
                   </Typography>
                 </div>
-                <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                  {/* <Button variant="outlined" size="sm">
-                    Ver Todos
-                  </Button>
-                  <div className="w-full md:w-72 rounded-md  border-1 border-gray-300 p-2 flex items-center justify-between">
-                    <input
-                      className="focus:border-none"
-                      label="Search"
-                      placeholder="Buscar..."
-                    />
-                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-                  </div> */}
-                </div>
+                <div className="flex shrink-0 flex-col gap-2 sm:flex-row"></div>
               </div>
               <div className="flex flex-col items-center justify-between gap-5 md:flex-row md:w-full">
                 <Tabs value="all" className="md:w-full">
@@ -162,151 +171,126 @@ export function SortableTableProducts({ data, isLoading }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredData?.map(
-                    (
-                      {
-                        id,
-                        bankAccount,
-                        productName,
-                        //product,
-                        //account,
-                        status,
-                        //date,
-                      },
-                      index
-                    ) => {
-                      const isLast = index === data.length - 1;
-                      const classes = isLast
-                        ? "p-4"
-                        : "p-4 border-b border-blue-gray-50";
+                  {filterData.length > 0 ? (
+                    financialProductsToShow?.map(
+                      ({ id, bankAccount, productName, status }, index) => {
+                        const isLast = index === data.length - 1;
+                        const classes = isLast
+                          ? "p-4"
+                          : "p-4 border-b border-blue-gray-50";
 
-                      return (
-                        <tr
-                          key={id}
-                          className={`${
-                            status === "accepted"
-                              ? "bg-green-200"
-                              : status === "declined"
-                              ? "bg-red-200"
-                              : "bg-gray-50"
-                          }`}
-                        >
-                          <td className={classes}>
-                            <div className="flex items-center gap-3 align-middle">
-                              <Avatar
-                                src={bankAccount.Company.profilePicture}
-                                alt={bankAccount.Company.name}
-                                size="sm"
-                                className="rounded-full"
-                              />
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal"
-                              >
-                                {bankAccount.Company.name}
-                              </Typography>
-                            </div>
-                          </td>
-                          <td className={classes}>
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal"
-                              >
-                                {productName}
-                              </Typography>
-                            </div>
-                          </td>
-                          <td className={classes}>
-                            <div className="w-max">
-                              <Chip variant="ghost" size="sm" value={status} />
-                            </div>
-                          </td>
-                          <td className={classes}>
-                            {/* <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {date}
-                      </Typography> */}
-                          </td>
-                          <td className={classes}>
-                            {/* <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {typeof account === "number"
-                          ? `U$S : ${account}`
-                          : account}
-                      </Typography> */}
-                          </td>
-                          <td className={classes}>
-                            <Tooltip content="Ver Adjuntos">
-                              <IconButton variant="text">
-                                <DocumentMagnifyingGlassIcon className="h-4 w-4 text-blue-700" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip content="Aprobar solicitud">
-                              <IconButton
-                                variant="text"
-                                onClick={() => {
-                                  handleOpenModal(id, bankAccount.Company.name);
-                                }}
-                                className={`disabled: ${
-                                  status === "accepted"
-                                    ? "pointer-events-none opacity-50"
-                                    : null
-                                }`}
-                              >
-                                <CheckCircleIcon className="h-4 w-4 text-green-700" />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip content="Solicitar Revisión">
-                              <IconButton
-                                variant="text"
-                                onClick={() => {
-                                  handleOpenTextModal(
-                                    id,
-                                    bankAccount.Company.name
-                                  );
-                                }}
-                                className={`disabled: ${
-                                  status === "accepted" || status === "declined"
-                                    ? "pointer-events-none opacity-50"
-                                    : null
-                                }`}
-                              >
-                                <EyeIcon className="h-4 w-4 text-red-700" />
-                              </IconButton>
-                            </Tooltip>
-                          </td>
-                        </tr>
-                      );
-                    }
+                        return (
+                          <tr
+                            key={id}
+                            className={`${
+                              status === "accepted"
+                                ? "bg-green-200"
+                                : status === "declined"
+                                ? "bg-red-200"
+                                : "bg-gray-50"
+                            }`}
+                          >
+                            <td className={classes}>
+                              <div className="flex items-center gap-3 align-middle">
+                                <Avatar
+                                  src={bankAccount.Company.profilePicture}
+                                  alt={bankAccount.Company.name}
+                                  size="sm"
+                                  className="rounded-full"
+                                />
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {bankAccount.Company.name}
+                                </Typography>
+                              </div>
+                            </td>
+                            <td className={classes}>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {productName}
+                                </Typography>
+                              </div>
+                            </td>
+                            <td className={classes}>
+                              <div className="w-max">
+                                <Chip
+                                  variant="ghost"
+                                  size="sm"
+                                  value={status}
+                                />
+                              </div>
+                            </td>
+                            <td className={classes}></td>
+                            <td className={classes}></td>
+                            <td className={classes}>
+                              <Tooltip content="Ver Adjuntos">
+                                <IconButton variant="text">
+                                  <DocumentMagnifyingGlassIcon className="h-4 w-4 text-blue-700" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip content="Aprobar solicitud">
+                                <IconButton
+                                  variant="text"
+                                  onClick={() => {
+                                    handleOpenModal(
+                                      id,
+                                      bankAccount.Company.name
+                                    );
+                                  }}
+                                  className={`disabled: ${
+                                    status === "accepted"
+                                      ? "pointer-events-none opacity-50"
+                                      : null
+                                  }`}
+                                >
+                                  <CheckCircleIcon className="h-4 w-4 text-green-700" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip content="Solicitar Revisión">
+                                <IconButton
+                                  variant="text"
+                                  onClick={() => {
+                                    handleOpenTextModal(
+                                      id,
+                                      bankAccount.Company.name
+                                    );
+                                  }}
+                                  className={`disabled: ${
+                                    status === "accepted" ||
+                                    status === "declined"
+                                      ? "pointer-events-none opacity-50"
+                                      : null
+                                  }`}
+                                >
+                                  <EyeIcon className="h-4 w-4 text-red-700" />
+                                </IconButton>
+                              </Tooltip>
+                            </td>
+                          </tr>
+                        );
+                      }
+                    )
+                  ) : (
+                    <h1>
+                      No hay Productos Financieros que coincidan con el filtro
+                    </h1>
                   )}
                 </tbody>
               </table>
             </CardBody>
             <CardFooter className="flex flex-col items-center justify-between border-t border-blue-gray-50 p-4">
-              {/* <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-normal"
-              >
-                Página 1 of 10
-              </Typography>
-              <div className="flex gap-2">
-                <Button variant="outlined" size="sm">
-                  Anterior
-                </Button>
-                <Button variant="outlined" size="sm">
-                  Siguiente
-                </Button>
-              </div> */}
+              <PaginationComponent
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </CardFooter>
           </Card>
           {open && (

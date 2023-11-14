@@ -4,10 +4,14 @@ import { useGetLocationsQuery } from "@/app/redux/services/locationApi";
 import { useState } from "react";
 import { fiterCompaniesByLocation } from "@/app/redux/features/companieSlice";
 import { useDispatch } from "react-redux";
-
+import {
+  fiterTendersByLocation,
+} from "@/app/redux/features/tenderSlice";
+import { usePathname } from "next/navigation";
 
 function LocationFilter() {
   const dispatch = useDispatch();
+  const path = usePathname();
   const [checkedLocations, setCheckedLocations] = useState([]);
   const {data, error, isLoading} = useGetLocationsQuery()
   
@@ -15,18 +19,32 @@ function LocationFilter() {
   
     if(e.target.checked){
          setCheckedLocations([...checkedLocations, e.target.id]);
-          dispatch(
-            fiterCompaniesByLocation([...checkedLocations, e.target.id])
-          );
+         if(path.includes("directory")){
+           dispatch(
+             fiterCompaniesByLocation([...checkedLocations, e.target.id])
+           );
+         }
+         if(path.includes("tenders")){
+          dispatch(fiterTendersByLocation([...checkedLocations, e.target.id]));
+         }
       }else{
          setCheckedLocations(
            checkedLocations.filter((id) => id !== e.target.id)
          );
-         dispatch(
-           fiterCompaniesByLocation(
-             checkedLocations.filter((id) => id !== e.target.id)
-           )
-         );
+         if(path.includes("directory")){
+           dispatch(
+             fiterCompaniesByLocation(
+               checkedLocations.filter((id) => id !== e.target.id)
+             )
+           );
+         }
+         if(path.includes("tenders")){
+          dispatch(
+            fiterTendersByLocation(
+              checkedLocations.filter((id) => id !== e.target.id)
+            )
+          );
+         }
       }
   }
 
