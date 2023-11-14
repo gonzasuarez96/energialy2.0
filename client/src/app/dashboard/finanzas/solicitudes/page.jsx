@@ -8,8 +8,7 @@ import getLocalStorage from "@/app/Func/localStorage";
 import { useState, useEffect } from "react";
 
 function BankDashboard() {
-  const { company } = getLocalStorage();
-  const [bankAccountId, setbankAccountId] = useState(null);
+  const user = getLocalStorage();
   const [financeProducts, setFinanceProducts] = useState([]);
 
   const [groupedData, setGroupedData] = useState([
@@ -22,8 +21,8 @@ function BankDashboard() {
     data: companyData,
     error: companyError,
     isLoading: companyLoading,
-  } = useGetCompaniesByIdQuery(company.id);
-  console.log(company.id)
+  } = useGetCompaniesByIdQuery(user?.company.id);
+
 
 
   const {

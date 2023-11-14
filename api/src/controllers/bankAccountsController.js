@@ -42,7 +42,7 @@ const getBankAccountById = async (id) => {
     include: [
       {
         model: FinanceProducts,
-        attributes: ['id', 'productName', 'status'],
+        attributes: ['id', 'productName', 'status', 'updatedAt', 'isActive'],
       },
       {
         model: Companies,

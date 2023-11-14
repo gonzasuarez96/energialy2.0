@@ -147,7 +147,7 @@ export function SortableTableClient({ data, isLoading }) {
                 <tbody>
                   {filterData.length > 0 ? (
                     financialProductsToShow?.map(
-                      ({ id, productName, status }, index) => {
+                      ({ id, productName, status, updatedAt }, index) => {
                         const isLast = index === data.length - 1;
                         const classes = isLast
                           ? "p-4"
@@ -198,7 +198,7 @@ export function SortableTableClient({ data, isLoading }) {
                                 <Chip
                                   variant="ghost"
                                   size="sm"
-                                  value={id}
+                                  value={updatedAt}
                                 />
                               </div>
                             </td>
