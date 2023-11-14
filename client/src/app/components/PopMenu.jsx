@@ -50,9 +50,9 @@ export default function Example() {
         <List className="p-0">
           <Link
             href="/dashboard"
-            className="text-sm hover:text-primary-600 hover:font-semibold"
+            //className="text-sm hover:text-primary-600 hover:font-semibold"
           >
-            <ListItem className="m-0">
+            <ListItem className="m-0 text-sm hover:text-primary-600 hover:font-semibold cursor-pointer">
               <ListItemPrefix>
                 <MdSpaceDashboard />
               </ListItemPrefix>

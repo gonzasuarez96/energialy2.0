@@ -55,8 +55,8 @@ function EmailModal({ open, handleOpen, status, id, company }) {
       {open && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white p-5 rounded flex flex-col justify-center items-center gap-5 h-screem">
-            <h4>
-              Invita a tus empresas a formar parte de Energialy{" "}
+            <h4 className=''>
+              Invita a otras empresas a formar parte de Energialy!{" "}
               <span className="font-bold">{company}</span>
             </h4>
             <div className="w-full">
@@ -71,7 +71,7 @@ function EmailModal({ open, handleOpen, status, id, company }) {
                   className="rounded-md bg-secondary-400 font-semibold text-white px-4 py-2"
                   type="submit"
                 >
-                  Guardar
+                  Agregar
                 </button>
               </form>
             </div>
@@ -95,13 +95,13 @@ function EmailModal({ open, handleOpen, status, id, company }) {
             )}
             <div className="flex gap-2">
               <button
-                className="bg-primary-500 py-2 px-4 rounded-sm text-white font-bold m-5"
+                className="bg-primary-500 py-2 px-4 rounded-md text-white font-bold m-5"
                 onClick={handleStatus}
               >
                 Enviar
               </button>
               <button
-                className="bg-secondary-500 py-2 px-4 rounded-sm text-white font-bold m-5"
+                className="bg-secondary-500 py-2 px-4 rounded-md text-white font-bold m-5"
                 onClick={handleOpen}
               >
                 Cerrar

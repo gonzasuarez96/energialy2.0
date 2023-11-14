@@ -74,7 +74,7 @@ export function SortableTableProducts({ data, isLoading }) {
 
   
   const itemsPerPage = 6;
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
  
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
