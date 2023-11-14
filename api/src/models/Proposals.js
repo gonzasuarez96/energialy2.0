@@ -1,7 +1,7 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  sequelize.define("Proposals", {
+  sequelize.define('Proposals', {
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -27,11 +27,11 @@ module.exports = (sequelize) => {
     projectDuration: {
       type: DataTypes.ENUM,
       values: [
-        "Menos de una semana",
-        "Menos de un mes",
-        "De 1 a 3 meses",
-        "De 3 a 6 meses",
-        "Más de 6 meses",
+        'Menos de una semana',
+        'Menos de un mes',
+        'De 1 a 3 meses',
+        'De 3 a 6 meses',
+        'Más de 6 meses',
       ],
       allowNull: false,
     },
@@ -44,13 +44,8 @@ module.exports = (sequelize) => {
     },
     status: {
       type: DataTypes.ENUM,
-      values: [
-        "sent",
-        "seen",
-        "accepted",
-        "declined",
-      ],
-      defaultValue: "sent",
+      values: ['sent', 'accepted', 'declined'],
+      defaultValue: 'sent',
       allowNull: false,
     },
     isActive: {

@@ -1,9 +1,13 @@
 'use client'
 import LocationFilter from "./LocationFilter";
 import { useDispatch } from "react-redux";
-import {filterCompaniesByName, filterCompaniesByCategorie, filterCompaniesBySubcategorie } from "@/app/redux/features/companieSlice";
+import {filterCompaniesByName, filterCompaniesByCategorie, filterCompaniesBySubcategorie, resetFilter } from "@/app/redux/features/companieSlice";
+import {filterTendersByName, filterTendersByCategorie, fiterTendersByLocation, filterTendersBySubcategorie} from "@/app/redux/features/tenderSlice"
 import { useGetCategoriesQuery } from '../redux/services/categoriesApi';
 import Select from 'react-select';
+import { usePathname } from "next/navigation";
+
+
 
 import { useState } from "react";
 
@@ -17,11 +21,20 @@ const employerNumber = [
 
 function FilterBar() {
   const dispatch = useDispatch();
+  const path = usePathname()
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const [search, setSearch] = useState("");
   const [categorieSelected, setCategorieSelected] = useState([])
   const [subCatSelected, setSubCatSelected] = useState([])
+
+  const optionsCategories = categories?.map((cat) => ({
+              value: cat.id,
+              label: cat.name,
+            }))
+
+  
+  
   
   const handleSearch = (e) => {
     const name = e.target.value;
@@ -32,20 +45,37 @@ function FilterBar() {
     //crear las subcategorias para el select
     const subcategories = categories?.find(cat => cat.id === e.value).subcategories
     setSubCatSelected(subcategories.map(subcat => ({label:subcat.name, value:subcat.id})))      
+      
     //mandar a redux las categorias seleccionada para modificar el filterCompanies
-    dispatch(filterCompaniesByCategorie(e.value))
+    if(path.includes("directory")){
+      dispatch(filterCompaniesByCategorie(e.value))
+    }
+    // if(path.includes("tenders")){
+    //   dispatch(filterTendersByCategorie(e.value))
+    // }
     //setear su propio estado para no perder la referencia
     setCategorieSelected(e)
   }
   
   const handleSubcategorieChange = (e) => {
-    dispatch(filterCompaniesBySubcategorie(e.value))
+    if(categorieSelected.length === 0) return
+    if(path.includes("directory")){
+      dispatch(filterCompaniesBySubcategorie(e.value))
+    }
+    if(path.includes("tenders")){
+      dispatch(filterTendersBySubcategorie(e.value))
+    }
     // setSubCatSelected(e)
   }
   
 
   const searchCompanies = () => {
-    dispatch(filterCompaniesByName(search));
+    if(path.includes("directory")){
+      dispatch(filterCompaniesByName(search));
+    }
+    if(path.includes('tenders')){
+      dispatch(filterTendersByName(search));
+    }
   };
 
   return (
@@ -82,17 +112,21 @@ function FilterBar() {
       <div className="bg-white p-8 mb-4">
         <div className="p-2 border-b-2 border-gray-300 mb-4">
           <h3 className="text-base inline-flex mr-1">Categoria: </h3>
-          <span className="inline-flex mr-1 text-xs">{categorieSelected.label}</span>
+          <span className="inline-flex mr-1 text-xs">
+            {categorieSelected.label}
+          </span>
         </div>
         <div>
           {categoriesLoading && "Loading..."}
+          {/* <AsyncSelect
+            loadOptions={}
+            onChange={handleChangeCategories}
+          /> */}
           <Select
             defaultInputValue={"Elige una categoria"}
-            options={categories?.map((cat) => ({
-              value: cat.id,
-              label: cat.name,
-            }))}
+            options={optionsCategories}
             onChange={handleChangeCategories}
+            defaultValue={"todas"}
           />
         </div>
       </div>

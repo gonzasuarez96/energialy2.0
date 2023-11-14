@@ -6,7 +6,7 @@ const cleanLocations = (locations) => {
     const cleanLocationsArray = locations.map((location) => ({
       id: location.id,
       name: location.name,
-      isActive: location.isActive
+      isActive: location.isActive,
     }));
     return cleanLocationsArray;
   } else {
@@ -16,7 +16,7 @@ const cleanLocations = (locations) => {
       companies: locations.Companies,
       isActive: locations.isActive,
       createdAt: locations.createdAt,
-      updatedAt: locations.updatedAt
+      updatedAt: locations.updatedAt,
     };
     return cleanLocationDetail;
   }
@@ -24,9 +24,9 @@ const cleanLocations = (locations) => {
 
 const getAllLocations = async () => {
   const allLocations = await Locations.findAll({
-    attributes: { exclude: ["createdAt", "updatedAt"] },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
   });
-  return allLocations;
+  return cleanLocations(allLocations);
 };
 
 const filterLocationsByName = async (name) => {
@@ -36,16 +36,16 @@ const filterLocationsByName = async (name) => {
         [Op.iLike]: `%${name}%`,
       },
     },
-    attributes: { exclude: ["createdAt", "updatedAt"] },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
   });
-  return filteredLocations;
+  return cleanLocations(filteredLocations);
 };
 
-const getLocationByID = async (id) => {
+const getLocationById = async (id) => {
   const foundLocation = await Locations.findByPk(id, {
     include: {
       model: Companies,
-      attributes: ["id", "name", "foundationYear", "annualRevenue", "employeeCount"],
+      attributes: ['id', 'name', 'foundationYear', 'annualRevenue', 'employeeCount'],
       through: { attributes: [] },
     },
   });
@@ -59,19 +59,19 @@ const getLocationByID = async (id) => {
 
 const createLocation = async (name) => {
   if (!name) {
-    const error = new Error("Missing required attributes.");
+    const error = new Error('Missing required attributes.');
     error.status = 400;
     throw error;
-  };
+  }
   const newLocation = await Locations.create({ name });
-  return newLocation;
+  return cleanLocations(newLocation);
 };
 
 const updateLocation = async (id, name, isActive) => {
   const foundLocation = await Locations.findByPk(id, {
     include: {
       model: Companies,
-      attributes: ["id", "name", "foundationYear", "annualRevenue", "employeeCount"],
+      attributes: ['id', 'name', 'foundationYear', 'annualRevenue', 'employeeCount'],
       through: { attributes: [] },
     },
   });
@@ -81,7 +81,7 @@ const updateLocation = async (id, name, isActive) => {
     throw error;
   }
   await foundLocation.update({ name, isActive });
-  return foundLocation;
+  return cleanLocations(foundLocation);
 };
 
 const deleteLocation = async (id) => {
@@ -93,16 +93,16 @@ const deleteLocation = async (id) => {
   }
   await foundLocation.destroy();
   const remainingLocations = await Locations.findAll({
-    attributes: { exclude: ["createdAt", "updatedAt"] },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
   });
-  return remainingLocations;
-}
+  return cleanLocations(remainingLocations);
+};
 
 module.exports = {
   getAllLocations,
   filterLocationsByName,
-  getLocationByID,
+  getLocationById,
   createLocation,
   updateLocation,
-  deleteLocation
+  deleteLocation,
 };

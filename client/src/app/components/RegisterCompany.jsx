@@ -1,138 +1,108 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Montserrat } from "next/font/google";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
+import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
+import { annualRevenueOptions, employeeCountOptions, organizationTypes} from '@/app/data/dataGeneric'
+import {handleCategoryChange, handleSubcategoryChange} from '@/app/Func/handlers'
+import getLocalStorage from "../Func/localStorage";
+//import { useGetLocationsQuery } from "../redux/services/locationApi";
 
-const displaySuccessMessage = (mensaje) => {
-  toast.success(mensaje, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
-};
-
-const displayFailedMessage = (mensaje) => {
-  toast.error(mensaje, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-  });
-};
-
-const ubicacionesOptions = [
-  "Cuenca Neuquina",
-  "Cuenca Golfo San Jorge",
-  "Cuenca Austral",
-  "Cuenca Cuyana",
-  "Cuenca Noroeste",
-];
-
-const subcategoriesOptions = [
-  "Opcion A",
-  "Opcion B",
-  "Opcion C",
-  "Opcion D",
-  "Opcion E",
-];
-
-const projectOptions = [
-  "Proyecto A",
-  "Proyecto B",
-  "Proyecto C",
-  "Proyecto D",
-  "Proyecto E",
-  "Proyecto F",
-];
-const serviceOptions = [
-  "Servicio X",
-  "Servicio Y",
-  "Servicio Z",
-  "Servicio 1",
-  "Servicio 2",
-  "Servicio 3",
-];
-
-const organizationTypes = [
-  "Organismo Público",
-  "Operadora",
-  "PyME",
-  "Cámara/Cluster/Federación",
-  "Profesional independiente",
-  "Servicios especiales",
-];
 
 const stepsForm = ["01", "02", "03", "04"];
 
 export default function RegisterCompany() {
-  // ------------ Estados Locales ---------------------//
+  const router = useRouter();
+  const user = getLocalStorage();
 
+  // ------------ Estados Locales ---------------------//
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [locations, setLocations] = useState("");
-  const [subcategories, setSubCategories] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const [foundationYear, setfoundationYear] = useState("");
   const [annualRevenue, setAnnualRevenue] = useState("");
   const [employeeCount, setEmployeeCount] = useState("");
   const [cuit, setCuit] = useState("");
-  const [profilePicture, setProfilePicture] = useState(null);
-  const [bannerPicture, setBannerPicture] = useState(null);
-  const [profilePictureError, setProfilePictureError] = useState("");
-  const [bannerPictureError, setBannerPictureError] = useState("");
   const [organizationType, setOrganizationType] = useState("");
-
-  const [website, setWebsite] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
-  const [compreNeuquino, setCompreNeuquino] = useState(false);
-  const [experience, setExperience] = useState([]);
-  const [services, setServices] = useState([]);
-  const [certifications, setCertifications] = useState([]);
-  const [homologations, setHomologations] = useState([]);
 
-  const router = useRouter();
 
-  // ------------------------------------------------- //
+  //-------------- Funciones para traer las opciones del form --------------//
+  const [locationsOptions, setLocationsOptions] = useState([]);
+  const [subcategoriesOptions, setSubcategoriesOptions] = useState([]);
+  const [subcategorySelected, setSubcategorySelected] = useState([]);
+  const [stepCompletion, setStepCompletion] = useState([false, false, false, false]);
+  const [errorMessages, setErrorMessages] = useState({
+    step1: "",
+    step2: "",
+    step3: "",
+    step4: "",
+  });
+  
+  //const { data: locations, isLoading } = useGetLocationsQuery();
+
+
+  const getLocation = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/locations");
+      const transformedData = response.data.map((item) => ({
+        id: item.id,
+        name: item.name,
+      }));
+      setLocationsOptions(transformedData);
+      console.log("Locations: ", transformedData);
+    } catch (error) {
+      console.log("Error al traer las ubicaciones: ", error);
+      throw error;
+    }
+  };
+
+  
+
+  const getCategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/categories");
+      const transformedData = response.data.map((item) => ({
+        id: item.id,
+        name: item.name,
+      }));
+      setCategories(transformedData);
+      console.log("Categories: ", transformedData);
+    } catch (error) {
+      console.log("Error al traer las categorias: ", error);
+      throw error;
+    }
+  };
+
+  const getSubcategories = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/subcategories");
+      const transformedData = response.data.map((item) => ({
+        id: item.id,
+        name: item.name,
+        categoryId: item.parentCategory.id,
+      }));
+      setSubcategories(transformedData);
+      console.log('Subcategories: ', transformedData)
+    } catch (error) {
+      console.log("Error al traer las subcategorias: ", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    getLocation();
+    getSubcategories();
+    getCategories();
+  }, []);
 
   // -------- Handlers de campos ----------------- //
-
-  const handleExperienceChange = (e, option) => {
-    const selectedProjects = [...experience];
-    if (e.target.checked) {
-      selectedProjects.push(option);
-    } else {
-      const index = selectedProjects.indexOf(option);
-      if (index !== -1) {
-        selectedProjects.splice(index, 1);
-      }
-    }
-    setExperience(selectedProjects);
-  };
-
-  const handleServiceChange = (e, option) => {
-    const selectedServices = [...services];
-    if (e.target.checked) {
-      selectedServices.push(option);
-    } else {
-      const index = selectedServices.indexOf(option);
-      if (index !== -1) {
-        selectedServices.splice(index, 1);
-      }
-    }
-    setServices(selectedServices);
-  };
 
   const handleNextStep = () => {
     if (step < 4) {
@@ -140,90 +110,109 @@ export default function RegisterCompany() {
     }
   };
 
-  const handleProfilePictureChange = (e) => {
-    const pic = e.target.files[0];
-    if (pic && pic.type.startsWith("image/")) {
-      setProfilePicture(pic);
-      setProfilePictureError("");
-    } else {
-      setProfilePicture(null);
-      setProfilePictureError("Por favor selecciona una imagen válida.");
-    }
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    console.log('categoryId:',categoryId)
+    const filteredSubcategories = subcategories.filter(
+      (subcategory) => subcategory.categoryId === categoryId
+    );
+    setSubcategoriesOptions(filteredSubcategories);
+    console.log('nuevas opciones de subcat:',filteredSubcategories)
   };
 
-  const handleBannerPictureChange = (e) => {
-    const picBanner = e.target.files[0];
-    if (picBanner && picBanner.type.startsWith("image/")) {
-      setBannerPicture(picBanner);
-      setBannerPictureError("");
-    } else {
-      setBannerPicture(null);
-      setBannerPictureError("Por favor selecciona una imagen válida.");
-    }
+  const handleSubcategoryChange = (e) => {
+    const subcategoryId = e.target.value;
+    setSubcategorySelected((prevSubcategories) => {
+      if (prevSubcategories.includes(subcategoryId)) {
+        return prevSubcategories.filter(id => id !== subcategoryId);
+      } else {
+        return [...prevSubcategories, subcategoryId];
+      }
+    });
+    console.log('Subcategorias seleccionadas:', subcategoryId)
   };
+  console.log('Estado subcategorySelected:', subcategorySelected)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("locations", locations);
-    formData.append("subcategories", subcategories);
-    formData.append("foundationYear", foundationYear);
-    formData.append("annualRevenue", annualRevenue);
-    formData.append("employeeCount", employeeCount);
-    formData.append("cuit", cuit);
-    formData.append("profileImage", profilePicture);
-    formData.append("bannerImage", bannerPicture);
-    formData.append("organizationType",organizationType);
+    const companyData = {
+      name,
+      description,
+      locations,
+      subcategories: subcategorySelected,
+      foundationYear,
+      annualRevenue,
+      employeeCount,
+      cuit,
+      profilePicture,
+      bannerPicture,
+      organizationType,
+      userId: user.id,
+    };
 
+    console.log("Datos enviados en companyData:", companyData);
 
-    // ----- Esto solo esta hecho para poder ver en consola lo q se manda, luego se borra ----- //
-    function formDataToObject(formData) {
-      const obj = {};
-      formData.forEach((value, key) => {
-        if (!obj.hasOwnProperty(key)) {
-          obj[key] = value;
-        } else {
-          if (!Array.isArray(obj[key])) {
-            obj[key] = [obj[key]];
-          }
-          obj[key].push(value);
-        }
-      });
-      return obj;
-    }
-    const formDataObject = formDataToObject(formData);
-    console.log("Datos enviados en formDataObject:",formDataObject);
-
-    // ------------------------------------------------------------------------ //
-
-    console.log("Datos enviados en formData:", formData);
 
     try {
       const response = await axios.post(
         "http://localhost:3001/companies",
-        formData,
+        companyData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json", // Cambiado a JSON
           },
         }
       );
       console.log("Respuesta del servidor:", response);
-      displaySuccessMessage("Empresa registrada con exito");
+      displaySuccessMessage("Empresa registrada con éxito");
       setTimeout(() => {
         router.push("/directory");
       }, 2000);
     } catch (error) {
       console.error("Error al registrar la empresa:", error);
-      console.log("Datos enviados en companyData:", formData);
+      console.log("Datos enviados en companyData:", companyData);
       displayFailedMessage(error.response.data.error);
     }
   };
 
-  // -------------------------------- //
+  // ------------------------ Cloudinary ----------------------------//
+
+  const [profilePicture, setProfilePicture] = useState("");
+  const [bannerPicture, setBannerPicture] = useState("");
+  const [profilePictureError, setProfilePictureError] = useState("");
+  const [bannerPictureError, setBannerPictureError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const uploadImage = async (e, imageType) => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", "energialy_users");
+    setLoading(true);
+
+    try {
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dbraa6jpj/image/upload",
+        data  
+      );
+      const file = res.data;
+      console.log("Respuesta de cloudinary:", res);
+
+      if (imageType === "profile") {
+        setProfilePicture(file.secure_url);
+      } else if (imageType === "banner") {
+        setBannerPicture(file.secure_url);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.log("Error al cargar la imagen:", error);
+      setLoading(false);
+    }
+  };
+
+  // ------------------------------------------------------------------------ //
 
   return (
     <div className="min-h-screen flex flex-col justify-center">
@@ -301,9 +290,36 @@ export default function RegisterCompany() {
                       rows="4" // Puedes ajustar la cantidad de filas aquí
                     />
                   </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="mb-3">
+                      <input
+                        type="number"
+                        id="foundationYear"
+                        placeholder="Año de fundación (ej. 1990)"
+                        value={foundationYear}
+                        onChange={(e) => setfoundationYear(e.target.value)}
+                        className={`w-full px-3 py-2 text-lg border ${
+                          foundationYear.length === 4
+                            ? "border-green-500"
+                            : "border-red-500"
+                        }`}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <input
+                        type="text"
+                        id="cuit"
+                        placeholder="CUIT de la empresa"
+                        value={cuit}
+                        onChange={(e) => setCuit(e.target.value)}
+                        className="w-full px-3 py-2 text-lg border"
+                      />
+                    </div>
+                  </div>
+
                   <button
                     onClick={handleNextStep}
-                    className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                    className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
                   >
                     Siguiente
                   </button>
@@ -312,114 +328,77 @@ export default function RegisterCompany() {
               {step === 2 && (
                 <div>
                   <div className="space-y-2">
-                    <div>
-                      <select
-                        value={locations}
-                        onChange={(e) => setLocations(e.target.value)}
-                        className="border rounded px-2 py-2 w-full"
-                      >
-                        <option value="">Seleccione una ubicación</option>
-                        {ubicacionesOptions.map((option, index) => (
-                          <option key={index} value={option}>
-                            {option}
-                          </option>
+                    <div className="mb-3">
+                      <label className="block mb-2 font-bold">Tipo de Organización</label>
+                      <div className="flex flex-wrap">
+                        {organizationTypes.map((type, index) => (
+                          <div key={index} className="w-1/2 mb-2">
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                id={`organizationType${index}`}
+                                value={type}
+                                checked={organizationType === type}
+                                onChange={(e) =>
+                                  setOrganizationType(e.target.value)
+                                }
+                              />
+                              <span className="ml-2">{type}</span>
+                            </label>
+                          </div>
                         ))}
-                      </select>
-                    </div>
-                    <div>
-                      <select
-                        value={subcategories}
-                        onChange={(e) => setSubCategories(e.target.value)}
-                        className="border rounded px-2 py-2 w-full"
-                      >
-                        <option value="">Subcategoria</option>
-                        {subcategoriesOptions.map((option, index) => (
-                          <option key={index} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <input
-                          type="number"
-                          id="foundationYear"
-                          placeholder="Año de fundación (ej. 1990)"
-                          value={foundationYear}
-                          onChange={(e) => setfoundationYear(e.target.value)}
-                          className={`w-full px-3 py-2 text-lg border ${
-                            foundationYear.length === 4
-                              ? "border-green-500"
-                              : "border-red-500"
-                          }`}
-                        />
+                        <label className="block mb-2 font-bold">Ingresos Anuales</label>
+                        {annualRevenueOptions.map((option, index) => (
+                          <div key={index} className="mb-2">
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                value={option}
+                                checked={annualRevenue === option}
+                                onChange={(e) =>
+                                  setAnnualRevenue(e.target.value)
+                                }
+                              />
+                              <span className="ml-2">{option}</span>
+                            </label>
+                          </div>
+                        ))}
                       </div>
                       <div>
-                        <input
-                          type="text"
-                          id="annualRevenue"
-                          placeholder="Ingresos anuales de la empresa"
-                          value={annualRevenue}
-                          onChange={(e) => setAnnualRevenue(e.target.value)}
-                          className="w-full px-3 py-2 text-lg border"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="text"
-                          id="employeeCount"
-                          placeholder="Cantidad de empleados"
-                          value={employeeCount}
-                          onChange={(e) => setEmployeeCount(e.target.value)}
-                          className="w-full px-3 py-2 text-lg border"
-                        />
-                      </div>
-                      <div>
-                        <input
-                          type="text"
-                          id="cuit"
-                          placeholder="CUIT de la empresa"
-                          value={cuit}
-                          onChange={(e) => setCuit(e.target.value)}
-                          className="w-full px-3 py-2 text-lg border"
-                        />
+                        <label className="block mb-2 font-bold">
+                          Cantidad de Empleados
+                        </label>
+                        {employeeCountOptions.map((option, index) => (
+                          <div key={index} className="mb-2">
+                            <label className="flex items-center">
+                              <input
+                                type="radio"
+                                value={option}
+                                checked={employeeCount === option}
+                                onChange={(e) =>
+                                  setEmployeeCount(e.target.value)
+                                }
+                              />
+                              <span className="ml-2">{option}</span>
+                            </label>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    {/* <div>
-                        <input
-                          type="text"
-                          id="website"
-                          placeholder="Sitio web de la empresa"
-                          value={website}
-                          onChange={(e) => setWebsite(e.target.value)}
-                          className="w-full px-3 py-2 text-lg rounded border"
-                        />
-                      </div>
-                      <div>
-                        <label className="block mb-2">
-                          ¿La empresa tiene Compre Neuquino?
-                        </label>
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            id="compreNeuquino"
-                            checked={compreNeuquino}
-                            onChange={(e) => setCompreNeuquino(e.target.checked)}
-                          />
-                          <label htmlFor="compreNeuquino">Sí</label>
-                        </div>
-                      </div> */}
                     <div className="mt-4 space-x-4">
                       <button
                         onClick={() => setStep(step - 1)}
-                        className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
+                        className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
                       >
                         Volver
                       </button>
                       <button
                         onClick={handleNextStep}
-                        className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                        className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
                       >
                         Siguiente
                       </button>
@@ -430,45 +409,76 @@ export default function RegisterCompany() {
               {step === 3 && (
                 <div>
                   <div className="mb-3">
-                    <label htmlFor="profilePicture">Foto de Perfil</label>
-                    <input
-                      type="file"
-                      id="profilePicture"
-                      accept="image/*"
-                      onChange={handleProfilePictureChange}
-                      className="w-full border rounded px-2 py-1"
-                    />
-                    {profilePictureError && (
-                      <p className="text-red-500 text-sm">
-                        {profilePictureError}
-                      </p>
-                    )}
+                    <label className="block mb-2 font-bold">
+                      Seleccionar ubicaciones
+                    </label>
+                    <div className="flex flex-wrap">
+                      {locationsOptions.map((option) => (
+                        <div key={option.id} className="w-1/2 mb-2">
+                          <label className="flex items-center">
+                            <input
+                              type="checkbox"
+                              value={option.id}
+                              checked={locations.includes(option.id)}
+                              onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                setLocations((prevLocations) =>
+                                  isChecked
+                                    ? [...prevLocations, option.id]
+                                    : prevLocations.filter(
+                                        (id) => id !== option.id
+                                      )
+                                );
+                              }}
+                            />
+                            <span className="ml-2">{option.name}</span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="bannerPicture">Banner</label>
-                    <input
-                      type="file"
-                      id="bannerPicture"
-                      accept="image/*"
-                      onChange={handleBannerPictureChange}
-                      className="w-full border rounded px-2 py-1"
-                    />
-                    {bannerPictureError && (
-                      <p className="text-red-500 text-sm">
-                        {bannerPictureError}
-                      </p>
-                    )}
+                    <select
+                      value=''
+                      onChange={handleCategoryChange} 
+                      className="border rounded px-2 py-2 w-full"
+                    >
+                      <option value="">Seleccione una categoria</option>
+                      {categories?.map((option) => (
+                        <option key={option.id} value={option.id}>
+                          {option.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="mb-3">
+                    <label className="block mb-2 font-bold">Subcategorías</label>
+                    <div className="flex flex-wrap">
+                      {subcategoriesOptions.map((option) => (
+                        <div key={option.id} className="w-1/2 mb-2">
+                          <label className="flex items-center">
+                            <input
+                              type="checkbox"
+                              value={option.id}
+                              checked={subcategorySelected.includes(option.id)}
+                              onChange={handleSubcategoryChange}
+                            />
+                            <span className="ml-2">{option.name}</span>
+                          </label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                   <div className="mt-4 space-x-4">
                     <button
                       onClick={() => setStep(step - 1)}
-                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
+                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
                     >
                       Volver
                     </button>
                     <button
                       onClick={handleNextStep}
-                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
                     >
                       Siguiente
                     </button>
@@ -478,36 +488,54 @@ export default function RegisterCompany() {
               {step === 4 && (
                 <div>
                   <div className="mb-3">
-                    <label className="block mb-2">Tipo de Organización</label>
-                    <div className="flex flex-wrap">
-                      {organizationTypes.map((type, index) => (
-                        <div key={index} className="w-1/2 mb-2">
-                          <label className="flex items-center">
-                            <input
-                              type="radio"
-                              id={`organizationType${index}`}
-                              value={type}
-                              checked={organizationType === type}
-                              onChange={(e) =>
-                                setOrganizationType(e.target.value)
-                              }
-                            />
-                            <span className="ml-2">{type}</span>
-                          </label>
-                        </div>
-                      ))}
-                    </div>
+                    <label htmlFor="profilePicture" className="block mb-2 font-bold">Foto de Perfil</label>
+                    <input
+                      type="file"
+                      id="profilePicture"
+                      accept="image/*"
+                      onChange={(e) => uploadImage(e, "profile")}
+                      className="w-full border rounded px-2 py-1"
+                    />
+                    {profilePictureError && (
+                      <p className="text-red-500 text-sm">
+                        {profilePictureError}
+                      </p>
+                    )}
+                    {loading ? (
+                      <h3>Cargando Imagenes...</h3>
+                    ) : (
+                      <img src={profilePicture} style={{ width: "300px" }} />
+                    )}
                   </div>
-
+                  <div className="mb-3">
+                    <label htmlFor="bannerPicture" className="block mb-2 font-bold">Banner</label>
+                    <input
+                      type="file"
+                      id="bannerPicture"
+                      accept="image/*"
+                      onChange={(e) => uploadImage(e, "banner")}
+                      className="w-full border rounded px-2 py-1"
+                    />
+                    {bannerPictureError && (
+                      <p className="text-red-500 text-sm">
+                        {bannerPictureError}
+                      </p>
+                    )}
+                    {loading ? (
+                      <h3>Cargando Imagenes...</h3>
+                    ) : (
+                      <img src={bannerPicture} style={{ width: "300px" }} />
+                    )}
+                  </div>
                   <div className="mt-4 space-x-4">
                     <button
                       onClick={() => setStep(step - 1)}
-                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
+                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
                     >
                       Volver
                     </button>
                     <button
-                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
+                      className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
                       type="submit"
                     >
                       Registrarse
@@ -523,138 +551,3 @@ export default function RegisterCompany() {
     </div>
   );
 }
-
-// <div className="mt-4 space-y-4">
-//                     <div>
-//                       <label className="block mb-2">
-//                         Trabajos/Proyectos de la Empresa
-//                       </label>
-//                       <div className="grid grid-cols-3">
-//                         {projectOptions.map((option, index) => (
-//                           <div key={index} className="mt-1">
-//                             <input
-//                               type="checkbox"
-//                               id={`project_${index}`}
-//                               value={option}
-//                               checked={experience.includes(option)}
-//                               onChange={(e) =>
-//                                 handleExperienceChange(e, option)
-//                               }
-//                               className="mr-1"
-//                             />
-//                             <label htmlFor={`project_${index}`}>{option}</label>
-//                           </div>
-//                         ))}
-//                       </div>
-//                     </div>
-
-//                     <div>
-//                       <label className="block mb-2">
-//                         Servicios que ofrece la Empresa
-//                       </label>
-//                       <div className="grid grid-cols-3">
-//                         {serviceOptions.map((option, index) => (
-//                           <div key={index} className="mt-1">
-//                             <input
-//                               type="checkbox"
-//                               id={`service_${index}`}
-//                               value={option}
-//                               checked={services.includes(option)}
-//                               onChange={(e) => handleServiceChange(e, option)}
-//                               className="mr-1"
-//                             />
-//                             <label htmlFor={`service_${index}`}>{option}</label>
-//                           </div>
-//                         ))}
-//                       </div>
-//                     </div>
-
-//                     <div className="mt-4 space-x-4">
-//                       <button
-//                         onClick={() => setStep(step - 1)}
-//                         className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600"
-//                       >
-//                         Volver
-//                       </button>
-//                       <button
-//                         onClick={handleNextStep}
-//                         className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600"
-//                       >
-//                         Siguiente
-//                       </button>
-//                     </div>
-//                   </div>
-//                   <div className="mt-4 space-y-4">
-//                   <div>
-//                     <label className="block mb-2">
-//                       Certificados que obtuvo
-//                     </label>
-//                     <div className="grid grid-cols-3">
-//                       {projectOptions.map((option, index) => (
-//                         <div key={index} className="mt-1">
-//                           <input
-//                             type="checkbox"
-//                             id={`project_${index}`}
-//                             value={option}
-//                             checked={experience.includes(option)}
-//                             onChange={(e) =>
-//                               handleExperienceChange(e, option)
-//                             }
-//                             className="mr-1"
-//                           />
-//                           <label htmlFor={`project_${index}`}>{option}</label>
-//                         </div>
-//                       ))}
-//                     </div>
-//                     <div>
-//                       <label className="block mb-2">
-//                         Trabajos/Proyectos de la Empresa
-//                       </label>
-//                       <div className="grid grid-cols-3">
-//                         {projectOptions.map((option, index) => (
-//                           <div key={index} className="mt-1">
-//                             <input
-//                               type="checkbox"
-//                               id={`project_${index}`}
-//                               value={option}
-//                               checked={experience.includes(option)}
-//                               onChange={(e) =>
-//                                 handleExperienceChange(e, option)
-//                               }
-//                               className="mr-1"
-//                             />
-//                             <label htmlFor={`project_${index}`}>
-//                               {option}
-//                             </label>
-//                           </div>
-//                         ))}
-//                       </div>
-//                     </div>
-//                   </div>
-
-//                   <div className="flex items-center space-x-2">
-//                     <input
-//                       type="checkbox"
-//                       id="agreeToTerms"
-//                       checked={agreeToTerms}
-//                       onChange={(e) => setAgreeToTerms(e.target.checked)}
-//                     />
-//                     <label htmlFor="agreeToTerms">
-//                       De Acuerdo Con Nuestros Términos Y Condiciones
-//                     </label>
-//                   </div>
-//                   <div className="mt-4 space-x-4">
-//                     <button
-//                       onClick={() => setStep(step - 1)}
-//                       className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-gray-300"
-//                     >
-//                       Volver
-//                     </button>
-//                     <button
-//                       className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
-//                       type="submit"
-//                     >
-//                       Registrarse
-//                     </button>
-//                   </div>
-//                 </div>

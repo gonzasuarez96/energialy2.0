@@ -1,26 +1,47 @@
 'use client'
+
+
 import Link from "next/link";
 import Image from "next/image";
-import Banner from "@/app/assets/banner.jpg";
-import Logo from "@/app/assets/LogoPenzoil.png";
+//import Banner from "@/app/assets/banner.jpg";
+//import Logo from "@/app/assets/LogoPenzoil.png";
 import { MdMoney } from "react-icons/md";
 import {MdPointOfSale} from 'react-icons/md'
 import {MdOutlineArrowDropDown} from 'react-icons/md'
 import {AiOutlineMenu} from 'react-icons/ai'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MenuItem from "./MenuItem";
+import  getLocalStorage  from "../../Func/localStorage";
+
+import Loader from "@/app/components/Loader";
 
 import { menuBar } from "@/app/data/menu";
 
 
 function SideBar() {
+   const [user, setUser] = useState(null);
+   console.log(user)
   const [isOpen, setIsOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
+  const [itemMenu, setItemMenu] = useState(menuBar);
+  
+  const banner = user?.company?.bannerPicture || null;
+  const logo = user?.company?.profilePicture || null;
+  console.log(banner)
+  //console.log(userData)
 
   const toggle = () => {
     setIsOpen(!isOpen);
   };
 
+  
+  console.log(itemMenu)
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user);
+    const itemUserRole = menuBar.filter((item) => item.auth.includes(user.role));
+    setItemMenu(itemUserRole);
+  }, []);
   
 
   return (
@@ -42,18 +63,34 @@ function SideBar() {
       </div>
       {/*Company Data */}
       <div className="flex flex-col items-center justify-center">
-        <Image className="-z-0" src={Banner} width={500} height={500} />
-        <Image
-          src={Logo}
-          className={`${isOpen ? "w-[100px]" : "w-[50px] duration-300"}`}
-        ></Image>
+        {banner ? (
+          <img className="-z-0" src={banner} alt="bannerProfile" />
+        ) : null}
+        {logo ? (
+          <img
+            src={logo}
+            className={`${isOpen ? "w-[100px]" : "w-[50px] duration-300"}`}
+          />
+        ) : null}
       </div>
       {/*Menu Items*/}
-      <div className="flex flex-col items-start justify-center gap-4 duration-300 px-2">
-        <ul className="pt-2 w-full">
-          {menuBar.map((menuItem, index) => (
-            <MenuItem menuItem={menuItem} key={index} isOpen={isOpen}/>
-          ))}
+      <div
+        className={`flex flex-col items-start justify-center gap-4 duration-300 ${
+          isOpen ? "px-2" : "px-0"
+        } `}
+      >
+        <ul className="pt-2 w-full items-center ">
+          {itemMenu.length === 0 
+            ? (<Loader/>)
+            : ( itemMenu.map((menuItem, index) => (
+            <MenuItem
+              menuItem={menuItem}
+              key={index}
+              isOpen={isOpen}
+              user={user}
+            />
+          )))}
+         
         </ul>
       </div>
     </div>

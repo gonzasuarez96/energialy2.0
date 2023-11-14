@@ -6,19 +6,19 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Logo from "@/app/assets/Energialy Logo-01.svg";
 import UserProfile from "./UserProfile";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+
 
 import { useRouter } from "next/navigation";
+import getLocalStorage from "../Func/localStorage";
 
-function isAuthenticated() {
-  return true;
-}
 
 export default function Navigation() {
-  const user = useSelector((state) => state.user);
+  const [user, setUser] = useState(null);
+  
 
   function isAuthenticated() {
-    if (user.userData.login) {
+    if (user) {
       return true;
     } else {
       return false;
@@ -27,6 +27,11 @@ export default function Navigation() {
 
   let pathname = usePathname() || "/";
   const router = useRouter();
+
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user);
+  },[])
 
   return (
     <Disclosure as="nav">
@@ -48,7 +53,7 @@ export default function Navigation() {
 
                 {isAuthenticated() ? (
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                    <Link
+                    {user.company?.id ? null: <Link
                       href="/registerCompany"
                       prefetch
                       className={`${
@@ -58,7 +63,7 @@ export default function Navigation() {
                       }`}
                     >
                       Registra tu empresa
-                    </Link>
+                    </Link> }
                     <div
                       onClick={() => {
                         router.refresh();
@@ -73,17 +78,17 @@ export default function Navigation() {
                       Directorio
                     </div>
                     <Link
-                      href="/licitaciones"
-                      prefetch
-                      className={`${
-                        pathname === "/licitaciones"
-                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
-                          : "border-transparent no-underline  text-gray-600 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
-                      }`}
-                    >
-                      Licitaciones
-                    </Link>
-                    <UserProfile user={user.userData.email} />
+                    href="/tenders"
+                    prefetch
+                    className={`${
+                      pathname === "/licitaciones"
+                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
+                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                    }`}
+                  >
+                    Licitaciones
+                  </Link>
+                    <UserProfile />
                   </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">

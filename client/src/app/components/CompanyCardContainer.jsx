@@ -4,31 +4,40 @@ import CompanyCard from './CompanyCard';
 import { useSelector } from 'react-redux';
 
 import { useGetCompaniesQuery } from '@/app/redux/services/companiesApi';
-import Pagination from "react-bootstrap/Pagination";
+
+import PaginationComponent from './PaginationComponent';
 
 
 function CompanyCardContainer() {
-  
   const [currentPage, setCurrentPage] = useState(1);
-  const cardPerPage = 6;
-  const lastIndex = cardPerPage * currentPage;
-  const firstIndex = lastIndex - cardPerPage;
-  
   const filterCompanies = useSelector((state) => state.company.filterCompanies);
-  
-  const cardsCompanies = filterCompanies.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(filterCompanies.length / cardPerPage);
-  const numbers = [...Array(npage + 1).keys()].slice(1);
-  
-  function changePage(page){
-    if(page < 1){
-      page = 1;
-    }
-    if(page > npage){
-      page = npage;
-    }
-    setCurrentPage(page)
-  }
+
+  console.log(PaginationComponent.perPage);
+  console.log(filterCompanies);
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(filterCompanies.length / itemsPerPage);
+
+  // Calcula las compañías que se mostrarán en la página actual
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const companiesToShow = filterCompanies.slice(startIndex, endIndex);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+  //const cardsCompanies = filterCompanies.slice(firstIndex, lastIndex);
+  //const npage = Math.ceil(filterCompanies.length / cardPerPage);
+  //const numbers = [...Array(npage + 1).keys()].slice(1);
+
+  // function changePage(page){
+  //   if(page < 1){
+  //     page = 1;
+  //   }
+  //   if(page > npage){
+  //     page = npage;
+  //   }
+  //   setCurrentPage(page)
+  // }
 
   const { isLoading } = useGetCompaniesQuery();
 
@@ -39,7 +48,7 @@ function CompanyCardContainer() {
       ) : (
         <div className="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-4 justify-center">
           {filterCompanies.length > 0 ? (
-            cardsCompanies?.map((comp) => (
+            companiesToShow.map((comp) => (
               <CompanyCard
                 key={comp.id}
                 compBanner={comp.bannerPicture}
@@ -54,31 +63,12 @@ function CompanyCardContainer() {
         </div>
       )}
       <div className="flex justify-center">
-        <Pagination>
-          <Pagination.First onClick={() => changePage(1)} />
-          <Pagination.Prev onClick={() => changePage(currentPage - 1)}/>
-          <Pagination.Item>{1}</Pagination.Item>
+        <PaginationComponent
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
 
-          {currentPage > 1 ? (
-            <Pagination.Item>{currentPage - 1}</Pagination.Item>
-          ) : (
-            <Pagination.Ellipsis />
-          )}
-          {numbers.map((number, i) => (
-            <Pagination.Item key={i} active={number === currentPage} onClick={() => changePage(i)}>
-              {number}
-            </Pagination.Item>
-          ))}
-
-          {currentPage < npage ? (
-            <Pagination.Item>{currentPage + 1}</Pagination.Item>
-          ) : (
-            <Pagination.Ellipsis />
-          )}
-          <Pagination.Item>{npage}</Pagination.Item>
-          <Pagination.Next onClick={() => changePage(currentPage + 1)}/>
-          <Pagination.Last onClick={() => changePage(npage)} />
-        </Pagination>
       </div>
     </div>
   );
