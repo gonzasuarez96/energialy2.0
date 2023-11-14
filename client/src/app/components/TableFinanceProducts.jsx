@@ -69,17 +69,18 @@ export function SortableTableProducts({ data, isLoading }) {
   const [openTextModal, setOpenTextModal] = useState(false);
   const [filteredData, setFilteredData] = useState(null);
   const [modalData, setModalData] = useState(null);
-
+  const [totalPages, setTotalPages] = useState(null);
+  const [financialProductsToShow, setFinancialProductsToShow] = useState(null)
   //---- Logica de Paginación ----//
 
   
   const itemsPerPage = 6;
-  const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
+ 
  
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  const financialProductsToShow = filteredData?.slice(startIndex, endIndex);
+  
 
   
 
@@ -107,6 +108,15 @@ export function SortableTableProducts({ data, isLoading }) {
     setModalData({ id: id, company: company });
     setOpenTextModal((cur) => !cur);
   };
+
+  useEffect(()=> {
+     const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
+     setTotalPages(totalPages);
+     const financialProductsToShow = filteredData?.slice(startIndex, endIndex);
+     setFinancialProductsToShow(financialProductsToShow)
+
+  }, [])
+
 
   return (
     <>
