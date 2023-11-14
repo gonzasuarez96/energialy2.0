@@ -67,21 +67,22 @@ export function SortableTableProducts({ data, isLoading }) {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openTextModal, setOpenTextModal] = useState(false);
-  const [filteredData, setFilteredData] = useState(null);
+  const [filteredData, setFilteredData] = useState(data);
   const [modalData, setModalData] = useState(null);
-  const [totalPages, setTotalPages] = useState(null);
-  const [financialProductsToShow, setFinancialProductsToShow] = useState(null)
+  //const [totalPages, setTotalPages] = useState(null);
+  //const [financialProductsToShow, setFinancialProductsToShow] = useState(null)
   //---- Logica de Paginación ----//
-
-  
+  ;
   const itemsPerPage = 6;
  
+  const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
  
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
+  const financialProductsToShow = filteredData?.slice(startIndex, endIndex);
   
-
+ 
   
 
   const handlePageChange = (page) => {
@@ -109,13 +110,13 @@ export function SortableTableProducts({ data, isLoading }) {
     setOpenTextModal((cur) => !cur);
   };
 
-  useEffect(()=> {
-     const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
-     setTotalPages(totalPages);
-     const financialProductsToShow = filteredData?.slice(startIndex, endIndex);
-     setFinancialProductsToShow(financialProductsToShow)
+  // useEffect(()=> {
+  //    const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
+  //    setTotalPages(totalPages);
+  //    const financialProductsToShow = filteredData?.slice(startIndex, endIndex);
+  //    setFinancialProductsToShow(financialProductsToShow)
 
-  }, [])
+  // }, [])
 
 
   return (
