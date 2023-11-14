@@ -20,9 +20,7 @@ function BankDashboard() {
   return (
     <>
       <div className="flex w-full gap-4 justify-evenly mb-4">
-        {testingData.map((item) => (
-            <BankCard key={item.title} data={item} />
-        ))}
+        
       </div>
     </>
   );

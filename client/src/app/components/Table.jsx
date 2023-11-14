@@ -61,7 +61,7 @@ export function SortableTableAccount({data, isLoading}) {
   const [openModal, setOpenModal] = useState(false);
   const [openTextModal, setOpenTextModal] = useState(false);
   const [idAttachments, setIdAttachments] = useState('')
-  const [filteredData, setFilteredData] = useState(null)
+  const [filteredData, setFilteredData] = useState(data)
   const [modalData, setModalData] = useState(null)
   
   //---- Logica de Paginación ----//
