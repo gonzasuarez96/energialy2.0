@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import getLocalStorage from "@/app/Func/localStorage";
 import { useGetCompaniesByIdQuery } from "@/app/redux/services/companiesApi";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 
 export default function FacturaCredito() {
@@ -94,7 +95,7 @@ export default function FacturaCredito() {
     console.log("Información enviada:", accountData);
     try {
       const response = await axios.post(
-        "http://localhost:3001/financeProducts",
+        `${urlProduction}/financeProducts`,
         accountData
       );
       console.log("Información enviada:", accountData);

@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import getLocalStorage from "@/app/Func/localStorage";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 // ---------------------- Toastify -------------------------//
 const displaySuccessMessage = (mensaje) => {
@@ -89,7 +90,7 @@ export default function EditCompany({ option }) {
 
   const getLocation = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/locations");
+      const response = await axios.get(`${urlProduction}/locations`);
       const transformedData = response.data.map((item) => ({
         id: item.id,
         name: item.name,
@@ -104,7 +105,7 @@ export default function EditCompany({ option }) {
 
   const getCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/categories");
+      const response = await axios.get(`${urlProduction}/categories`);
       const transformedData = response.data.map((item) => ({
         id: item.id,
         name: item.name,
@@ -119,7 +120,7 @@ export default function EditCompany({ option }) {
 
   const getSubcategories = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/subcategories");
+      const response = await axios.get(`${urlProduction}/subcategories`);
       const transformedData = response.data.map((item) => ({
         id: item.id,
         name: item.name,

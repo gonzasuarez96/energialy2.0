@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import getLocalStorage from "@/app/Func/localStorage";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 export default function Attachment(props) {
   const [files, setFiles] = useState({
@@ -27,7 +28,7 @@ export default function Attachment(props) {
     e.preventDefault();
     const companyId = user.company.id
     try {
-      const res = await axios.post("http://localhost:3001/bankAccounts", {
+      const res = await axios.post(`${urlProduction}/bankAccounts`, {
         companyId,
       });
       console.log("resBank:", res);
