@@ -157,7 +157,7 @@ export default function RegisterCompany() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/companies",
+        `${urlProduction}/companies`,
         companyData,
         {
           headers: {
