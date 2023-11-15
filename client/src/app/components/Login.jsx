@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setAccessToken, setUserData } from "../redux/features/userSlice";
 import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
+import { urlProduction } from "../data/dataGeneric";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -80,11 +81,11 @@ export default function Login() {
 
     try {
       console.log("Datos enviados:", user);
-      const response = await axios.post("http://localhost:3001/auth", user);
+      const response = await axios.post(`${urlProduction}/auth`, user);
       const accessToken = response.data.accessToken;
       // Después del inicio de sesión exitoso, obtén los detalles del usuario
       const userDetailsResponse = await axios.get(
-        `http://localhost:3001/users?email=${email}`
+        `${urlProduction}/users?email=${email}`
       );
       const userDetails = userDetailsResponse.data;
       console.log("Datos del usuario:", userDetails);

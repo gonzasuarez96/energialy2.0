@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 import CollapsedBar from "./components/collapsedBar";
 import { setAllCompanies } from "@/app/redux/features/companieSlice";
@@ -15,7 +16,7 @@ function page({params}) {
 
   
   useEffect(() => {
-    fetch(`http://localhost:3001/companies/${id}`)
+    fetch(`${urlProduction}/companies/${id}`)
       .then((response) => response.json())
       .then((data) => setCompany(data))
       .catch((error) => console.error("Error fetching data:", error));

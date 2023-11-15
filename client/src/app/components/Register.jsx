@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
+import { urlProduction } from "../data/dataGeneric";
 
 //Toastify module for success message
 const displaySuccessMessage = (mensaje) => {
@@ -142,7 +143,7 @@ export default function Register() {
     };
 
     try {
-      const response = await axios.post("http://localhost:3001/register", user);
+      const response = await axios.post(`${urlProduction}/register`, user);
       displaySuccessMessage("Usuario creado con exito");
       console.log("Datos enviados:", user);
       console.log(response);

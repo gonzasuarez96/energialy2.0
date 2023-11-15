@@ -27,6 +27,7 @@ import {
 import { useEffect, useState } from "react";
 import { filterData } from "../Func/controllers";
 import PaginationComponent from "./PaginationComponent";
+import { urlProduction } from "../data/dataGeneric";
 
 const TABS = [
   {
@@ -63,7 +64,7 @@ export function SortableTableClient({ data, isLoading }) {
 
   const financialProductsToShow = filteredData?.slice(startIndex, endIndex);
   const getLastUpdate = (id) => {
-    const res = axios.get(`http://localhost:3001/financeProducts/${id}`)
+    const res = axios.get(`${urlProduction}/financeProducts/${id}`)
     const update = res.updatedAt
     console.log('update:', update)
     return update;
