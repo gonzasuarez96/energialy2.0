@@ -84,7 +84,7 @@ export default function Data(props) {
     console.log("Información enviada:", accountData);
     try {
       const res = await axios.put(
-        `${urlProduction}/bankAccounts`,
+        `${urlProduction}/companies/${companyId}`,
         accountData
       );
       console.log("resData server:", res);
