@@ -331,6 +331,7 @@ export function SortableTableAccount({data, isLoading}) {
               id={modalData?.id}
               company={modalData?.company}
               endpoint={"bankAccount"}
+              statusMessage={"cuenta aprobada"}
             />
           )}
           {openTextModal && (
