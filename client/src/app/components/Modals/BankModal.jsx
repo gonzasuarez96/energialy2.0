@@ -9,6 +9,9 @@ import {
 
 function BankModal({open, handleOpen, statusMessage, status, id, company, endpoint }) {
     // const endpoint = "bankAccounts"
+    console.log('endpoint:',endpoint)
+    console.log('status:',status)
+    console.log('statusMessage:',statusMessage)
     const completeStatus = {
       status: status,
       statusMessage: "Cuenta Aprobada",
@@ -17,10 +20,10 @@ function BankModal({open, handleOpen, statusMessage, status, id, company, endpoi
       try {
         const response = await handleChangeStatus(id, statusMessage, status, endpoint);
         displaySuccessMessage("Cuenta Aprobada exitosamente")
-        setTimeout(()=> {
-            window.location.reload()
-            handleOpen();
-        }, 10000)
+        // setTimeout(()=> {
+        //     window.location.reload()
+        //     handleOpen();
+        // }, 3500000)
       } catch (error) {
         displayFailedMessage("Error al aprobar la cuenta")
       }
