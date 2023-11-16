@@ -316,7 +316,7 @@ export function SortableTableProducts({ data, isLoading }) {
             <BankModal
               open={openModal}
               handleOpen={handleOpenModal}
-              status="open"
+              status="accepted"
               id={modalData?.id}
               company={modalData?.company}
               endpoint={"financeProducts"}
@@ -326,7 +326,7 @@ export function SortableTableProducts({ data, isLoading }) {
             <TextModal
               open={openTextModal}
               handleOpen={handleOpenTextModal}
-              status="require changes"
+              status="declined"
               id={modalData?.id}
               company={modalData?.company}
             />
