@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import getLocalStorage from "@/app/Func/localStorage";
 import { urlProduction } from "@/app/data/dataGeneric";
+import { displayFailedMessage, displaySuccessMessage } from "@/app/components/Toastify";
 
 export default function Attachment(props) {
   const [files, setFiles] = useState({
@@ -26,6 +27,14 @@ export default function Attachment(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try{
+      const res = axios.post(`${urlProduction}/bankAccounts`,companyId)
+      console.log('res bankAccount:', res)
+      displaySuccessMessage('Solicitud de Apertura de cuenta enviada');
+    }catch(error){
+      console.log(error)
+      displayFailedMessage(error.response.data.error)
+    }
     console.log("Console.log de handleSubmit")
   };
 
