@@ -23,12 +23,11 @@ export default function Attachment(props) {
     compreNeuquino: null,
   });
   const user = getLocalStorage();
-  const companyId = user.company.id;
-  console.log('companyIdAttachment:',companyId)
   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const companyId = user?.company.id;
     try{
       const res = axios.post(`${urlProduction}/bankAccounts`,companyId)
       console.log('res bankAccount:', res)
@@ -132,6 +131,7 @@ export default function Attachment(props) {
         [fieldName]: fileUrl,
       }));
   
+      const companyId = user.company.id;
       try {
         const response = await axios.post(`${urlProduction}/documents`, {
           companyId,
