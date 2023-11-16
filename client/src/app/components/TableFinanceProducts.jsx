@@ -30,6 +30,7 @@ import { filterData } from "../Func/controllers";
 import BankModal from "./Modals/BankModal";
 import TextModal from "./Modals/TextModal";
 import PaginationComponent from "./PaginationComponent";
+import { financeProducts } from "../dashboard/bank/financialProducts/data";
 
 
 
@@ -318,6 +319,7 @@ export function SortableTableProducts({ data, isLoading }) {
               status="open"
               id={modalData?.id}
               company={modalData?.company}
+              endpoint={"financeProducts"}
             />
           )}
           {openTextModal && (
