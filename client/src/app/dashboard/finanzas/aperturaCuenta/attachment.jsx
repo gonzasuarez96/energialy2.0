@@ -28,9 +28,12 @@ export default function Attachment(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const companyId = user?.company.id;
+    const id = {
+      companyId: companyId
+    }
     console.log('companyIdAttach:', companyId)
     try{
-      const res = axios.post(`${urlProduction}/bankAccounts`,companyId)
+      const res = axios.post(`${urlProduction}/bankAccounts`,id)
       console.log('res bankAccount:', res)
       displaySuccessMessage('Solicitud de Apertura de cuenta enviada');
     }catch(error){
