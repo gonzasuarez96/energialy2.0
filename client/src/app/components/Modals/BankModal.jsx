@@ -18,7 +18,7 @@ function BankModal({open, handleOpen, statusMessage, status, id, company, endpoi
     };
     const handleStatus = async () => {
       try {
-        const response = await handleChangeStatus(id, statusMessage, status, endpoint);
+        const response = await handleChangeStatus(id, completeStatus, endpoint);
         displaySuccessMessage("Cuenta Aprobada exitosamente")
         // setTimeout(()=> {
         //     window.location.reload()

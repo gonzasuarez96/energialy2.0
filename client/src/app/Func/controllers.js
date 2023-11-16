@@ -7,13 +7,14 @@ export function filterData(data, status) {
     return filteredData;
 }
 
-export const handleChangeStatus = async (id, statusMessage, status, endpoint) => {
+export const handleChangeStatus = async (id, completeStatus, endpoint) => {
   console.log(endpoint)
-  console.log(status)
+
+  console.log('completeStatus:',completeStatus)
   try {
     const accountChange = await axios.put(
       `${urlProduction}/${endpoint}/${id}`,
-      status, statusMessage
+      completeStatus
     );
     
     console.log(accountChange)
