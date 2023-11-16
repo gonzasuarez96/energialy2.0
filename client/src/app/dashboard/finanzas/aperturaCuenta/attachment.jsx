@@ -26,22 +26,7 @@ export default function Attachment(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const companyId = user.company.id
-    const filesToSend = Object.keys(files).reduce((acc, fieldName) => {
-      if (files[fieldName]) {
-        acc.push({ name: fieldName, attachment: files[fieldName] });
-      }
-      return acc;
-    }, []);
-    try {
-      const res = await axios.post(`${urlProduction}/documents`, {
-        companyId,
-        files: filesToSend,
-      });
-      console.log("resBank:", res);
-    } catch (error) {
-      console.log(error);
-    }
+    console.log("Console.log de handleSubmit")
   };
 
   const fields = [
@@ -115,8 +100,8 @@ export default function Attachment(props) {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "energialy_users"); // Reemplaza 'tu_upload_preset' con tu propio upload preset de Cloudinary
-
+    formData.append("upload_preset", "energialy_users");
+  
     try {
       const res = await axios.post(
         "https://api.cloudinary.com/v1_1/dbraa6jpj/upload",
@@ -127,19 +112,31 @@ export default function Attachment(props) {
           },
         }
       );
-
+  
       const fileUrl = res.data.secure_url;
       console.log("URL del archivo subido:", fileUrl);
-
+  
       setFiles((prevFiles) => ({
         ...prevFiles,
         [fieldName]: fileUrl,
       }));
-      console.log('files:',files)
+  
+      const companyId = user.company.id;
+      try {
+        const response = await axios.post(`${urlProduction}/documents`, {
+          companyId,
+          name: fieldName,
+          attachment: fileUrl,
+        });
+        console.log("Document uploaded:", response);
+      } catch (error) {
+        console.error("Error al subir el documento:", error);
+      }
     } catch (error) {
       console.error("Error al cargar el archivo:", error);
     }
   };
+  
 
   return (
     <main className="flex justify-center items-start w-full  bg-white p-3 shadow ">
