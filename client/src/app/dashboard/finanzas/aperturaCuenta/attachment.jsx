@@ -27,9 +27,16 @@ export default function Attachment(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const companyId = user.company.id
+    const filesToSend = Object.keys(files).reduce((acc, fieldName) => {
+      if (files[fieldName]) {
+        acc.push({ name: fieldName, attachment: files[fieldName] });
+      }
+      return acc;
+    }, []);
     try {
-      const res = await axios.post(`${urlProduction}/bankAccounts`, {
+      const res = await axios.post(`${urlProduction}/documents`, {
         companyId,
+        files: filesToSend,
       });
       console.log("resBank:", res);
     } catch (error) {

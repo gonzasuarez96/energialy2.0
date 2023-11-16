@@ -226,12 +226,8 @@ export default function Data(props) {
               className="px-4 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
               type="button"
               onClick={() => {
-                if (!envioExitoso) {
                   setError("Debes enviar todos los datos.");
-                } else {
-                  setError('')
                   props.handleNext();
-                }
               }}
             >
               Siguiente
