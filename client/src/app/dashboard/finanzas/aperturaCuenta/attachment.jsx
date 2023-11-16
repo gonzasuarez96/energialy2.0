@@ -28,7 +28,7 @@ export default function Attachment(props) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const companyId = user?.company.id;
-    console.log('companyIdAttach')
+    console.log('companyIdAttach:', companyId)
     try{
       const res = axios.post(`${urlProduction}/bankAccounts`,companyId)
       console.log('res bankAccount:', res)
