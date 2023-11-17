@@ -341,6 +341,7 @@ export function SortableTableAccount({data, isLoading}) {
               status="require changes"
               id={modalData?.id}
               company={modalData?.company}
+              endpoint={"bankAccount"}
             />
           )}
         </>
