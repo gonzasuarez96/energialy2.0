@@ -18,13 +18,13 @@ function FinanceProductsPage() {
             <BankCard
               data={financeProducts}
               title="Pendientes"
-              status="waiting approval"
+              status="sent"
             />
             <BankCard data={financeProducts} title="Aprobados" status="accepted" />
             <BankCard
               data={financeProducts}
               title="En revisión"
-              status="require changes"
+              status="declined"
             />
           </div>
         )}
