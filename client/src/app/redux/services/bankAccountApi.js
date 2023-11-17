@@ -1,8 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 export const bankAccountApi = createApi({
   reducerPath: "bankAccounts",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3001" }),
+  baseQuery: fetchBaseQuery({ baseUrl: urlProduction }),
   endpoints: (builder) => ({
     getBankAccount: builder.query({
       query: () => "/bankAccounts",

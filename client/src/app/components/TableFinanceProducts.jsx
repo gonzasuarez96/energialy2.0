@@ -30,6 +30,7 @@ import { filterData } from "../Func/controllers";
 import BankModal from "./Modals/BankModal";
 import TextModal from "./Modals/TextModal";
 import PaginationComponent from "./PaginationComponent";
+import { financeProducts } from "../dashboard/bank/financialProducts/data";
 
 
 
@@ -315,18 +316,20 @@ export function SortableTableProducts({ data, isLoading }) {
             <BankModal
               open={openModal}
               handleOpen={handleOpenModal}
-              status="open"
+              status="accepted"
               id={modalData?.id}
               company={modalData?.company}
+              endpoint={"financeProducts"}
             />
           )}
           {openTextModal && (
             <TextModal
               open={openTextModal}
               handleOpen={handleOpenTextModal}
-              status="require changes"
+              status="declined"
               id={modalData?.id}
               company={modalData?.company}
+              endpoint={"financeProducts"}
             />
           )}
         </>

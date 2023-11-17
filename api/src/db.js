@@ -4,9 +4,10 @@ const fs = require('fs');
 const path = require('path');
 const { POSTGRES_URL } = process.env;
 
-const sequelize = new Sequelize(`${POSTGRES_URL}`, {
+const sequelize = new Sequelize(`${POSTGRES_URL}?sslmode=require`, {
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
+  dialectModule: require('pg'),
 });
 const basename = path.basename(__filename);
 

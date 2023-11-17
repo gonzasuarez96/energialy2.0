@@ -5,13 +5,14 @@ import PaginationComp from "../components/Pagination";
 import { setAllCompanies } from "@/app/redux/features/companieSlice";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
+import { urlProduction } from "../data/dataGeneric";
 
 function page() {
 
  const dispatch = useDispatch();
    
   useEffect(() => {
-    fetch(`http://localhost:3001/companies`)
+    fetch(urlProduction)
       .then((response) => response.json())
       .then((data) => dispatch(setAllCompanies(data)))
       .catch((error) => console.error("Error fetching data:", error));

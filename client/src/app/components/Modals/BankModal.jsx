@@ -7,8 +7,11 @@ import {
 
 
 
-function BankModal({open, handleOpen, status, id, company }) {
-    const endpoint = "bankAccounts"
+function BankModal({open, handleOpen, statusMessage, status, id, company, endpoint }) {
+    // const endpoint = "bankAccounts"
+    console.log('endpoint:',endpoint)
+    console.log('status:',status)
+    console.log('statusMessage:',statusMessage)
     const completeStatus = {
       status: status,
       statusMessage: "Cuenta Aprobada",

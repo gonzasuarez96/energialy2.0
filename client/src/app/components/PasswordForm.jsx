@@ -1,6 +1,8 @@
 'use client'
 import React, { useState } from 'react';
 import axios from "axios";
+import { urlProduction } from '../data/dataGeneric';
+
 const EmailForm = () => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -10,7 +12,7 @@ const EmailForm = () => {
  
   const handleSendEmail = async () => {
     try {
-      const emailURL = 'http://localhost:3001/users/enviar-email';
+      const emailURL = `${urlProduction}/users/enviar-email`;
       const data = { email };
 
       const response = await axios.post(emailURL, data);

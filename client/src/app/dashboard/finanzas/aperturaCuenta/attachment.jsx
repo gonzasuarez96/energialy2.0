@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import getLocalStorage from "@/app/Func/localStorage";
+import { urlProduction } from "@/app/data/dataGeneric";
+import { displayFailedMessage, displaySuccessMessage } from "@/app/components/Toastify";
 
 export default function Attachment(props) {
   const [files, setFiles] = useState({
@@ -25,15 +27,20 @@ export default function Attachment(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const companyId = user.company.id
-    try {
-      const res = await axios.post("http://localhost:3001/bankAccounts", {
-        companyId,
-      });
-      console.log("resBank:", res);
-    } catch (error) {
-      console.log(error);
+    const companyId = user?.company.id;
+    const id = {
+      companyId: companyId
     }
+    console.log('companyIdAttach:', companyId)
+    try{
+      const res = axios.post(`${urlProduction}/bankAccounts`,id)
+      console.log('res bankAccount:', res)
+      displaySuccessMessage('Solicitud de Apertura de cuenta enviada');
+    }catch(error){
+      console.log(error)
+      displayFailedMessage(error.response.data.error)
+    }
+   
   };
 
   const fields = [
@@ -107,8 +114,8 @@ export default function Attachment(props) {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "energialy_users"); // Reemplaza 'tu_upload_preset' con tu propio upload preset de Cloudinary
-
+    formData.append("upload_preset", "energialy_users");
+  
     try {
       const res = await axios.post(
         "https://api.cloudinary.com/v1_1/dbraa6jpj/upload",
@@ -119,19 +126,31 @@ export default function Attachment(props) {
           },
         }
       );
-
+  
       const fileUrl = res.data.secure_url;
       console.log("URL del archivo subido:", fileUrl);
-
+  
       setFiles((prevFiles) => ({
         ...prevFiles,
         [fieldName]: fileUrl,
       }));
-      console.log('files:',files)
+  
+      const companyId = user.company.id;
+      try {
+        const response = await axios.post(`${urlProduction}/documents`, {
+          companyId,
+          name: fieldName,
+          attachment: fileUrl,
+        });
+        console.log("Document uploaded:", response);
+      } catch (error) {
+        console.error("Error al subir el documento:", error);
+      }
     } catch (error) {
       console.error("Error al cargar el archivo:", error);
     }
   };
+  
 
   return (
     <main className="flex justify-center items-start w-full  bg-white p-3 shadow ">

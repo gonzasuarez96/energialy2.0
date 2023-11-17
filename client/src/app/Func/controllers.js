@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { urlProduction } from "../data/dataGeneric";
 
 
 export function filterData(data, status) {
@@ -7,13 +7,14 @@ export function filterData(data, status) {
     return filteredData;
 }
 
-export const handleChangeStatus = async (id, status, endpoint) => {
+export const handleChangeStatus = async (id, completeStatus, endpoint) => {
   console.log(endpoint)
-  console.log(status)
+
+  console.log('completeStatus:',completeStatus)
   try {
     const accountChange = await axios.put(
-      `http://localhost:3001/${endpoint}/${id}`,
-      status
+      `${urlProduction}/${endpoint}/${id}`,
+      completeStatus
     );
     
     console.log(accountChange)

@@ -17,6 +17,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import getLocalStorage from "../Func/localStorage";
 //import UploadthingButton from "./UploadthingButton";
+import { urlProduction } from "../data/dataGeneric";
 
 
 
@@ -74,7 +75,7 @@ export function ProposalModal({open, handleOpen, data}) {
     const createProposal = async (proposal) => {
       try {
         const response = await axios.post(
-          "http://localhost:3001/proposals",
+          `${urlProduction}/proposals`,
           proposal
         );
         displaySuccessMessage("Propuesta enviada");

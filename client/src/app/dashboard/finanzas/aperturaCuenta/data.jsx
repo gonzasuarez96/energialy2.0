@@ -8,6 +8,7 @@ import {
 } from "@/app/components/Toastify";
 import { ToastContainer } from "react-toastify";
 import getLocalStorage from "@/app/Func/localStorage";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 export default function Data(props) {
   // Estados Locales
@@ -83,7 +84,7 @@ export default function Data(props) {
     console.log("Información enviada:", accountData);
     try {
       const res = await axios.put(
-        `http://localhost:3001/companies/${companyId}`,
+        `${urlProduction}/companies/${companyId}`,
         accountData
       );
       console.log("resData server:", res);
@@ -225,12 +226,8 @@ export default function Data(props) {
               className="px-4 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
               type="button"
               onClick={() => {
-                if (!envioExitoso) {
                   setError("Debes enviar todos los datos.");
-                } else {
-                  setError('')
                   props.handleNext();
-                }
               }}
             >
               Siguiente

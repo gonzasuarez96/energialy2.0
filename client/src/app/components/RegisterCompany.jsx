@@ -10,6 +10,7 @@ import { annualRevenueOptions, employeeCountOptions, organizationTypes} from '@/
 import {handleCategoryChange, handleSubcategoryChange} from '@/app/Func/handlers'
 import getLocalStorage from "../Func/localStorage";
 //import { useGetLocationsQuery } from "../redux/services/locationApi";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 
 const stepsForm = ["01", "02", "03", "04"];
@@ -50,7 +51,7 @@ export default function RegisterCompany() {
 
   const getLocation = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/locations");
+      const response = await axios.get(`${urlProduction}/locations`);
       const transformedData = response.data.map((item) => ({
         id: item.id,
         name: item.name,
@@ -67,7 +68,7 @@ export default function RegisterCompany() {
 
   const getCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/categories");
+      const response = await axios.get(`${urlProduction}/categories`);
       const transformedData = response.data.map((item) => ({
         id: item.id,
         name: item.name,
@@ -82,7 +83,7 @@ export default function RegisterCompany() {
 
   const getSubcategories = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/subcategories");
+      const response = await axios.get(`${urlProduction}/subcategories`);
       const transformedData = response.data.map((item) => ({
         id: item.id,
         name: item.name,
@@ -156,7 +157,7 @@ export default function RegisterCompany() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/companies",
+        `${urlProduction}/companies`,
         companyData,
         {
           headers: {

@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useGetCompaniesByIdQuery } from "@/app/redux/services/companiesApi";
 import getLocalStorage from "@/app/Func/localStorage";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 export default function ECheq() {
   // Estados Locales
@@ -60,7 +61,7 @@ export default function ECheq() {
 
     try {
       const res = await axios.post(
-        `http://localhost:3001/FinanceProducts`,
+        `${urlProduction}/FinanceProducts`,
         accountData
       );
       console.log("resData server:", res);

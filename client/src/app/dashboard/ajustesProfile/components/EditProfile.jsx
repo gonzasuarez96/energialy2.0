@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { setUserData } from "@/app/redux/actions";
 import getLocalStorage from "@/app/Func/localStorage";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 // ---------------------- Toastify -------------------------//
 const displaySuccessMessage = (mensaje) => {
@@ -94,7 +95,7 @@ export default function EditProfile({ option }) {
     };
   
     try {
-      const response = await axios.put(`http://localhost:3001/users/${user.id}`, updatedData);
+      const response = await axios.put(`${urlProduction}/users/${user.id}`, updatedData);
       displaySuccessMessage('Cambios guardados con exito');
       console.log('Datos actualizados: ',response)
       const userDetails = response.data;
