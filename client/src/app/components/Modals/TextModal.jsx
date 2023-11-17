@@ -7,7 +7,7 @@ import {useState} from 'react'
 
 
 
-function TextModal({ open, handleOpen, id, company, status }) {
+function TextModal({ open, handleOpen, id, company, status, endpoint }) {
     const [review, setReview] = useState('')
 
     const completeStatus = {
@@ -22,7 +22,8 @@ function TextModal({ open, handleOpen, id, company, status }) {
        const response = await handleChangeStatus(
          id,
          completeStatus,
-         "bankAccounts"
+         endpoint,
+
        );
        console.log(response);
        displaySuccessMessage("Solicitud de revisión enviada correctamente");

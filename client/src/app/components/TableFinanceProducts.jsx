@@ -329,6 +329,7 @@ export function SortableTableProducts({ data, isLoading }) {
               status="declined"
               id={modalData?.id}
               company={modalData?.company}
+              endpoint={"financeProducts"}
             />
           )}
         </>
