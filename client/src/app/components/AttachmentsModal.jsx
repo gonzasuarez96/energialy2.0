@@ -41,7 +41,7 @@ export function AttachmentsModal({ open, handleOpen, data }) {
               bankAccount.company.Documents.map((e) => (
                 <div className="flex gap-8">
                   <p className="font-bold w-[250px] uppercase">{e.name}</p>
-                  <Link href={e.attachment.fileUrl} target="_blank">
+                  <Link href={e.attachment} target="_blank">
                     <Button variant="outlined" size="sm">
                       Ver
                     </Button>
