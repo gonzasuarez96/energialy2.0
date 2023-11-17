@@ -1,5 +1,9 @@
 const { FinanceProducts, BankAccounts, Companies, Users } = require('../db');
-const { sendBankEmailNewFinanceProduct, sendCompanyEmailFinanceProductAccepted, sendCompanyEmailFinanceProductDeclined } = require('../services/resend');
+const {
+  sendBankEmailNewFinanceProduct,
+  sendCompanyEmailFinanceProductAccepted,
+  sendCompanyEmailFinanceProductDeclined,
+} = require('../services/resend');
 
 const cleanFinanceProducts = (financeProducts) => {
   if (Array.isArray(financeProducts)) {
@@ -29,13 +33,13 @@ const cleanFinanceProducts = (financeProducts) => {
 
 const getAllFinanceProducts = async () => {
   const allFinanceProducts = await FinanceProducts.findAll({
-    attributes: { exclude: ["createdAt", "updatedAt"] },
+    attributes: { exclude: ['createdAt', 'updatedAt'] },
     include: {
       model: BankAccounts,
-      attributes: ["id", "status"],
+      attributes: ['id', 'status'],
       include: {
         model: Companies,
-        attributes: ["id", "name", "profilePicture"],
+        attributes: ['id', 'name', 'profilePicture'],
       },
     },
   });
@@ -128,7 +132,7 @@ const updateFinanceProduct = async (id, body) => {
     const receiver = foundFinanceProduct.BankAccount.Company.Users[0].email;
     const companyOwnerName = foundFinanceProduct.BankAccount.Company.Users[0].firstName;
     const companyName = foundFinanceProduct.BankAccount.Company.name;
-    await sendCompanyEmailFinanceProductAccepted('juancruz.roldan19@gmail.com', companyOwnerName, companyName);
+    await sendCompanyEmailFinanceProductAccepted(receiver, companyOwnerName, companyName);
   } else if (body.status === 'declined') {
     if (foundFinanceProduct.status === 'declined') {
       const error = new Error(`Finance product with id ${id} already declined.`);
@@ -139,7 +143,7 @@ const updateFinanceProduct = async (id, body) => {
     const receiver = foundFinanceProduct.BankAccount.Company.Users[0].email;
     const companyOwnerName = foundFinanceProduct.BankAccount.Company.Users[0].firstName;
     const companyName = foundFinanceProduct.BankAccount.Company.name;
-    await sendCompanyEmailFinanceProductDeclined('juancruz.roldan19@gmail.com', companyOwnerName, companyName);
+    await sendCompanyEmailFinanceProductDeclined(receiver, companyOwnerName, companyName);
   } else {
     await foundFinanceProduct.update(body);
   }

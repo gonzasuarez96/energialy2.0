@@ -9,6 +9,7 @@ const {
   generateCompanyEmailBankAccountRequireChanges,
   generateCompanyEmailFinanceProductAccepted,
   generateCompanyEmailFinanceProductDeclined,
+  generateSendInviteCompanies,
 } = require('./emailTemplates');
 
 const sendEmployerEmailProposalReceived = async (receiver, employerName, supplierCompanyName, tenderTitle, proposalAmount, proposalDuration) => {
@@ -110,6 +111,17 @@ const sendCompanyEmailFinanceProductDeclined = async (receiver, companyOwnerName
   console.log(response);
 };
 
+const sendInviteCompanies = async (receiver, companyName) => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const response = await resend.emails.send({
+    from: 'Energialy <energialy@resend.dev>',
+    to: receiver,
+    subject: '¡Te invitaron a unirte a Energialy!',
+    html: generateSendInviteCompanies(companyName),
+  });
+  console.log(response);
+};
+
 module.exports = {
   sendEmployerEmailProposalReceived,
   sendSupplierEmailProposalAccepted,
@@ -120,4 +132,5 @@ module.exports = {
   sendCompanyEmailBankAccountRequireChanges,
   sendCompanyEmailFinanceProductAccepted,
   sendCompanyEmailFinanceProductDeclined,
+  sendInviteCompanies,
 };

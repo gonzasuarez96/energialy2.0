@@ -118,6 +118,26 @@ const generateCompanyEmailFinanceProductDeclined = (companyOwnerName, companyNam
   return html;
 };
 
+const generateSendInviteCompanies = (companyName) => {
+  const html = `
+  <body>
+    <p><b>Hola!</b></p>
+    <p>La empresa ${companyName} te ha invitado a unirte a Energialy!</p>
+    <p>En Energialy contratás y sos contratado: </p>
+    <p>Creá Licitaciones y contratá a proveedores de servicios, sin cargo. </p>
+    <p>Participá y enviá tu propuesta en Licitaciones de otras empresas. </p>
+    <p>También accedés a las soluciones financieras de Banco de Comercio para que tu Pyme y tus Proyectos sigan creciendo: </p>
+    <p>PRÉSTAMOS </p>
+    <p>FACTURAS DE CRÉDITO ELECTRÓNICAS </p>
+    <p>E-CHEQS | CHEQUES </p>
+    <p>COMEX </p>
+    <p>Energialy es la plataforma para integrar a la Cadena de Valor, gestionar contrataciones entre Pymes y acceder a financiamiento. </p>
+    <p>Ingresá ahora y creá tu Cuenta gratis! </p>
+  </body>
+  `;
+  return html;
+};
+
 module.exports = {
   generateEmployerEmailProposalReceived,
   generateSupplierEmailProposalAccepted,
@@ -128,4 +148,5 @@ module.exports = {
   generateCompanyEmailBankAccountRequireChanges,
   generateCompanyEmailFinanceProductAccepted,
   generateCompanyEmailFinanceProductDeclined,
+  generateSendInviteCompanies,
 };
