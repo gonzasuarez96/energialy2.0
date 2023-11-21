@@ -1,12 +1,14 @@
 import React from "react";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { BsLinkedin } from "react-icons/bs";
+import Logo from "@/app/assets/Energialy Logo-01.svg";
+import Image from "next/image";
 
 const oportunities = [
-  { name: "Crear licitaciones", link: "/tenders" },
-  { name: "Participar en Licitaciones", link: "/" },
-  { name: "Financiamiento", link: "/" },
-  { name: "Directorio Energetico", link: "directory" },
+  { name: "Crear licitaciones", link: "https://energialy.ar/bid/crear-licitaciones/" },
+  { name: "Participar en Licitaciones", link: "https://energialy.ar/bid/participar-en-licitaciones/" },
+  { name: "Financiamiento", link: "https://energialy.ar/bid/financiamiento/" },
+  { name: "Directorio Energetico", link: "https://energialy.ar/bid/directorio/" },
 ];
 
 export default function Footer() {
@@ -16,17 +18,15 @@ export default function Footer() {
         <div className="flex flex-wrap">
           <div className="w-full sm:w-6/12 md:w-6/12 lg:w-6/12 xl:w-3/12 px-4 text-[#B4B4B4]">
             <a href="/">
-              <img
-                src="https://energialy.ar/uploads/settings/footer/1624496061-Energialy-Logo-150.png"
+              <Image
+                src={Logo}
                 alt="company logo here"
                 className="w-60"
               />
             </a>
             <div>
               <p className="text-base mt-4">
-                La Plataforma de Licitaciones Fullstream de Vaca Muerta. Las
-                herramientas de Energialy colaboran en tus procesos
-                licitatorios.
+              Plataforma para integrar a la Cadena de Valor, gestionar contrataciones entre Pymes y acceder a financiamiento.
               </p>
             </div>
           </div>
@@ -50,7 +50,7 @@ export default function Footer() {
             <ul className="pl-0">
               <li>
                 <a
-                  href="/register"
+                  href="https://energialy.ar/bid/descubri-energialy/"
                   className="no-underline text-current hover:text-primary-500 transition duration-300"
                 >
                   Descubri Energialy
