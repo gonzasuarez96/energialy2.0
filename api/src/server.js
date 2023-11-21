@@ -25,6 +25,10 @@ app.use((req, res, next) => {
 
 app.use('/', routes);
 
+app.get('/', (req, res) => {
+  res.send('API de Energialy');
+});
+
 // Error catching endware.
 app.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
