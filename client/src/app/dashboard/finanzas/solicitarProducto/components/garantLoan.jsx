@@ -109,7 +109,6 @@ export default function GarantLoan() {
         accountData
       );
       console.log("resData server:", res);
-      setEnvioExitoso(true);
       displaySuccessMessage('Datos enviados con exito')
       setTimeout(() => {
         router.push("/dashboard");
@@ -121,7 +120,7 @@ export default function GarantLoan() {
   };
   return (
     <div>
-      <label className="flex justify-center font-bold w-full p-4 mb-2 text-xl">Prestamo con Garantia</label>
+      <h3 className="text-center p-4 border-b-2 border-gray-300 font-bold">Prestamo con Garantia</h3>
       <div>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
           Tu Empresa
@@ -271,7 +270,7 @@ export default function GarantLoan() {
               type="button"
               onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
             >
-              Siguiente
+              Solicitar
             </button>
         </div>
         {error && (

@@ -77,7 +77,7 @@ export default function ECheq() {
 
   return (
     <div>
-      <label className="flex justify-center font-bold w-full p-4 mb-2 text-xl">E-Cheq</label>
+      <h3 className="text-center p-4 border-b-2 border-gray-300 font-bold">E-Cheq</h3>
       <div>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
           Emisor
@@ -235,7 +235,7 @@ export default function ECheq() {
             type="button"
             onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
           >
-            Siguiente
+            Solicitar
           </button>
         </div>
         {error && (

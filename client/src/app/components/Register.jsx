@@ -101,11 +101,11 @@ export default function Register() {
 
   const handlePasswordBlur = () => {
     const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%*?&.,]{6,}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%#$%&/()=¿'@$*?&.,]{6,}$/;
 
     if (!passwordRegex.test(password)) {
       setPasswordError(
-        "La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula, y un carácter especial."
+        "La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula, y un carácter especial (:/?*.)."
       );
     } else {
       setPasswordError("");
@@ -148,6 +148,9 @@ export default function Register() {
       console.log("Datos enviados:", user);
       console.log(response);
       console.log(response.statusText);
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
     } catch (error) {
       console.log("Error:", error.response.data.error);
       displayFailedMessage(error.response.data.error);

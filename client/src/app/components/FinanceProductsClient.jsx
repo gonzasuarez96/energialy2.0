@@ -28,6 +28,7 @@ import { useEffect, useState } from "react";
 import { filterData } from "../Func/controllers";
 import PaginationComponent from "./PaginationComponent";
 import { urlProduction } from "../data/dataGeneric";
+import { format } from "date-fns";
 
 const TABS = [
   {
@@ -199,7 +200,7 @@ export function SortableTableClient({ data, isLoading }) {
                                 <Chip
                                   variant="ghost"
                                   size="sm"
-                                  value={updatedAt}
+                                  value={format(new Date(updatedAt), "dd/MM/yyyy HH:mm:ss")}
                                 />
                               </div>
                             </td>

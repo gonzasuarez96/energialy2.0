@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setAccessToken, setUserData } from "../redux/features/userSlice";
 import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
 import { urlProduction } from "../data/dataGeneric";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -158,24 +160,25 @@ export default function Login() {
                 Contraseña
               </label>
               <input
-                type="password"
-                className="form-control"
+                type={showPassword ? "text" : "password"}
+                className="form-control pr-10"
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
                 onBlur={handlePasswordBlur}
                 required
               />
+              <button
+                type="button"
+                className="focus:outline-none ml-2"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
+              </button>
             </div>
             {passwordError && (
               <div className="text-danger mt- mb-2">{passwordError}</div>
             )}
-          </div>
-          <div className="mb-3 form-check">
-            <input type="checkbox" className="form-check-input" id="remember" />
-            <label htmlFor="remember" className="form-check-label">
-              Recuérdame
-            </label>
           </div>
           <div className="flex justify-center border-t pt-4">
             <button
