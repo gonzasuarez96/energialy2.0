@@ -12,8 +12,8 @@ export default function Head({ onProductoClick, products }) {
     <div  className="pl-4 m-2">
       <div className="flex">
         {/* Columna izquierda */}
-        <div className="w-1/2 pl-4 m-2">
-          <div className="pl-4 m-2">
+        <div className="w-1/2 m-2">
+          <div className="pl-2 m-2">
             <label className="font-bold w-full p-4 mb-2 text-xl">
               Solicitud de Productos
             </label>

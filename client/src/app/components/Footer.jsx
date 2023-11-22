@@ -86,6 +86,10 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
+              <p className="flex justify-end mt-12">
+
+              consultas: hola@energialy.ar
+              </p>
           </div>
         </div>
       </div>

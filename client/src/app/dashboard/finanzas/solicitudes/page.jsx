@@ -29,7 +29,7 @@ function BankDashboard() {
     data: bankAccount,
     error,
     isLoading,
-  } = useGetBankAccountByIdQuery(companyData?.bankAccount.id);
+  } = useGetBankAccountByIdQuery(companyData?.bankAccount?.id);
   console.log(bankAccount)
 
   useEffect(() => {
@@ -62,7 +62,7 @@ function BankDashboard() {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>No tienes solicitudes</div>;
   }
 
   return (
