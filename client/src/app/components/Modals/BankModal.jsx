@@ -21,9 +21,9 @@ function BankModal({open, handleOpen, statusMessage, status, id, company, endpoi
         const response = await handleChangeStatus(id, completeStatus, endpoint);
         displaySuccessMessage("Cuenta Aprobada exitosamente")
         setTimeout(()=> {
-            window.location.reload()
-            handleOpen();
-        }, 1000)
+          window.location.reload()
+          handleOpen();
+      }, 1000)
       } catch (error) {
         displayFailedMessage("Error al aprobar la cuenta")
       }
@@ -36,8 +36,7 @@ function BankModal({open, handleOpen, statusMessage, status, id, company, endpoi
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white p-5 rounded flex flex-col justify-center items-center gap-5 h-screem">
             <p>
-              Dando click en continuar, estas aprobando de manera permanente la
-              Apertura de Cuenta Bancaria de{" "}
+              Dando click en continuar, estas aprobando la solicitud de este producto de{" "}
               <span className="font-bold">{company}</span>
             </p>
             <p>Estas seguro?</p>
