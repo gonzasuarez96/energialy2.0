@@ -22,12 +22,22 @@ export default function Buttons() {
       setOpenModal((cur) => !cur);
     };
 
+    const handleOption = (index) => {
+      if ( index === 0){
+        handleOpenModal();
+      }else if (index === 1){
+        window.location.href = '/dashboard/tenders/createTender';
+      }else if(index === 2){
+        window.location.href = '/dashboard/finanzas/aperturaCuenta';
+      }
+    }
+
 
     return(
         <div className="flex h-100 justify-end">
             {buttonsOptions.map((option, index) => (
                 <button key={index} className="m-4 p-4 text-white font-semibold bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-                onClick={() => {handleOpenModal()}}>
+                onClick={() => handleOption(index)}>
                     {option}
                 </button>
             ))}

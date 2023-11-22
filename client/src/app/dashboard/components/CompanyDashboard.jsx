@@ -56,7 +56,7 @@ function CompanyDashboard({user}) {
                   content={userProposals}
                 />
                 <DashboardKpiCard
-                  title={"Propuestas recibidas"}
+                  title={"Propuestas Recibidas En Mis Licitaciones"}
                   content={proposalsToUser}
                 />
               </div>
