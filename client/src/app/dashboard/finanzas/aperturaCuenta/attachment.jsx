@@ -4,6 +4,7 @@ import axios from "axios";
 import getLocalStorage from "@/app/Func/localStorage";
 import { urlProduction } from "@/app/data/dataGeneric";
 import { displayFailedMessage, displaySuccessMessage } from "@/app/components/Toastify";
+import { ToastContainer } from "react-toastify";
 
 export default function Attachment(props) {
   const [files, setFiles] = useState({
@@ -33,12 +34,16 @@ export default function Attachment(props) {
     }
     console.log('companyIdAttach:', companyId)
     try{
-      const res = axios.post(`${urlProduction}/bankAccounts`,id)
+      const res = await axios.post(`${urlProduction}/bankAccounts`,id)
       console.log('res bankAccount:', res)
       displaySuccessMessage('Solicitud de Apertura de cuenta enviada');
+      setTimeout(() => {
+        window.location.href = '/dashboard';
+      }, 2000);
     }catch(error){
       console.log(error)
-      displayFailedMessage(error.response.data.error)
+      if (error.response.data.error === 'Company Testing already has a bank account.')
+      displayFailedMessage('La empresa ya tiene una solicitud de Apertura de Cuenta')
     }
    
   };
@@ -190,6 +195,7 @@ export default function Attachment(props) {
           </button>
         </div>
       </form>
+      <ToastContainer style={{ marginTop: "100px" }} />
     </main>
   );
 }
