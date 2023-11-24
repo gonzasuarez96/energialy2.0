@@ -31,8 +31,7 @@ import BankModal from "./Modals/BankModal";
 import TextModal from "./Modals/TextModal";
 import PaginationComponent from "./PaginationComponent";
 import { financeProducts } from "../dashboard/bank/financialProducts/data";
-
-
+import GeneratePDF from "../Func/pdfGenerator";
 
 const TABS = [
   {
@@ -57,13 +56,12 @@ const TABLE_HEAD = [
   "Empresa",
   "Producto",
   "Estado",
-  "Ultima revisión",
+  "Mail de la Empresa",
   "Monto",
   "Acciones",
 ];
 
 export function SortableTableProducts({ data, isLoading }) {
-  
   const [currentPage, setCurrentPage] = useState(1);
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -73,18 +71,14 @@ export function SortableTableProducts({ data, isLoading }) {
   //const [totalPages, setTotalPages] = useState(null);
   //const [financialProductsToShow, setFinancialProductsToShow] = useState(null)
   //---- Logica de Paginación ----//
-  ;
   const itemsPerPage = 6;
- 
+
   const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
- 
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
   const financialProductsToShow = filteredData?.slice(startIndex, endIndex);
-  
- 
-  
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -118,7 +112,6 @@ export function SortableTableProducts({ data, isLoading }) {
   //    setFinancialProductsToShow(financialProductsToShow)
 
   // }, [])
-
 
   return (
     <>
@@ -185,7 +178,16 @@ export function SortableTableProducts({ data, isLoading }) {
                 <tbody>
                   {filterData.length > 0 ? (
                     financialProductsToShow?.map(
-                      ({ id, bankAccount, productName, status }, index) => {
+                      (
+                        {
+                          id,
+                          bankAccount,
+                          productName,
+                          status,
+                          additionalData,
+                        },
+                        index
+                      ) => {
                         const isLast = index === data.length - 1;
                         const classes = isLast
                           ? "p-4"
@@ -239,14 +241,16 @@ export function SortableTableProducts({ data, isLoading }) {
                                 />
                               </div>
                             </td>
-                            <td className={classes}></td>
-                            <td className={classes}></td>
                             <td className={classes}>
-                              <Tooltip content="Ver Adjuntos">
-                                <IconButton variant="text">
-                                  <DocumentMagnifyingGlassIcon className="h-4 w-4 text-blue-700" />
-                                </IconButton>
-                              </Tooltip>
+                              {bankAccount.Company.companyEmail}
+                            </td>
+                            <td className={classes}>
+                              {additionalData
+                                ? additionalData.amount
+                                : " - "}
+                            </td>
+                            <td className={classes}>
+                              <GeneratePDF bankAccount={bankAccount} productName={productName} additionalData={additionalData} />
                               <Tooltip content="Aprobar solicitud">
                                 <IconButton
                                   variant="text"

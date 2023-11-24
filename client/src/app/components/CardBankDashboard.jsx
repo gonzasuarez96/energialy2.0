@@ -15,7 +15,7 @@ export function BankCard({data, title, status}) {
   const filteredData = filterData(data, status)
   
   return (
-    <Card className="mt-6 w-96">
+    <Card className="mt-6 w-96 mr-6">
       <CardBody className="text-center">
         <Typography variant="h5" color="blue-gray" className="mb-2">
           {title}

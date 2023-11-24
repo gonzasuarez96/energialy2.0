@@ -23,7 +23,7 @@ export default function ECheq() {
     beneficiaryDocType: "",
     beneficiaryDni: "",
     paymentDate: "",
-    totalAmount: "",
+    amount: "",
     modo: "Cruzado",
     cheqType: "",
     caracter: "A la Orden",
@@ -182,9 +182,9 @@ export default function ECheq() {
           <div className="mt-5 pt-2">
             <input
               type="text"
-              id="totalAmount"
-              value={eCheqData.totalAmount}
-              name="totalAmount"
+              id="amount"
+              value={eCheqData.amount}
+              name="amount"
               placeholder="Importe Total"
               onChange={handleChange}
               className="w-full px-3 py-3 font-bold text-lg border"
