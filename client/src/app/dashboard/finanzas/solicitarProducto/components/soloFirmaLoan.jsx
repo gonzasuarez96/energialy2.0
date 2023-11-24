@@ -13,7 +13,7 @@ import { urlProduction } from "@/app/data/dataGeneric";
 
 export default function SoloFirmaLoan() {
   // Estados Locales
-  const {company} = getLocalStorage();
+  const { company } = getLocalStorage();
   const [error, setError] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [fiscalAdress, setFiscalAdress] = useState("");
@@ -30,9 +30,9 @@ export default function SoloFirmaLoan() {
   const [amountToRequest, setAmountToRequest] = useState("");
   const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
   const bankAccountId = userCompany?.bankAccount.id;
+  const [currency, setCurrency] = useState("AR$");
 
   const router = useRouter();
-
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -62,6 +62,9 @@ export default function SoloFirmaLoan() {
         case "amountToRequest":
           setAmountToRequest(value);
           break;
+        case "currency":
+          setCurrency(value);
+          break;
         default:
           break;
       }
@@ -77,7 +80,7 @@ export default function SoloFirmaLoan() {
       companyEmail,
       legalManager,
       destination,
-      amountToRequest,
+      amount: `${amountToRequest} ${currency}`,
     };
 
     const accountData = {
@@ -118,7 +121,9 @@ export default function SoloFirmaLoan() {
   };
   return (
     <div>
-      <h3 className="text-center p-4 border-b-2 border-gray-300 font-bold">Prestamo a Sola Firma</h3>
+      <h3 className="text-center p-4 border-b-2 border-gray-300 font-bold">
+        Prestamo a Sola Firma
+      </h3>
       <div>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
           Tu Empresa
@@ -241,25 +246,36 @@ export default function SoloFirmaLoan() {
               className="w-full px-3 py-3 font-bold text-lg border"
             />
           </div>
-          <div className="mt-4 text-left">
-            <input
-              type="text"
-              id="amountToRequest"
-              value={amountToRequest}
-              placeholder="Monto a solicitar"
-              onChange={handleChange}
-              className="w-full px-3 py-3 font-bold text-lg border"
-            />
+          <div className="flex mt-4 text-left">
+            
+              <input
+                type="text"
+                id="amountToRequest"
+                value={amountToRequest}
+                placeholder="Monto a solicitar"
+                onChange={handleChange}
+                className="w-full px-3 py-3 font-bold text-lg border"
+              />
+              <select
+                id="currency"
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+                className="px-3 py-3 border border-gray-300 rounded-r-md appearance-none"
+              >
+                <option value="AR$">AR$</option>
+                <option value="U$D">U$D</option>
+              </select>
+            
           </div>
-        </div>  
+        </div>
         <div className="flex justify-end">
-            <button
-              className="px-10 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-              type="button"
-              onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
-            >
-              Solicitar
-            </button>
+          <button
+            className="px-10 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
+            type="button"
+            onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
+          >
+            Solicitar
+          </button>
         </div>
         {error && (
           <div className="flex justify-center text-danger mt-2 mb-2">

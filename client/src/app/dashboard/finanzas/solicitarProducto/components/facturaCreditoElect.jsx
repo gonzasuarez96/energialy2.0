@@ -57,7 +57,7 @@ export default function FacturaCredito() {
       case "cuitRecived":
         setCuilRecived(value);
         break;
-        case "currency": // Maneja el cambio de la moneda
+      case "currency":
         setCurrency(value);
         break;
       default:
@@ -68,8 +68,8 @@ export default function FacturaCredito() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const additionalData = {
-      amount: amount,
-      paymentTerm: paymentTerm,
+      amount: `${amount} ${currency}`,
+      paymentTerm: `${paymentTerm} Días`,
       invoiceIssuer: invoiceIssuer,
       invoiceTo: invoiceTo,
       issueDate: issueDate,
@@ -131,23 +131,23 @@ export default function FacturaCredito() {
                   Valor (Indicar en pesos AR$ o en dólares U$D)
                 </label>
                 <div className="flex">
-                <input
-                  type="text"
-                  id="value"
-                  value={amount}
-                  placeholder={currency}
-                  onChange={handleChange}
-                  className="w-full px-3 py-3 font-bold text-lg border"
-                />
-                <select
-                  id="currency"
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="px-3 py-3 border border-gray-300 rounded-r-md appearance-none"
-                >
-                  <option value="AR$">AR$</option>
-                  <option value="U$D">U$D</option>
-                </select>
+                  <input
+                    type="text"
+                    id="value"
+                    value={amount}
+                    placeholder={currency}
+                    onChange={handleChange}
+                    className="w-full px-3 py-3 font-bold text-lg border"
+                  />
+                  <select
+                    id="currency"
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="px-3 py-3 border border-gray-300 rounded-r-md appearance-none"
+                  >
+                    <option value="AR$">AR$</option>
+                    <option value="U$D">U$D</option>
+                  </select>
                 </div>
               </div>
               <div>

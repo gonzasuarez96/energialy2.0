@@ -24,7 +24,7 @@ export default function CheqThird() {
     beneficiaryDocType: "",
     beneficiaryDni: "",
     paymentDate: "",
-    totalAmount: "",
+    amount: "",
     modo: "Cruzado",
     cheqType: "",
     caracter: "A la Orden",
@@ -185,9 +185,9 @@ export default function CheqThird() {
           <div className="mt-5 pt-2">
             <input
               type="text"
-              id="totalAmount"
-              value={cheqThird.totalAmount}
-              name="totalAmount"
+              id="amount"
+              value={cheqThird.amount}
+              name="amount"
               placeholder="Importe Total"
               onChange={handleChange}
               className="w-full px-3 py-3 font-bold text-lg border"

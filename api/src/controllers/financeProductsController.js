@@ -39,7 +39,7 @@ const getAllFinanceProducts = async () => {
       attributes: ['id', 'status'],
       include: {
         model: Companies,
-        attributes: ['id', 'name', 'profilePicture'],
+        attributes: ['id', 'name', 'profilePicture', 'companyEmail'],
       },
     },
   });

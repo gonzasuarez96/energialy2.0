@@ -23,7 +23,7 @@ export default function OwnCheq() {
     beneficiaryDocType: "",
     beneficiaryDni: "",
     paymentDate: "",
-    totalAmount: "",
+    amount: "",
     modo: "Cruzado",
     cheqType: "",
     caracter: "A la Orden",
@@ -180,9 +180,9 @@ export default function OwnCheq() {
           <div className="mt-5 pt-2">
             <input
               type="text"
-              id="totalAmount"
-              value={ownCheq.totalAmount}
-              name="totalAmount"
+              id="amount"
+              value={ownCheq.amount}
+              name="amount"
               placeholder="Importe Total"
               onChange={handleChange}
               className="w-full px-3 py-3 font-bold text-lg border"
