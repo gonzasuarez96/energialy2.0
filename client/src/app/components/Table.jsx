@@ -330,7 +330,7 @@ export function SortableTableAccount({data, isLoading}) {
               status="open"
               id={modalData?.id}
               company={modalData?.company}
-              endpoint={"bankAccount"}
+              endpoint={"bankAccounts"}
               statusMessage={"cuenta aprobada"}
             />
           )}
@@ -341,7 +341,7 @@ export function SortableTableAccount({data, isLoading}) {
               status="require changes"
               id={modalData?.id}
               company={modalData?.company}
-              endpoint={"bankAccount"}
+              endpoint={"bankAccounts"}
             />
           )}
         </>
