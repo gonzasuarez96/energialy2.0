@@ -23,7 +23,7 @@ export default function OwnCheq() {
     beneficiaryDocType: "",
     beneficiaryDni: "",
     paymentDate: "",
-    totalAmount: "",
+    amount: "",
     modo: "Cruzado",
     cheqType: "",
     caracter: "A la Orden",
@@ -75,7 +75,7 @@ export default function OwnCheq() {
 
   return (
     <div>
-      <label className="flex justify-center font-bold w-full p-4 mb-2 text-xl">Cheques Propios</label>
+      <h3 className="text-center p-4 border-b-2 border-gray-300 font-bold">Cheques Propios</h3>
       <div>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
           Emisor
@@ -180,9 +180,9 @@ export default function OwnCheq() {
           <div className="mt-5 pt-2">
             <input
               type="text"
-              id="totalAmount"
-              value={ownCheq.totalAmount}
-              name="totalAmount"
+              id="amount"
+              value={ownCheq.amount}
+              name="amount"
               placeholder="Importe Total"
               onChange={handleChange}
               className="w-full px-3 py-3 font-bold text-lg border"
@@ -233,7 +233,7 @@ export default function OwnCheq() {
             type="button"
             onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
           >
-            Siguiente
+            Solicitar
           </button>
         </div>
         {error && (

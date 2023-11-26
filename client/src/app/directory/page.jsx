@@ -12,7 +12,7 @@ function page() {
  const dispatch = useDispatch();
    
   useEffect(() => {
-    fetch(urlProduction)
+    fetch(`${urlProduction}/companies`)
       .then((response) => response.json())
       .then((data) => dispatch(setAllCompanies(data)))
       .catch((error) => console.error("Error fetching data:", error));

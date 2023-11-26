@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setAccessToken, setUserData } from "../redux/features/userSlice";
 import { displayFailedMessage, displaySuccessMessage } from "./Toastify";
 import { urlProduction } from "../data/dataGeneric";
+import { RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -80,7 +82,7 @@ export default function Login() {
     };
 
     try {
-      console.log("Datos enviados:", user);
+      // console.log("Datos enviados:", user);
       const response = await axios.post(`${urlProduction}/auth`, user);
       const accessToken = response.data.accessToken;
       // Después del inicio de sesión exitoso, obtén los detalles del usuario
@@ -88,10 +90,10 @@ export default function Login() {
         `${urlProduction}/users?email=${email}`
       );
       const userDetails = userDetailsResponse.data;
-      console.log("Datos del usuario:", userDetails);
+      // console.log("Datos del usuario:", userDetails);
 
-      console.log("Respuesta del servidor:", response);
-      console.log("Estado accessToken:", response.data.accessToken);
+      // console.log("Respuesta del servidor:", response);
+      // console.log("Estado accessToken:", response.data.accessToken);
 
       displaySuccessMessage("Sesion iniciada");
 
@@ -106,7 +108,7 @@ export default function Login() {
         window.location.href = '/dashboard';
       }, 2000);
     } catch (error) {
-      console.log("Error:", error);
+      // console.log("Error:", error);
       if (error.response.data.error == "Incorrect password.") {
         displayFailedMessage("Contraseña incorrecta");
       } else if (error.response.data.error == "Email not registered.") {
@@ -157,25 +159,30 @@ export default function Login() {
               <label htmlFor="password" className="form-label w-40">
                 Contraseña
               </label>
+              <div className="flex w-full border  px-2 justify-between">
               <input
-                type="password"
-                className="form-control"
+                type={showPassword ? "text" : "password"}
+                className=""
                 id="password"
                 value={password}
                 onChange={handlePasswordChange}
                 onBlur={handlePasswordBlur}
                 required
+                
               />
+              <button
+                type="button"
+                className="focus:outline-none"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
+              </button>
+                
+              </div>
             </div>
             {passwordError && (
               <div className="text-danger mt- mb-2">{passwordError}</div>
             )}
-          </div>
-          <div className="mb-3 form-check">
-            <input type="checkbox" className="form-check-input" id="remember" />
-            <label htmlFor="remember" className="form-check-label">
-              Recuérdame
-            </label>
           </div>
           <div className="flex justify-center border-t pt-4">
             <button

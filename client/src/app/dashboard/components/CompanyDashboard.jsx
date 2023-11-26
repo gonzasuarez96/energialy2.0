@@ -10,7 +10,7 @@ import { useGetTendersQuery } from "@/app/redux/services/tendersApi";
 
 function CompanyDashboard({user}) {
   //const [user, setUser] = useState(null);
-  console.log(user);
+  //console.log(user);
 
   const { data: proposals, isLoading: loadingProposals } =
     useGetProposalsQuery();
@@ -56,7 +56,7 @@ function CompanyDashboard({user}) {
                   content={userProposals}
                 />
                 <DashboardKpiCard
-                  title={"Propuestas recibidas"}
+                  title={"Propuestas Recibidas En Mis Licitaciones"}
                   content={proposalsToUser}
                 />
               </div>

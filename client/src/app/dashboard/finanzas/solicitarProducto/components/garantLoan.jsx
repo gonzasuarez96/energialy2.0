@@ -1,17 +1,19 @@
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
-import { displayFailedMessage, displaySuccessMessage } from "@/app/components/Toastify";
-import { ToastContainer} from "react-toastify";
+import {
+  displayFailedMessage,
+  displaySuccessMessage,
+} from "@/app/components/Toastify";
+import { ToastContainer } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useGetCompaniesByIdQuery } from "@/app/redux/services/companiesApi";
 import getLocalStorage from "@/app/Func/localStorage";
 import { urlProduction } from "@/app/data/dataGeneric";
 
-
 export default function GarantLoan() {
-      // Estados Locales
-  const {company} = getLocalStorage();
+  // Estados Locales
+  const { company } = getLocalStorage();
   const [error, setError] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [fiscalAdress, setFiscalAdress] = useState("");
@@ -25,10 +27,11 @@ export default function GarantLoan() {
     phoneNumber: "",
   });
   const [destination, setDestination] = useState("");
-  const [amountToRequest, setAmountToRequest] = useState("")
-  const [garantType, setGarantType] = useState("")
+  const [amountToRequest, setAmountToRequest] = useState("");
+  const [garantType, setGarantType] = useState("");
   const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
   const bankAccountId = userCompany?.bankAccount.id;
+  const [currency, setCurrency] = useState("AR$");
 
   const router = useRouter();
 
@@ -55,14 +58,17 @@ export default function GarantLoan() {
           setCompanyEmail(value);
           break;
         case "destination":
-            setDestination(value);
-            break;
+          setDestination(value);
+          break;
         case "amountToRequest":
-            setAmountToRequest(value);
-            break;
+          setAmountToRequest(value);
+          break;
         case "garantType":
-            setGarantType(value);
-            break;
+          setGarantType(value);
+          break;
+        case "currency":
+          setCurrency(value);
+          break;
         default:
           break;
       }
@@ -78,13 +84,13 @@ export default function GarantLoan() {
       companyEmail,
       legalManager,
       destination,
-      amountToRequest,
+      amount: `${amountToRequest} ${currency}`,
       garantType,
-    }
+    };
     const accountData = {
-      productName: 'Préstamo con garantía',
+      productName: "Préstamo con garantía",
       bankAccountId,
-      additionalData
+      additionalData,
     };
     if (
       !businessName ||
@@ -109,8 +115,7 @@ export default function GarantLoan() {
         accountData
       );
       console.log("resData server:", res);
-      setEnvioExitoso(true);
-      displaySuccessMessage('Datos enviados con exito')
+      displaySuccessMessage("Datos enviados con exito");
       setTimeout(() => {
         router.push("/dashboard");
       }, 2000);
@@ -121,7 +126,9 @@ export default function GarantLoan() {
   };
   return (
     <div>
-      <label className="flex justify-center font-bold w-full p-4 mb-2 text-xl">Prestamo con Garantia</label>
+      <h3 className="text-center p-4 border-b-2 border-gray-300 font-bold">
+        Prestamo con Garantia
+      </h3>
       <div>
         <label className="block mb-2 bg-[#f7f7f7] py-4 pl-7 mt-4 font-bold border-l-4 border-primary-500 text-left">
           Tu Empresa
@@ -244,15 +251,26 @@ export default function GarantLoan() {
               className="w-full px-3 py-3 font-bold text-lg border"
             />
           </div>
-          <div className="mt-4 text-left">
-            <input
-              type="text"
-              id="amountToRequest"
-              value={amountToRequest}
-              placeholder="Monto a solicitar"
-              onChange={handleChange}
-              className="w-full px-3 py-3 font-bold text-lg border"
-            />
+          <div className="flex mt-4 text-left">
+            
+              <input
+                type="text"
+                id="amountToRequest"
+                value={amountToRequest}
+                placeholder="Monto a solicitar"
+                onChange={handleChange}
+                className="w-full px-3 py-3 font-bold text-lg border"
+              />
+              <select
+                id="currency"
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+                className="px-3 py-3 border border-gray-300 rounded-r-md appearance-none"
+              >
+                <option value="AR$">AR$</option>
+                <option value="U$D">U$D</option>
+              </select>
+            
           </div>
         </div>
         <div className="mt-4 text-left">
@@ -266,13 +284,13 @@ export default function GarantLoan() {
           />
         </div>
         <div className="flex justify-end">
-            <button
-              className="px-10 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-              type="button"
-              onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
-            >
-              Siguiente
-            </button>
+          <button
+            className="px-10 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
+            type="button"
+            onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
+          >
+            Solicitar
+          </button>
         </div>
         {error && (
           <div className="flex justify-center text-danger mt-2 mb-2">
