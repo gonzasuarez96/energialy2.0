@@ -43,8 +43,12 @@ export default function Navigation() {
                 <div className="flex items-center cursor-pointer">
                   <div
                     onClick={() => {
-                      router.refresh();
-                      router.push("/");
+                      if(user){
+                        router.refresh();
+                        router.push("/dashboard");
+                      }else{
+                         router.push("/");
+                      }
                     }}
                   >
                     <Image src={Logo} />
@@ -53,17 +57,19 @@ export default function Navigation() {
 
                 {isAuthenticated() ? (
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                    {user.company?.id ? null: <Link
-                      href="/registerCompany"
-                      prefetch
-                      className={`${
-                        pathname === "/registerCompany"
-                          ? "no-underline bg-secondary-600 text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide"
-                          : "no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide transition duration-300 ease-in-out hover:bg-secondary-600"
-                      }`}
-                    >
-                      Registra tu empresa
-                    </Link> }
+                    {user.company?.id ? null : (
+                      <Link
+                        href="/registerCompany"
+                        prefetch
+                        className={`${
+                          pathname === "/registerCompany"
+                            ? "no-underline bg-secondary-600 text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide"
+                            : "no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide transition duration-300 ease-in-out hover:bg-secondary-600"
+                        }`}
+                      >
+                        Registra tu empresa
+                      </Link>
+                    )}
                     <div
                       onClick={() => {
                         router.refresh();
@@ -78,16 +84,16 @@ export default function Navigation() {
                       Directorio
                     </div>
                     <Link
-                    href="/tenders"
-                    prefetch
-                    className={`${
-                      pathname === "/licitaciones"
-                        ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
-                        : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
-                    }`}
-                  >
-                    Licitaciones
-                  </Link>
+                      href="/tenders"
+                      prefetch
+                      className={`${
+                        pathname === "/licitaciones"
+                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
+                          : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                      }`}
+                    >
+                      Licitaciones
+                    </Link>
                     <UserProfile />
                   </div>
                 ) : (
@@ -168,12 +174,12 @@ export default function Navigation() {
                 Directorio
               </Link>
               <Link
-                href="/licitaciones"
+                href="/tenders"
                 prefetch
                 className={`${
-                  pathname == "/licitaciones"
+                  pathname == "/tenders"
                     ? "border-secondary-600  no-underline text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-                    : "border-transparent no-underline text-gray-800 hover:border-secondary-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+                    : "border-transparent  no-underline text-gray-800 hover:border-secondary-600 hover:text-white block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
                 }`}
               >
                 Licitaciones
