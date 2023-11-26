@@ -10,7 +10,7 @@ import { useGetTendersQuery } from "@/app/redux/services/tendersApi";
 
 function CompanyDashboard({user}) {
   //const [user, setUser] = useState(null);
-  console.log(user);
+  //console.log(user);
 
   const { data: proposals, isLoading: loadingProposals } =
     useGetProposalsQuery();

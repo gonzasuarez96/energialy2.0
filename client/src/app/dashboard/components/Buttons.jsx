@@ -1,6 +1,9 @@
 'use client';
 import EmailModal from "@/app/components/Modals/EmailModal";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+
 const buttonsOptions = [
     'INVITAR EMPRESAS',
     'CREAR LICITACION',
@@ -13,7 +16,7 @@ const buttonsOptions = [
 
 export default function Buttons() {
 
-    
+    const router = useRouter();
     const [openModal, setOpenModal] = useState(false);
     const [modalData, setModalData] = useState(null);
 
@@ -26,9 +29,9 @@ export default function Buttons() {
       if ( index === 0){
         handleOpenModal();
       }else if (index === 1){
-        window.location.href = '/dashboard/tenders/createTender';
+        router.push('/dashboard/tenders/createTender');
       }else if(index === 2){
-        window.location.href = '/dashboard/finanzas/aperturaCuenta';
+        router.push('/dashboard/finanzas/aperturaCuenta');
       }
     }
 
