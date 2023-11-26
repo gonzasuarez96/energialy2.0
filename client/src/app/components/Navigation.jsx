@@ -43,11 +43,11 @@ export default function Navigation() {
                 <div className="flex items-center cursor-pointer">
                   <div
                     onClick={() => {
-                      if(user){
+                      if (user) {
                         router.refresh();
                         router.push("/dashboard");
-                      }else{
-                         router.push("/");
+                      } else {
+                        router.push("/");
                       }
                     }}
                   >
@@ -83,18 +83,22 @@ export default function Navigation() {
                     >
                       Directorio
                     </div>
-                    <Link
-                      href="/tenders"
-                      prefetch
+                    <div
+                      onClick={() => {
+                        router.refresh();
+                        router.push("/tenders");
+                      }}
                       className={`${
-                        pathname === "/licitaciones"
+                        pathname === "/tenders"
                           ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
                           : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
                       }`}
                     >
                       Licitaciones
-                    </Link>
-                    <UserProfile />
+                    </div>
+                    <div className="cursor-pointer">
+                      <UserProfile />
+                    </div>
                   </div>
                 ) : (
                   <div className="sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
