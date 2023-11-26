@@ -12,26 +12,24 @@ function CompanyDashboard({user}) {
   //const [user, setUser] = useState(null);
   //console.log(user);
 
+  const [userProposals, setUserProposals] = useState([]);
+  const [proposalsToUser, setProposalsToUser] = useState([]);
+  const [userTenders, setUserTenders] = useState([]);
+
+
+
   const { data: proposals, isLoading: loadingProposals } =
     useGetProposalsQuery();
   const { data: tenders, isLoading: loadingTenders } = useGetTendersQuery();
 
-  const userProposals = proposals?.filter(
-    (proposal) => proposal.company.id === user.company.id
-  );
 
-  const proposalsToUser = proposals?.filter(
-    (proposal) => proposal.tender.Company.id === user.company.id
-  );
-
-  const userTenders = tenders?.filter(
-    (tender) => tender.company.id === user.company.id
-  );
-
-//   useEffect(() => {
-//     const user = getLocalStorage();
-//     setUser(user);
-//   }, []);
+  useEffect(() => {
+    if(user.company){
+      setUserProposals(proposals?.filter((proposal) => proposal.company.id === user.company.id))
+      setProposalsToUser(proposals?.filter((proposal) => proposal.tender.Company.id === user.company.id))
+      setUserTenders(tenders?.filter((tender) => tender.company.id === user.company.id))
+    }
+  }, []);
 
   return (
     
