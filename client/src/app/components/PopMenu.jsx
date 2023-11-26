@@ -19,6 +19,7 @@ import getLocalStorage from "../Func/localStorage";
 export default function Example() {
   const userData = getLocalStorage();
   
+  const defaultAvatar = `https://ui-avatars.com/api/?name=${userData.firstName}+${userData.lastName}background=c7d2fe&color=3730a3&bold=true`
 
   const handleLogout = () => {
     sessionStorage.removeItem('user');
@@ -32,7 +33,7 @@ export default function Example() {
           <div className="w-[50px] h-[50px] m-2">
             <img
               className="rounded-full"
-              src={userData?.company?.profilePicture || "defaultImg"}
+              src={userData?.company?.profilePicture || defaultAvatar}
               alt={userData?.company?.name || "Default Image"}
             />
           </div>
