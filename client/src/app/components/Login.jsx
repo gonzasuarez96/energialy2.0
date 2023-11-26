@@ -129,8 +129,8 @@ export default function Login() {
   };
 
   return (
-    <div className="h-[90vh] flex items-center justify-center">
-      <div className="bg-white shadow rounded w-50">
+    <div className="h-[90vh] w-full flex items-center justify-center">
+      <div className="bg-white shadow rounded w-[70%]">
         <h3 className=" mb-0 p-4 bg-gray-100 border-b border-gray-300">
           Iniciar sesión
         </h3>
@@ -159,26 +159,24 @@ export default function Login() {
               <label htmlFor="password" className="form-label w-40">
                 Contraseña
               </label>
-              <div className="flex w-full border  px-2 justify-between">
-              <input
-                type={showPassword ? "text" : "password"}
-                className=""
-                id="password"
-                value={password}
-                onChange={handlePasswordChange}
-                onBlur={handlePasswordBlur}
-                required
-                
-              />
-              <button
-                type="button"
-                className="focus:outline-none"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
-              </button>
-                
-              </div>
+             
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  onBlur={handlePasswordBlur}
+                  required
+                />
+                <button
+                  type="button"
+                  className="focus:outline-none pl-1"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
+                </button>
+              
             </div>
             {passwordError && (
               <div className="text-danger mt- mb-2">{passwordError}</div>
