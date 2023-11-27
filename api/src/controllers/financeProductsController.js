@@ -75,6 +75,11 @@ const createFinanceProduct = async (body) => {
   const foundBankAccount = await BankAccounts.findByPk(bankAccountId, {
     include: { model: FinanceProducts },
   });
+  if (foundBankAccount.status !== 'open') {
+    const error = new Error('Bank Account is not open');
+    error.status = 400;
+    throw error;
+  }
   const financeProducts = foundBankAccount.FinanceProducts;
   if (productName === 'CC en pesos $' || productName === 'CC en dólares u$s' || productName === 'Home Banking') {
     const financeProductExist = financeProducts.some((financeProduct) => financeProduct.productName === productName);
