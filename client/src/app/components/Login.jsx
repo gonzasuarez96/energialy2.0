@@ -22,6 +22,7 @@ export default function Login() {
 
   const dispatch = useDispatch();
 
+  console.log("URL:", urlProduction);
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -82,7 +83,7 @@ export default function Login() {
     };
 
     try {
-      // console.log("Datos enviados:", user);
+      console.log("URL:", urlProduction );
       const response = await axios.post(`${urlProduction}/auth`, user);
       const accessToken = response.data.accessToken;
       // Después del inicio de sesión exitoso, obtén los detalles del usuario
