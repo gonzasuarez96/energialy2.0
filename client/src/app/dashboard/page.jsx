@@ -6,7 +6,7 @@ import CompanyDashboard from "./components/CompanyDashboard";
 function DasboardPage() {
   
   const [user, setUser] = useState(null);
-  console.log(user)
+  //console.log(user)
   
   useEffect(() => {
      const user = getLocalStorage();
@@ -23,5 +23,7 @@ function DasboardPage() {
     </div>
   );
 }
+
+// TODO separar el Detalle de la tender a una vista aparte.
 
 export default DasboardPage;

@@ -22,6 +22,7 @@ export default function Login() {
 
   const dispatch = useDispatch();
 
+  console.log("URL:", urlProduction);
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -82,7 +83,7 @@ export default function Login() {
     };
 
     try {
-      console.log("Datos enviados:", user);
+      console.log("URL:", urlProduction );
       const response = await axios.post(`${urlProduction}/auth`, user);
       const accessToken = response.data.accessToken;
       // Después del inicio de sesión exitoso, obtén los detalles del usuario
@@ -90,10 +91,10 @@ export default function Login() {
         `${urlProduction}/users?email=${email}`
       );
       const userDetails = userDetailsResponse.data;
-      console.log("Datos del usuario:", userDetails);
+      // console.log("Datos del usuario:", userDetails);
 
-      console.log("Respuesta del servidor:", response);
-      console.log("Estado accessToken:", response.data.accessToken);
+      // console.log("Respuesta del servidor:", response);
+      // console.log("Estado accessToken:", response.data.accessToken);
 
       displaySuccessMessage("Sesion iniciada");
 
@@ -104,11 +105,11 @@ export default function Login() {
       dispatch(setUserData(userDetails));
       dispatch(setAccessToken(accessToken));
 
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 2000);
+      
+      window.location.href = '/dashboard';
+     
     } catch (error) {
-      console.log("Error:", error);
+      // console.log("Error:", error);
       if (error.response.data.error == "Incorrect password.") {
         displayFailedMessage("Contraseña incorrecta");
       } else if (error.response.data.error == "Email not registered.") {
@@ -129,8 +130,8 @@ export default function Login() {
   };
 
   return (
-    <div className="h-[90vh] flex items-center justify-center">
-      <div className="bg-white shadow rounded w-50">
+    <div className="h-[90vh] w-full flex items-center justify-center">
+      <div className="bg-white shadow rounded w-[70%]">
         <h3 className=" mb-0 p-4 bg-gray-100 border-b border-gray-300">
           Iniciar sesión
         </h3>
@@ -159,22 +160,24 @@ export default function Login() {
               <label htmlFor="password" className="form-label w-40">
                 Contraseña
               </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                className="form-control pr-10"
-                id="password"
-                value={password}
-                onChange={handlePasswordChange}
-                onBlur={handlePasswordBlur}
-                required
-              />
-              <button
-                type="button"
-                className="focus:outline-none ml-2"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
-              </button>
+             
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="form-control"
+                  id="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  onBlur={handlePasswordBlur}
+                  required
+                />
+                <button
+                  type="button"
+                  className="focus:outline-none pl-1"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
+                </button>
+              
             </div>
             {passwordError && (
               <div className="text-danger mt- mb-2">{passwordError}</div>

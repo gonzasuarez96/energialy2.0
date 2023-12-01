@@ -14,7 +14,7 @@ function TenderDetail({params}) {
 
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen((cur) => !cur);
-  console.log(data.description)
+  //console.log(data.description)
   const renderDescription = () => {
     // Check if data.description is not empty
     return data.description ? (

@@ -4,10 +4,11 @@ import PaginationComponent from './PaginationComponent';
 import { useRouter } from 'next/navigation';
 
 function DashboardTableData({title, data}) {
+  
   //---- Logica de Paginación ----//
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4;
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPages = data ? Math.ceil(data.length / itemsPerPage) : 1;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -78,7 +79,7 @@ function DashboardTableData({title, data}) {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.length === 0 ? (
+                    {!data ? <h5>No existen licitaciones</h5> : (data.length === 0 ? (
                       <h5>No existen licitaciones</h5>
                     ) : (
                       tendersToShow?.map((item) => (
@@ -121,7 +122,8 @@ function DashboardTableData({title, data}) {
                           </td>
                         </tr>
                       ))
-                    )}
+                    ))}
+
                   </tbody>
                 </table>
                 <PaginationComponent
