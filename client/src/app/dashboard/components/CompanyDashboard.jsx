@@ -43,12 +43,12 @@ function CompanyDashboard({user}) {
             </div>
           </div>
           {/*Contenido del Dashboard*/}
-
+          {/* TODO esta pendiente de realizar la logica para el calculo de las ganancias, los pendientes de ingreso y las inversiones*/}
           <div className="w-full h-screen rounded-md flex flex-col gap-3 p-2">
             <div className="w-full bg-white rounded-md flex gap-3 p-2">
               {/*Left */}
               <div className="w-1/2">
-                <DashboardTextCard title={"Ingresos"} content={"U$S 10500"} />
+                <DashboardTextCard title={"Ingresos"} content={"-"} />
                 <DashboardKpiCard
                   title={"Propuestas Enviadas En Otras Licitaciones"}
                   content={userProposals}
@@ -63,11 +63,11 @@ function CompanyDashboard({user}) {
                 <div className="flex justify-between gap-2">
                   <DashboardTextCard
                     title={"Ingresos Pendientes"}
-                    content={"U$S 0"}
+                    content={"-"}
                   />
                   <DashboardTextCard
                     title={"Inversiones"}
-                    content={"U$S 25000"}
+                    content={"-"}
                   />
                 </div>
                 <div className="h-full flex justify-center items-center">

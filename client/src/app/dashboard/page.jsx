@@ -24,4 +24,6 @@ function DasboardPage() {
   );
 }
 
+// TODO separar el Detalle de la tender a una vista aparte.
+
 export default DasboardPage;
