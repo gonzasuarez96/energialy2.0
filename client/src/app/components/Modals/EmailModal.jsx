@@ -6,25 +6,31 @@ import {
   displaySuccessMessage,
   displayFailedMessage,
 } from "@/app/components/Toastify";
+import axios from 'axios';
+import { urlProduction } from '@/app/data/dataGeneric';
 
 function EmailModal({ open, handleOpen, status, id, company }) {
     const [emails, setEmails] = useState([]);
     const [email, setEmail] = useState('')
-  const endpoint = "bankAccounts";
+  
+  const endpoint = "inviteCompanies";
   const completeStatus = {
     status: status,
     statusMessage: "Cuenta Aprobada",
   };
+
+
+
+
+
+  
   const handleStatus = async () => {
     if(emails.length <= 0) {
       displayFailedMessage("No existen Emails cargados para realizar la invitación");
     }
     try {
-      const response = await handleChangeStatus(id, completeStatus, endpoint);
-      displaySuccessMessage("Sus invitaciones se han enviando correctamente");
-      setTimeout(() => {
-        handleOpen();
-      }, 1000);
+      const response = await sendInvitations()
+      displaySuccessMessage("Invitaciones enviadas con exito");
     } catch (error) {
       displayFailedMessage("Error al invitar empresas");
     }
@@ -48,6 +54,15 @@ function EmailModal({ open, handleOpen, status, id, company }) {
     setEmails(updatedEmails)
   }
 
+  const sendInvitations = async () => {
+    axios.post(`${urlProduction}/${endpoint}`, {
+      
+      "companyId": id,
+      "emails": emails
+
+    })
+  
+  }
 
   
   return (
