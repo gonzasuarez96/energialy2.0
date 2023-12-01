@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/navigation";
 import getLocalStorage from "@/app/Func/localStorage";
 import { urlProduction } from "@/app/data/dataGeneric";
+import { useGetCompaniesByIdQuery } from "@/app/redux/services/companiesApi";
 
 // ---------------------- Toastify -------------------------//
 const displaySuccessMessage = (mensaje) => {
@@ -67,7 +68,12 @@ export default function EditCompany({ option }) {
 
   // ------------ Estados locales para los campos editables ---------------------//
   const [user, setUser] = useState(null);
-  console.log(user)
+  console.log(user);
+  const [companyData, setCompanyData] = useState(null);
+  const { data: companyInfo, isLoading } = useGetCompaniesByIdQuery(
+    user?.company.id
+  );
+  console.log("companyData:", companyInfo);
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -82,10 +88,29 @@ export default function EditCompany({ option }) {
   const [isEdited, setIsEdited] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
+  useEffect(() => {
+    if (companyInfo) {
+      setCompanyData(companyInfo);
+      // Establecer los datos de la empresa en los campos del formulario
+      setName(companyInfo.name || "");
+      setDescription(companyInfo.description || "");
+      setfoundationYear(companyInfo.foundationYear || "");
+      setAnnualRevenue(companyInfo.annualRevenue || "");
+      setEmployeeCount(companyInfo.employeeCount || "");
+      setCuit(companyInfo.cuit || "");
+      setOrganizationType(companyInfo.organizationType || "");
+      setLocations(companyInfo.locations.id || []);
+      setCategories(companyInfo.categories || []);
+      setSubcategories(companyInfo.subcategories || []);
+      // ... (establecer otros campos según la estructura de los datos)
+    }
+  }, [companyInfo]);
+
   //-------------- Funciones para traer las opciones del form --------------//
   const [locationsOptions, setLocationsOptions] = useState([]);
   const [subcategoriesOptions, setSubcategoriesOptions] = useState([]);
   const [subcategorySelected, setSubcategorySelected] = useState([]);
+  const [categorySelected, setCategorySelected] = useState([]);
   const [subcategoryNew, setSubcategoryNew] = useState([]);
 
   const getLocation = async () => {
@@ -134,18 +159,24 @@ export default function EditCompany({ option }) {
     }
   };
 
-  
-
   // -------- Handlers de campos ----------------- //
 
   const handleCategoryChange = (e) => {
     const categoryId = e.target.value;
     console.log("categoryId:", categoryId);
+    setCategorySelected((prevCategories) => {
+      if (prevCategories.includes(categoryId)) {
+        return prevCategories.filter((id) => id !== categoryId);
+      } else {
+        return [...prevCategories, categoryId];
+      }
+    });
     const filteredSubcategories = subcategories.filter(
       (subcategory) => subcategory.categoryId === categoryId
     );
     setSubcategoriesOptions(filteredSubcategories);
     console.log("nuevas opciones de subcat:", filteredSubcategories);
+    console.log("categoria seleccionada:", categorySelected);
   };
 
   const handleSubcategoryChange = (e) => {
@@ -184,7 +215,8 @@ export default function EditCompany({ option }) {
         setDescription(value);
         break;
       case "locations":
-        setLocations(value);
+        const locationsArray = Array.isArray(value) ? value : [value];
+        setLocations(locationsArray);
         break;
       case "categories":
         setCategories(value);
@@ -226,47 +258,60 @@ export default function EditCompany({ option }) {
     if (name.trim() !== "") {
       updatedData.name = name.trim();
     }
-    
+
     if (description.trim() !== "") {
       updatedData.description = description.trim();
     }
-    
-    if (foundationYear.trim() !== "") {
-      updatedData.foundationYear = foundationYear.trim();
+
+    if (foundationYear !== "") {
+      updatedData.foundationYear = foundationYear;
     }
-    
+
     if (annualRevenue.trim() !== "") {
       updatedData.annualRevenue = annualRevenue.trim();
     }
-    
+
     if (employeeCount.trim() !== "") {
       updatedData.employeeCount = employeeCount.trim();
     }
-    
+
     if (cuit.trim() !== "") {
       updatedData.cuit = cuit.trim();
     }
-    
+
     if (organizationType.trim() !== "") {
       updatedData.organizationType = organizationType.trim();
     }
-    
+
     if (locations.length > 0) {
       updatedData.locations = locations;
     }
-    
-    if (subcategories.length > 0 || subcategorySelected.length > 0) {
-      updatedData.subcategories = subcategorySelected.length > 0 ? subcategories : subcategorySelected;
+
+    if (categorySelected) {
+      updatedData.categories = categorySelected;
     }
-    
+
+    if (subcategories.length > 0 || subcategorySelected.length > 0) {
+      updatedData.subcategories =
+        subcategorySelected.length > 0 ? subcategories : subcategorySelected;
+    }
+
+    if (profilePicture) {
+      updatedData.profilePicture = profilePicture;
+    }
+
+    if (bannerPicture) {
+      updatedData.bannerPicture = bannerPicture;
+    }
+
     updatedData.id = user.company.id;
-    
-    console.log('Datos enviados:', updatedData)
+
+    console.log("Datos enviados:", updatedData);
     try {
       const response = await axios.put(
-        `http://localhost:3001/companies/${user.company.id}`,
+        `${urlProduction}/companies/${user.company.id}`,
         updatedData
-      ); 
+      );
       displaySuccessMessage("Cambios guardados con éxito");
       console.log("Datos actualizados: ", response);
       const companyDetails = response.data;
@@ -320,8 +365,8 @@ export default function EditCompany({ option }) {
   // ------------------------------------------------------------------------ //
 
   useEffect(() => {
-    const user = getLocalStorage()
-    setUser(user)
+    const user = getLocalStorage();
+    setUser(user);
     getLocation();
     getSubcategories();
     getCategories();
@@ -329,7 +374,7 @@ export default function EditCompany({ option }) {
 
   return (
     <div className="p-5 m-2">
-      {(!option || option === 0 || typeof option === 'undefined') && (
+      {(!option || option === 0 || typeof option === "undefined") && (
         <div>
           <div className="mb-3">
             <label className="block font-bold mb-2 bg-[#fcfcfc] p-2 border-l-4 border-primary-500">
@@ -339,7 +384,7 @@ export default function EditCompany({ option }) {
               type="text"
               id="name"
               //placeholder={user.company?.name}
-              value={user?.company.name}
+              value={name}
               onChange={(e) => handleInputChange(e, "name")}
               className="w-full px-3 py-2 text-lg rounded border"
             />
@@ -369,7 +414,7 @@ export default function EditCompany({ option }) {
                 value={foundationYear}
                 onChange={(e) => handleInputChange(e, "foundationYear")}
                 className={`w-full px-3 py-2 text-lg border ${
-                  foundationYear.length === 4
+                  foundationYear.toString().length === 4
                     ? "border-green-500"
                     : "border-red-500"
                 }`}
@@ -407,7 +452,9 @@ export default function EditCompany({ option }) {
                         id={`organizationType${index}`}
                         value={type}
                         checked={organizationType === type}
-                        onChange={(e) => handleInputChange(e, "organizationType")}
+                        onChange={(e) =>
+                          handleInputChange(e, "organizationType")
+                        }
                       />
                       <span className="ml-2">{type}</span>
                     </label>
@@ -473,8 +520,10 @@ export default function EditCompany({ option }) {
                         const isChecked = e.target.checked;
                         setLocations((prevLocations) =>
                           isChecked
-                            ? [...prevLocations, option.id] 
-                            : prevLocations.filter((id) => id !== option.id)
+                            ? [...prevLocations, option.id]
+                            : Array.isArray(prevLocations) // Verificar si prevLocations es un array
+                            ? prevLocations.filter((id) => id !== option.id) // Si es un array, aplicar filter
+                            : []
                         );
                         handleInputChange(e, "locations");
                       }}
@@ -511,10 +560,7 @@ export default function EditCompany({ option }) {
                       type="checkbox"
                       value={option.id}
                       checked={subcategorySelected.includes(option.id)}
-                      onChange={(e) => {
-                        handleSubcategoryChange;
-                        handleInputChange(e, "subcategories");
-                      }}
+                      onChange={handleSubcategoryChange}
                     />
                     <span className="ml-2">{option.name}</span>
                   </label>
@@ -537,7 +583,10 @@ export default function EditCompany({ option }) {
               type="file"
               id="profilePicture"
               accept="image/*"
-              onChange={(e) => {uploadImage(e, "profile"), handleInputChange(e, "profilePicture")}}
+              onChange={(e) => {
+                uploadImage(e, "profile"),
+                  handleInputChange(e, "profilePicture");
+              }}
               className="w-full border rounded px-2 py-1"
             />
             {profilePictureError && (
@@ -560,7 +609,10 @@ export default function EditCompany({ option }) {
               type="file"
               id="bannerPicture"
               accept="image/*"
-              onChange={(e) => {uploadImage(e, "banner");handleInputChange(e, "bannerPicture")}}
+              onChange={(e) => {
+                uploadImage(e, "banner");
+                handleInputChange(e, "bannerPicture");
+              }}
               className="w-full border rounded px-2 py-1"
             />
             {bannerPictureError && (
@@ -579,7 +631,7 @@ export default function EditCompany({ option }) {
           onClick={handleSubmit}
           className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
         >
-          Guardar Cambios 
+          Guardar Cambios
         </button>
       </div>
       {submitError && (
