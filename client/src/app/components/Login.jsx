@@ -105,9 +105,9 @@ export default function Login() {
       dispatch(setUserData(userDetails));
       dispatch(setAccessToken(accessToken));
 
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 2000);
+      
+      window.location.href = '/dashboard';
+     
     } catch (error) {
       // console.log("Error:", error);
       if (error.response.data.error == "Incorrect password.") {
