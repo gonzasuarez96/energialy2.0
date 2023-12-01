@@ -68,9 +68,6 @@ export function ProposalModal({open, handleOpen, data}) {
     const [serviceAmount, setServiceAmount] = useState(0);
     const [receiverAmount, setReceiverAmount] = useState(0);
 
-    // console.log(data)
-    // console.log(userData)
-    // console.log(proposal)
 
     const createProposal = async (proposal) => {
       try {

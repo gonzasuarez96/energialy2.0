@@ -9,9 +9,6 @@ function page() {
  
   const {data, isLoading} = useGetTendersQuery()
 
-  
-    //console.log(data)
-
   return (
     <>
       <div className="mt-8 mb-0 w-full flex">
@@ -20,7 +17,7 @@ function page() {
         </div>
         <div className="flex flex-col justify-center items-center">
           {
-            isLoading ? <h1>Loading...</h1> : <TenderContainer data={data}/>
+            isLoading ? <h1>Cargando...</h1> : <TenderContainer data={data}/>
           }
         </div>
       </div>

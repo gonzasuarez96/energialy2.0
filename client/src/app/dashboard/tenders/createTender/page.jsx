@@ -22,6 +22,7 @@ import ErrorMensage from "@/app/components/ErrorMensage";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import getLocalStorage from "@/app/Func/localStorage";
+import { urlProduction } from "@/app/data/dataGeneric";
 
 
 
@@ -179,7 +180,7 @@ function CreateTenderForm() {
      try {
       
       const tender = await axios.post(
-         "http://localhost:3001/tenders",
+         `${urlProduction}/tenders`,
          tenderData
        );
        displaySuccessMessage("Licitación creada con éxito");
