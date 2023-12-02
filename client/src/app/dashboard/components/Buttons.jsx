@@ -3,6 +3,10 @@ import EmailModal from "@/app/components/Modals/EmailModal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import  getLocalStorage  from "@/app/Func/localStorage";
+
+
+
 
 const buttonsOptions = [
     'INVITAR EMPRESAS',
@@ -21,7 +25,9 @@ export default function Buttons() {
     const [modalData, setModalData] = useState(null);
 
     const handleOpenModal = (id, company) => {
-      setModalData({ id: id, company: company });
+      const user = getLocalStorage('user');
+      console.log(user);
+      setModalData({ id: user.company.id });
       setOpenModal((cur) => !cur);
     };
 

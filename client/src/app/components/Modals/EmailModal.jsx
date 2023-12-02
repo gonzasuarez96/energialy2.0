@@ -1,6 +1,5 @@
 "use client";
 import { useState } from 'react';
-import { handleChangeStatus } from "@/app/Func/controllers";
 import { ToastContainer, toast } from "react-toastify";
 import {
   displaySuccessMessage,
@@ -9,20 +8,16 @@ import {
 import axios from 'axios';
 import { urlProduction } from '@/app/data/dataGeneric';
 
-function EmailModal({ open, handleOpen, status, id, company }) {
+function EmailModal({ open, handleOpen, id, company }) {
     const [emails, setEmails] = useState([]);
     const [email, setEmail] = useState('')
   
   const endpoint = "inviteCompanies";
-  const completeStatus = {
-    status: status,
-    statusMessage: "Cuenta Aprobada",
-  };
-
-
-
-
-
+  console.log('companyID',id)
+  const sendObj = {
+    companyId: id,
+    emails: emails
+  }
   
   const handleStatus = async () => {
     if(emails.length <= 0) {
@@ -31,6 +26,10 @@ function EmailModal({ open, handleOpen, status, id, company }) {
     try {
       const response = await sendInvitations()
       displaySuccessMessage("Invitaciones enviadas con exito");
+      setTimeout(() => {
+        handleOpen();
+      }, 2000)
+      
     } catch (error) {
       displayFailedMessage("Error al invitar empresas");
     }
@@ -55,13 +54,19 @@ function EmailModal({ open, handleOpen, status, id, company }) {
   }
 
   const sendInvitations = async () => {
-    axios.post(`${urlProduction}/${endpoint}`, {
-      
-      "companyId": id,
-      "emails": emails
+    
+    if (emails.length <= 0) {
+      displayFailedMessage(
+        "No existen Emails cargados para realizar la invitación"
+      );
+    }
 
-    })
-  
+    try {
+      const response = axios.post(`${urlProduction}/${endpoint}`, sendObj);
+      displaySuccessMessage("Invitaciones enviadas con exito");
+    } catch (error) {
+      displayFailedMessage("Error al invitar empresas");
+    }
   }
 
   
