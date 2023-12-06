@@ -331,6 +331,7 @@ function CreateTenderForm() {
                 options={categories?.map((cat) => ({
                   value: cat.id,
                   label: cat.name,
+                  key: cat.id,
                 }))}
                 placeholder="CATEGORIA"
                 onChange={handleChangeCategories}
@@ -350,6 +351,7 @@ function CreateTenderForm() {
                 options={subCatSelected?.map((subCat) => ({
                   label: subCat.name,
                   value: subCat.value,
+                  key: subCat.id,
                 }))}
                 name="subcategories"
                 placeholder="SUBCATEGORIA"
@@ -357,20 +359,6 @@ function CreateTenderForm() {
               />
               {inputError.subcategories !== "" ? (
                 <ErrorMensage message={inputError.subcategories} />
-              ) : null}
-            </div>
-          </div>
-          {/*Editor Data*/}
-          <div className="flex flex-col gap-4 mt-4">
-            <div className="border-l-4 border-primary-600">
-              <Typography variant="h6" className="ml-5 my-0">
-                Detalles De La Licitación
-              </Typography>
-            </div>
-            <div className="ml-5 flex flex-col gap-2">
-              <EditorForm dataSet={handleDescriptionChange} />
-              {inputError.description !== "" ? (
-                <ErrorMensage message={inputError.description} />
               ) : null}
             </div>
           </div>
@@ -447,6 +435,20 @@ function CreateTenderForm() {
                   onChange={handlePrivateChange}
                 />
               </div>
+            </div>
+          </div>
+          {/*Editor Data*/}
+          <div className="flex flex-col gap-4 mt-4 -z-0">
+            <div className="border-l-4 border-primary-600">
+              <Typography variant="h6" className="ml-5 my-0">
+                Detalles De La Licitación
+              </Typography>
+            </div>
+            <div className="ml-5 flex flex-col gap-2">
+              <EditorForm dataSet={handleDescriptionChange} />
+              {inputError.description !== "" ? (
+                <ErrorMensage message={inputError.description} />
+              ) : null}
             </div>
           </div>
           <button
