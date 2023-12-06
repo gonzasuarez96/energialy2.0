@@ -38,10 +38,12 @@ const displayFailedMessage = (mensaje) => {
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [error, setError] = useState("");
@@ -54,6 +56,10 @@ export default function Register() {
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
   };
+
+  const handleConfPasswordChange = (event) => {
+    setConfirmPassword(event.target.value);
+  }
 
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
@@ -112,9 +118,22 @@ export default function Register() {
     }
   };
 
+  const handleConfPasswordBlur = () => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%#$%&/()=¿'@$*?&.,]{6,}$/;
+
+    if ( confirmPassword !== password) {
+      setConfirmPasswordError(
+        "Las contraseñas no coinciden"
+      )
+    }else {
+      setConfirmPasswordError("");
+    }
+  };
+
   const handleRegister = async () => {
     // Validaciones
-    if (!email || !password || !firstName || !lastName) {
+    if (!email || !password || !confirmPassword ||!firstName || !lastName) {
       setError("Por favor, completa todos los campos.");
       return;
     } else if (!isValidEmail(email)) {
@@ -123,9 +142,8 @@ export default function Register() {
       );
       setPasswordError("");
       return;
-    } else if (password.length < 6) {
-      setPasswordError("La contraseña debe tener al menos 6 caracteres.");
-      setEmailError("");
+    } else if (passwordError || confirmPasswordError) {
+      setError("Revisa los campos")
       return;
     } else {
       setError("");
@@ -158,7 +176,7 @@ export default function Register() {
   };
 
   return (
-    <div className="h-[90vh] flex items-center justify-center">
+    <div className="h-[90vh] flex items-center justify-center m-4">
       <div className="bg-white shadow rounded w-50">
         <h3 className="mb-0 p-4 bg-gray-100 border-b border-gray-300">
           Registro de usuario
@@ -246,6 +264,33 @@ export default function Register() {
               <div className="text-danger mt-2">{passwordError}</div>
             )}
           </div>
+          <div className="mb-8">
+            <label htmlFor="password" className="form-label w-40">
+              Repetir contraseña
+            </label>
+            <div className="flex items-center">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="form-control pr-10"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={handleConfPasswordChange}
+                onBlur={handleConfPasswordBlur}
+                required
+              />
+              <button
+                type="button"
+                className="focus:outline-none ml-2"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
+              </button>
+            </div>
+            {confirmPasswordError && (
+              <div className="text-danger mt-2">{confirmPasswordError}</div>
+            )}
+          </div>
+          
 
           {/* Botón de Registro */}
           <div className="flex justify-center border-t pt-4">

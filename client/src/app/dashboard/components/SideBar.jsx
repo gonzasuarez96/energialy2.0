@@ -16,6 +16,7 @@ import  getLocalStorage  from "../../Func/localStorage";
 import Loader from "@/app/components/Loader";
 
 import { menuBar } from "@/app/data/menu";
+import { bankAccountOpen } from "@/app/Func/controllers";
 
 
 function SideBar() {
@@ -24,6 +25,7 @@ function SideBar() {
   const [isOpen, setIsOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
   const [itemMenu, setItemMenu] = useState(menuBar);
+  const [isBankAccountOpen, setIsBankAccountOpen] = useState(false);
   
   const banner = user?.company?.bannerPicture || null;
   const logo = user?.company?.profilePicture || null;
@@ -37,10 +39,22 @@ function SideBar() {
   
   //console.log(itemMenu)
   useEffect(() => {
-    const user = getLocalStorage();
-    setUser(user);
-    const itemUserRole = menuBar.filter((item) => item.auth.includes(user.role));
-    setItemMenu(itemUserRole);
+    const fetchData = async () => {
+      const user = getLocalStorage();
+      setUser(user);
+      const itemUserRole = menuBar.filter((item) => item.auth.includes(user.role));
+      setItemMenu(itemUserRole);
+
+      // Llamar a bankAccountOpen y establecer el estado de isBankAccountOpen
+      try {
+        const result = await bankAccountOpen(user.company.id);
+        setIsBankAccountOpen(result);
+      } catch (error) {
+        console.error("Error fetching bank account status:", error);
+      }
+    };
+
+    fetchData();
   }, []);
   
 
@@ -88,6 +102,7 @@ function SideBar() {
               key={index}
               isOpen={isOpen}
               user={user}
+              isBankAccountOpen={isBankAccountOpen}
             />
           )))}
          
