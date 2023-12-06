@@ -30,9 +30,9 @@ export default function Example() {
     <Popover placement="bottom">
       <PopoverHandler>
         <div className="flex justify-center align-middle ml-4 sm:ml-2 sm:min-w-max">
-          <div className="w-[50px] h-[50px] m-2">
+          <div className="w-[50px] h-[50px] object-fill m-2">
             <img
-              className="rounded-full"
+              className="rounded-full w-full h-full"
               src={userData?.company?.profilePicture || defaultAvatar}
               alt={userData?.company?.name || "Default Image"}
             />
