@@ -55,7 +55,7 @@ export default function EditorForm({dataSet}) {
         className="bg-primary-500 text-white p-2 rounded-sm font-semibold"
         onClick={log}
       >
-        Guardar
+        Guardar Detalles
       </button>
     </>
   );
