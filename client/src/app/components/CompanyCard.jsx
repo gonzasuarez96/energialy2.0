@@ -7,20 +7,22 @@ function CompanyCard(props) {
   const router = useRouter()
   return (
     <>
-      <div className="w-[360px] h-[320px] flex flex-col rounded-md bg-white hover:shadow-xl hover:transform hover:scale-120 transition-transform">
-        <div className="w-full h-1/2  -mb-[45px] rounded-tr-md rounded-tl-md">
+      <div className="w-[360px] h-[320px] flex flex-col rounded-md bg-white shadow-md hover:shadow-2xl">
+        <div
+          className="flex w-full h-1/2  -mb-[45px] rounded-tr-md rounded-tl-md"
+        >
           <Image
-            className="w-full h-auto rounded-tr-md rounded-tl-md"
+            className="rounded-tr-md rounded-tl-md"
             src={props.compBanner}
-            width={320}
-            height={100}
+            width={360}
+            height={120}
           />
         </div>
-        <div className=" bg-white mx-auto my-0 z-50 rounded-md w-[90px] h-[90px]">
+        <div className=" flex bg-white mx-auto my-0 z-50 rounded-md min-w-[90px] min-h-[90px]">
           <Image
             width={90}
             height={90}
-            className="w-full h-full object-contain shadow rounded-md"
+            className="p-2 shadow rounded-md"
             src={props.compLogo}
           />
         </div>

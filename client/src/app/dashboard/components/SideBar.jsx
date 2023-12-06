@@ -20,14 +20,14 @@ import { menuBar } from "@/app/data/menu";
 
 function SideBar() {
    const [user, setUser] = useState(null);
-   console.log(user)
+   //console.log(user)
   const [isOpen, setIsOpen] = useState(true);
   const [subMenuOpen, setSubMenuOpen] = useState(false);
   const [itemMenu, setItemMenu] = useState(menuBar);
   
   const banner = user?.company?.bannerPicture || null;
   const logo = user?.company?.profilePicture || null;
-  console.log(banner)
+  //console.log(banner)
   //console.log(userData)
 
   const toggle = () => {
@@ -35,7 +35,7 @@ function SideBar() {
   };
 
   
-  console.log(itemMenu)
+  //console.log(itemMenu)
   useEffect(() => {
     const user = getLocalStorage();
     setUser(user);
@@ -62,24 +62,24 @@ function SideBar() {
         )}
       </div>
       {/*Company Data */}
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center gap-2">
         {banner ? (
           <img className="-z-0" src={banner} alt="bannerProfile" />
         ) : null}
         {logo ? (
           <img
             src={logo}
-            className={`${isOpen ? "w-[100px]" : "w-[50px] duration-300"}`}
+            className={`${isOpen ? "w-[75px] h-[75px] rounded-full" : "w-[50px] h-[50px] rounded-full duration-300"}`}
           />
         ) : null}
       </div>
       {/*Menu Items*/}
       <div
-        className={`flex flex-col items-start justify-center gap-4 duration-300 ${
+        className={`  duration-300 ${
           isOpen ? "px-2" : "px-0"
         } `}
       >
-        <ul className="pt-2 w-full items-center ">
+        <ul className="pt-2 pl-0 w-full flex flex-col items-center justify-center gap-2">
           {itemMenu.length === 0 
             ? (<Loader/>)
             : ( itemMenu.map((menuItem, index) => (
