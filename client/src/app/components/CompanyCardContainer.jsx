@@ -12,8 +12,8 @@ function CompanyCardContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   const filterCompanies = useSelector((state) => state.company.filterCompanies);
 
-  console.log(PaginationComponent.perPage);
-  console.log(filterCompanies);
+  //console.log(PaginationComponent.perPage);
+  //console.log(filterCompanies);
   const itemsPerPage = 6;
   const totalPages = Math.ceil(filterCompanies.length / itemsPerPage);
 

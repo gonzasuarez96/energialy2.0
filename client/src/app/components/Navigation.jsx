@@ -91,7 +91,7 @@ export default function Navigation() {
                       className={`${
                         pathname === "/tenders"
                           ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
-                          : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium "
+                          : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
                       }`}
                     >
                       Licitaciones
