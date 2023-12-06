@@ -1,14 +1,42 @@
-'use client'
+"use client";
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import Loader from "@/app/components/Loader";
+import Swal from "sweetalert2";
 
-function MenuItem({menuItem, index, isOpen, user}) {
-   const [subMenuOpen, setSubMenuOpen] = useState(false);
-   
-   const router = useRouter();
-  
+function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
+  const [subMenuOpen, setSubMenuOpen] = useState(false);
+
+  const router = useRouter();
+  const handleProductRequest = (url) => {
+    if (url === "/dashboard/finanzas/solicitarProducto") {
+      if (isBankAccountOpen) {
+        router.push(url);
+      } else {
+        Swal.fire({
+          title: "No tienes una cuenta abierta",
+          text: "Para solicitar algún producto debes solicitar una apertura de cuenta, dirígete a Financiamiento > Apertura de Cuenta ",
+          icon: "warning",
+        });
+        console.log(
+          "Necesitas una cuenta bancaria para solicitar un producto."
+        );
+      }
+    } else if(url === "/dashboard/finanzas/aperturaCuenta") {
+      if(isBankAccountOpen) {
+        Swal.fire({
+          title: "Ya tienes una cuenta",
+          text: "Ahora puedes solicitar un producto en Financiamiento > Solicitar productos",
+          icon: "warning",
+        });
+      } else {
+        router.push(url);
+      }
+    }else {
+      router.push(url);
+    }
+  };
 
   return (
     <>
@@ -38,16 +66,14 @@ function MenuItem({menuItem, index, isOpen, user}) {
             />
           )}
         </li>
-      ) : (
-        null
-      )}
+      ) : null}
       {menuItem.submenu && isOpen && subMenuOpen && (
         <ul>
           {menuItem.submenuItems.map((item, index) => (
             <li
               key={index}
               className={`text-gray-800 text-xs flex items-center gap-x-4 cursor-pointer p-1 px-3 hover:bg-slate-200 rounded-md`}
-              onClick={() => router.push(`${item.url}`)}
+              onClick={() => handleProductRequest(item.url)}
             >
               {item.title}
             </li>
@@ -58,4 +84,4 @@ function MenuItem({menuItem, index, isOpen, user}) {
   );
 }
 
-export default MenuItem
+export default MenuItem;
