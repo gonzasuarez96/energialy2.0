@@ -31,7 +31,22 @@ export const chekAuth = async (item, role) => {
   console.log(role)
   const showItem = await item.auth.includes(role)
   return showItem;
-}
+};
+
+export const bankAccountOpen = async (id) => {
+  try {
+    const res = await axios.get(`${urlProduction}/companies/${id}`);
+    
+    if (res && res.data && res.data.bankAccount && res.data.bankAccount.status === 'open') {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+    return false; // Manejo de error: devuelve falso si hay algún error en la solicitud
+  }
+};
 
 
 export const calcProfits = (companyId) => {
