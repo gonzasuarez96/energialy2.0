@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import "tw-elements/dist/css/tw-elements.min.css";
+//import "tw-elements/dist/css/tw-elements.min.css";
 import PaginationComp from "./Pagination";
 import { useRouter } from "next/navigation";
 // Initialization for ES Users
