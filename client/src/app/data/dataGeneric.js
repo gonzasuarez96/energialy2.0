@@ -41,3 +41,4 @@ export const etapa = ["Upstream", "Midstream", "Downstream"];
 
 // export const urlProduction = "http://localhost:3001";
 export const urlProduction = "https://api-energialy.vercel.app";
+
