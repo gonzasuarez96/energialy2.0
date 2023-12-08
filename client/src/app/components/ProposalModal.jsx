@@ -137,9 +137,10 @@ export function ProposalModal({open, handleOpen, data}) {
     const handleInput = (e) => {
       
       const { name, value } = e.target;
-      if(name === "totalAmount") {
-        parseFloat(value);
-      }
+       if(name === "totalAmount") {
+        calculateFee(parseFloat(value), serviceFeePercentage);
+         
+       }
       setProposal({ ...proposal, [name]: value });
     }
 
