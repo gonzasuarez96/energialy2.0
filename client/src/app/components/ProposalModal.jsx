@@ -1,15 +1,15 @@
 'use client'
-import {
-  Button,
-  Dialog,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Typography,
-  Input,
-  Checkbox,
-} from "@material-tailwind/react";
+// import {
+//   Button,
+//   Dialog,
+//   Card,
+//   CardHeader,
+//   CardBody,
+//   CardFooter,
+//   Typography,
+//   Input,
+//   Checkbox,
+// } from "@material-tailwind/react";
 import Select from "react-select";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -55,6 +55,8 @@ const displayFailedMessage = (mensaje) => {
 
 export function ProposalModal({open, handleOpen, data}) {
 
+  
+
     const [proposal, setProposal] = useState({
       totalAmount: 0,
       projectDuration: "",
@@ -63,6 +65,8 @@ export function ProposalModal({open, handleOpen, data}) {
       companyId: "",
       // attachments: [],
     });
+
+    
     const userData = getLocalStorage();
     const [serviceFeePercentage, setServiceFeePercentage] = useState(1);
     const [serviceAmount, setServiceAmount] = useState(0);
@@ -70,6 +74,7 @@ export function ProposalModal({open, handleOpen, data}) {
 
 
     const createProposal = async (proposal) => {
+      console.log(proposal)
       try {
         const response = await axios.post(
           `${urlProduction}/proposals`,
@@ -85,7 +90,7 @@ export function ProposalModal({open, handleOpen, data}) {
         });
         setTimeout(() => {
           handleOpen()
-        }, 3000);
+        }, 2000);
       } catch (error) {
         displayFailedMessage(
           "Error al enviar la propuesta, Por favor complete todos los campos"
@@ -93,6 +98,7 @@ export function ProposalModal({open, handleOpen, data}) {
       }
 
     };
+
     const calculateFee = (totalAmount, serviceFeePercentage) => {
       if (
         typeof serviceFeePercentage !== "number" ||
@@ -128,12 +134,23 @@ export function ProposalModal({open, handleOpen, data}) {
     //   console.log(proposal);
     // }
 
+    const handleInput = (e) => {
+      
+      const { name, value } = e.target;
+      if(name === "totalAmount") {
+        parseFloat(value);
+      }
+      setProposal({ ...proposal, [name]: value });
+    }
+
     const handleSubmit = async (e) => {
       
         e.preventDefault();
+        
         createProposal(proposal);
     }
-  const optionDuration = [
+  
+    const optionDuration = [
         "Menos de una semana",
         "Menos de un mes",
         "De 1 a 3 meses",
@@ -150,45 +167,38 @@ export function ProposalModal({open, handleOpen, data}) {
       },[])
   return (
     <>
-      <Dialog
-        size="lg"
+      <div
         open={open}
         handler={handleOpen}
-        className="bg-transparent shadow-none"
+        className={`${
+          !open
+            ? "hidden"
+            : "fixed inset-0 z-50 overflow-auto bg-gray-800 bg-opacity-75 flex items-center justify-center"
+        }`}
       >
-        <Card className="mx-auto w-full max-w-[75%] p-4">
+        <div className="mx-auto w-full max-w-[75%]  p-4 bg-slate-50 rounded-md">
           <div className="flex flex-col gap-2 md:flex-row ">
             <div className="md:min-w-[75%]">
-              <Typography variant="h4" className="mb-4">
-                {data.company.name}
-              </Typography>
-              <Typography variant="h5" className="mb-4">
-                {data.title}
-              </Typography>
-              <Typography variant="small" className="mb-4">
+              <h4 className="mb-4 text-xl">{data.company.name}</h4>
+              <h5 className="mb-4 text-lg">{data.title}</h5>
+              <p className="mb-4 text-base">
                 Duración del proyecto: {data.projectDuration}
-              </Typography>
-              <Typography variant="paragraph" className="mb-1">
+              </p>
+              <p className="mb-1 text-sm">
                 Completa todos los campos para presentar tu propuesta. <br />
                 <span className="text-red-500 text-xs font-bold">
                   Una vez enviada, no podrá ser modificada
                 </span>
-              </Typography>
-              {/* <Typography
-                variant="small"
-                className="mb-4 text-green-700  text-xs font-bold"
-              >
-                Puedes guardar tu propuesta antes de enviarla.{" "}
-              </Typography> */}
+              </p>
             </div>
             <div className="flex flex-col gap-4">
-              <span class="inline-block whitespace-nowrap rounded-[0.27rem] bg-info-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-info-800">
+              <span class="inline-block whitespace-nowrap rounded-[0.27rem] bg-slate-300 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-info-800">
                 U$S: {data.budget}
               </span>
               <span
                 class={`${
                   data.location.id === "e8bbe98e-a725-44bb-b7d8-990013794f5c"
-                    ? "bg-success-100 text-success-700"
+                    ? "bg-secondary-200 text-secondary-800"
                     : data.location.id ===
                       "9a83f3bb-0472-4e7e-bb67-9c8bdf996cd3"
                     ? "bg-danger-500 text-danger-700"
@@ -197,28 +207,21 @@ export function ProposalModal({open, handleOpen, data}) {
               >
                 {data.location.name}
               </span>
-              <span class="inline-block whitespace-nowrap rounded-[0.27rem] bg-info-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-info-800">
+              <span class="inline-block whitespace-nowrap rounded-[0.27rem] bg-teal-200 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-teal-800">
                 {data.majorSector}
               </span>
             </div>
           </div>
-          <CardBody className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3">
             <div>
               <label htmlFor="">Ingrese el monto de su propuesta:</label>
-              <Input
+              <input
                 type="number"
-                size="lg"
                 placeholder="U$S"
                 name="totalAmount"
-                className="border-1 mt-1"
-                onChange={(e) => {
-                  const amount = parseFloat(e.target.value);
-                  setProposal({
-                    ...proposal,
-                    totalAmount: amount,
-                  });
-                  calculateFee(amount, 1);
-                }}
+                value={proposal.totalAmount}
+                className="border-1 mt-1 w-full p-2 rounded-md"
+                onChange={handleInput}
               />
               <div className="mt-2 flex justify-start gap-5 ml-2">
                 <div className="text-xs">
@@ -255,29 +258,33 @@ export function ProposalModal({open, handleOpen, data}) {
                 rows={10}
                 cols={70}
                 className="border-2 border-gray-300 rounded-md p-2"
-                onChange={(e) =>
-                  setProposal({ ...proposal, description: e.target.value })
-                }
+                onChange={handleInput}
               ></textarea>
-            {/* <UploadthingButton/> */}
+              {/* <UploadthingButton/> */}
             </div>
-          </CardBody>
-          <CardFooter className="pt-0">
+          </div>
+          <div className="pt-3">
             <div className="flex justify-around">
-              <Button className="bg-green-700" onClick={handleSubmit}>
+              <button
+                className="bg-primary-600 px-4 py-2 rounded-md text-white font-bold"
+                onClick={handleSubmit}
+              >
                 Enviar
-              </Button>
+              </button>
               {/* <Button className="bg-green-600" onClick={handleSave}>
                 Guardar
               </Button> */}
-              <Button className="bg-red-700" onClick={handleOpen}>
+              <button
+                className="bg-secondary-500 px-4 py-2 rounded-md text-white font-bold"
+                onClick={handleOpen}
+              >
                 Cancelar
-              </Button>
+              </button>
             </div>
-          </CardFooter>
-        </Card>
+          </div>
+        </div>
         <ToastContainer style={{ marginTop: "100px" }} />
-      </Dialog>
+      </div>
     </>
   );
 }
