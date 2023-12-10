@@ -21,7 +21,7 @@ function BankDashboard() {
     data: companyData,
     error: companyError,
     isLoading: companyLoading,
-  } = useGetCompaniesByIdQuery(user?.company.id);
+  } = useGetCompaniesByIdQuery(user?.company?.id);
 
 
 
@@ -35,15 +35,23 @@ function BankDashboard() {
   useEffect(() => {
     if (bankAccount) {
       const products = bankAccount.financeProducts;
-      setFinanceProducts(products);
+      const updatedFinanceProducts = [
+        ...products,
+        {
+          productName: 'Apertura de Cuenta',
+          status: bankAccount.status,
+          updatedAt: bankAccount.updatedAt,
+        },
+      ];
+      setFinanceProducts(updatedFinanceProducts);
 
-      const updatedGroupedData = products.reduce(
+      const updatedGroupedData = updatedFinanceProducts.reduce(
         (acc, item) => {
-          if (item.status === "accepted") {
+          if (item.status === "accepted" || item.status === "open") {
             acc[0].quantity++;
-          } else if (item.status === "sent") {
+          } else if (item.status === "sent" || item.status === "waiting approval") {
             acc[1].quantity++;
-          } else if (item.status === "declined") {
+          } else if (item.status === "declined" || item.status === "require changes") {
             acc[2].quantity++;
           }
           return acc;
