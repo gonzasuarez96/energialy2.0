@@ -160,9 +160,9 @@ export function SortableTableClient({ data, isLoading }) {
                           <tr
                             key={id}
                             className={`${
-                              status === "accepted"
+                              status === "accepted" || "open"
                                 ? "bg-green-200"
-                                : status === "declined"
+                                : status === "declined" || "require changes"
                                 ? "bg-red-200"
                                 : "bg-gray-50"
                             }`}
@@ -190,6 +190,12 @@ export function SortableTableClient({ data, isLoading }) {
                                       ? "Rechazado"
                                       : status === "sent"
                                       ? "Pendiente"
+                                      : status === "open"
+                                      ? "Aceptado"
+                                      : status === "require changes"
+                                      ? "Requiere cambios"
+                                      : status === "waiting approval"
+                                      ? "Esperando Aprobacion"
                                       : "" // Valor predeterminado si no coincide con ninguno de los estados anteriores
                                   }
                                 />
