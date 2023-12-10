@@ -1,16 +1,31 @@
 "use client";
-import { use, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import Loader from "@/app/components/Loader";
 import Swal from "sweetalert2";
+import getLocalStorage from "@/app/Func/localStorage";
 
 function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
+  const [company, setCompany] = useState(null);
+  useEffect(() => {
+    const user = getLocalStorage();
+    setCompany(user.company?.id || null);
+  }, []);
+
   const [subMenuOpen, setSubMenuOpen] = useState(false);
 
   const router = useRouter();
   const handleProductRequest = (url) => {
     if (url === "/dashboard/finanzas/solicitarProducto") {
+      if (!company) {
+        Swal.fire({
+          title: "No tienes una empresa registrada",
+          text: "Por favor registra tu empresa para avanzar.",
+          icon: "warning",
+        });
+        return; // Detener la ejecución si no hay una empresa registrada
+      }
       if (isBankAccountOpen) {
         router.push(url);
       } else {
@@ -23,8 +38,16 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           "Necesitas una cuenta bancaria para solicitar un producto."
         );
       }
-    } else if(url === "/dashboard/finanzas/aperturaCuenta") {
-      if(isBankAccountOpen) {
+    } else if (url === "/dashboard/finanzas/aperturaCuenta") {
+      if (!company) {
+        Swal.fire({
+          title: "No tienes una empresa registrada",
+          text: "Por favor registra tu empresa para avanzar.",
+          icon: "warning",
+        });
+        return; // Detener la ejecución si no hay una empresa registrada
+      }
+      if (isBankAccountOpen) {
         Swal.fire({
           title: "Ya tienes una cuenta",
           text: "Ahora puedes solicitar un producto en Financiamiento > Solicitar productos",
@@ -33,7 +56,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
       } else {
         router.push(url);
       }
-    }else {
+    } else {
       router.push(url);
     }
   };
