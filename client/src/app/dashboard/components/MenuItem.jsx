@@ -56,6 +56,17 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
       } else {
         router.push(url);
       }
+    } else if (url === "/dashboard/ajustesEmpresa") {
+      if (!company) {
+        Swal.fire({
+          title: "No tienes una empresa registrada",
+          text: "Por favor registra tu empresa para avanzar.",
+          icon: "warning",
+        });
+        return; // Detener la ejecución si no hay una empresa registrada
+      } else {
+        router.push(url);
+      }
     } else {
       router.push(url);
     }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { Montserrat } from "next/font/google";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -106,6 +106,14 @@ export default function EditCompany({ option }) {
     }
   }, [companyInfo]);
 
+  useEffect(() => {
+    const user = getLocalStorage();
+    setUser(user);
+    getLocation();
+    getSubcategories();
+    getCategories();
+  }, []);
+
   //-------------- Funciones para traer las opciones del form --------------//
   const [locationsOptions, setLocationsOptions] = useState([]);
   const [subcategoriesOptions, setSubcategoriesOptions] = useState([]);
@@ -204,6 +212,7 @@ export default function EditCompany({ option }) {
 
     // Actualizar el estado local
     handleFieldUpdate(field, value);
+    console.log('locations:',locations)
   };
 
   const handleFieldUpdate = (field, value) => {
@@ -364,13 +373,7 @@ export default function EditCompany({ option }) {
 
   // ------------------------------------------------------------------------ //
 
-  useEffect(() => {
-    const user = getLocalStorage();
-    setUser(user);
-    getLocation();
-    getSubcategories();
-    getCategories();
-  }, []);
+
 
   return (
     <div className="p-5 m-2">
@@ -521,9 +524,7 @@ export default function EditCompany({ option }) {
                         setLocations((prevLocations) =>
                           isChecked
                             ? [...prevLocations, option.id]
-                            : Array.isArray(prevLocations) // Verificar si prevLocations es un array
-                            ? prevLocations.filter((id) => id !== option.id) // Si es un array, aplicar filter
-                            : []
+                            : prevLocations.filter((id) => id !== option.id)
                         );
                         handleInputChange(e, "locations");
                       }}
@@ -536,8 +537,12 @@ export default function EditCompany({ option }) {
           </div>
           <div className="mb-3">
             <select
-              value=""
-              onChange={handleCategoryChange}
+              value={option.name}
+              onChange={(e) => {
+                handleCategoryChange(e);
+                handleInputChange(e, "categories")
+              }
+                }
               className="border rounded px-2 py-2 w-full"
             >
               <option value="">Seleccione una categoria</option>
