@@ -5,6 +5,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Nav from "../components/Nav";
 import EditCompany from "./components/EditCompany";
+import DatosBasicos from "./components/DatosBasicos";
+import DetallesEmpresa from "./components/DetallesEmpresa";
+import TipoOrganizacion from "./components/TipoOrganizacion";
+import Imagenes from "./components/Imagenes";
 
 const optionsNav = [
   "Datos Básicos",
@@ -14,7 +18,7 @@ const optionsNav = [
 ];
 
 function pageProfileCompany() {
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState(0);
 
   const handleOptions = (option) => {
     setSelectedOption(option);
@@ -26,7 +30,10 @@ function pageProfileCompany() {
         <Nav options={optionsNav} onClick={handleOptions} />
       </div>
       <div className="flex-1">
-        <EditCompany option={selectedOption} />
+        {selectedOption === 0 && <DatosBasicos />}
+        {selectedOption === 1 && <DetallesEmpresa />}
+        {selectedOption === 2 && <TipoOrganizacion />}
+        {selectedOption === 3 && <Imagenes />}
       </div>
     </div>
   );
