@@ -55,8 +55,8 @@ export default function Data(props) {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleNextButtonClick = async (e) => {
+    e.preventDefault()
     const companyId = user?.company.id;
     const accountData = {
       businessName,
@@ -65,6 +65,8 @@ export default function Data(props) {
       companyEmail,
       legalManager,
     };
+
+    // Validación de campos
     if (
       !businessName ||
       !fiscalAdress ||
@@ -73,15 +75,14 @@ export default function Data(props) {
       !legalManager.firstName ||
       !legalManager.lastName ||
       !legalManager.email ||
-      !legalManager.position
+      !legalManager.position ||
+      !legalManager.phoneNumber
     ) {
       setError("Completa todos los campos");
       return;
-    } else {
-      setError("");
     }
 
-    console.log("Información enviada:", accountData);
+    // Envío de datos
     try {
       const res = await axios.put(
         `${urlProduction}/companies/${companyId}`,
@@ -89,7 +90,8 @@ export default function Data(props) {
       );
       console.log("resData server:", res);
       setEnvioExitoso(true);
-      displaySuccessMessage("Datos enviados con exito, Presiona siguiente para subir la documentacion");
+      displaySuccessMessage("Datos enviados con éxito, presiona siguiente para subir la documentación");
+      props.handleNext(); // Ejecutar siguiente si el envío de datos fue exitoso
     } catch (error) {
       console.log("errorData:", error);
       displayFailedMessage(error.response.data.error);
@@ -212,23 +214,10 @@ export default function Data(props) {
             </div>
           </div>
           <div className="flex justify-center">
-            {!envioExitoso && (
-              <button
-                className="px-4 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-                type="button"
-                onClick={handleSubmit} // Al hacer clic en este botón, se ejecutará handleSubmit
-              >
-                Enviar
-              </button>
-            )}
-
             <button
               className="px-4 py-2 m-4 font-bold text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
               type="button"
-              onClick={() => {
-                  setError("Debes enviar todos los datos.");
-                  props.handleNext();
-              }}
+              onClick={handleNextButtonClick} // Al hacer clic en este botón, se ejecutará handleNextButtonClick
             >
               Siguiente
             </button>
