@@ -9,12 +9,14 @@ import DatosBasicos from "./components/DatosBasicos";
 import DetallesEmpresa from "./components/DetallesEmpresa";
 import TipoOrganizacion from "./components/TipoOrganizacion";
 import Imagenes from "./components/Imagenes";
+import Suscripciones from "./components/Suscripciones";
 
 const optionsNav = [
   "Datos Básicos",
   "Detalles de la Empresa",
   "Tipo de Organización",
   "Imágenes",
+  "Suscripciones"
 ];
 
 function pageProfileCompany() {
@@ -34,6 +36,7 @@ function pageProfileCompany() {
         {selectedOption === 1 && <DetallesEmpresa />}
         {selectedOption === 2 && <TipoOrganizacion />}
         {selectedOption === 3 && <Imagenes />}
+        {selectedOption === 4 && <Suscripciones />}
       </div>
     </div>
   );

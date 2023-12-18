@@ -36,6 +36,7 @@ module.exports = {
           800: "#1b4f45",
           900: "#0d2822",
         },
+        bgGris: "#f5f5f5",
       },
       fontFamily: {
         monse: ["var(--montserrat"],
