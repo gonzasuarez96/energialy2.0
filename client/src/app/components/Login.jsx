@@ -24,8 +24,10 @@ export default function Login() {
 
   console.log("URL:", urlProduction);
   const handleEmailChange = (event) => {
-    setEmail(event.target.value);
+    const emailValue = event.target.value.toLowerCase();
+    setEmail(emailValue);
   };
+  
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -78,9 +80,8 @@ export default function Login() {
     const user = {
       email: email,
       password: password,
-      email: email,
-      password: password,
     };
+    console.log(user)
 
     try {
       console.log("URL:", urlProduction );
@@ -121,7 +122,7 @@ export default function Login() {
   };
 
   const isValidEmail = (email) => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
     return emailPattern.test(email);
   };
 

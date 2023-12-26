@@ -37,6 +37,7 @@ export default function EditCompany() {
       // Establecer los datos de la empresa en los campos del formulario
       setLocations(companyInfo.locations.id || []);
       setSubcategories(companyInfo.subcategories || []);
+      setOrganizationType(companyInfo.organizationType || "");
       // ... (establecer otros campos según la estructura de los datos)
     }
   }, [companyInfo]);
@@ -49,11 +50,21 @@ export default function EditCompany() {
     getCategories();
   }, []);
 
+  const organizationTypes = [
+    "Organismo Público",
+    "Operadora",
+    "PyME",
+    "Cámara/Cluster/Federación",
+    "Profesional independiente",
+    "Servicios especiales",
+  ];
+
   //-------------- Funciones para traer las opciones del form --------------//
   const [locationsOptions, setLocationsOptions] = useState([]);
   const [subcategoriesOptions, setSubcategoriesOptions] = useState([]);
   const [subcategorySelected, setSubcategorySelected] = useState([]);
   const [categorySelected, setCategorySelected] = useState([]);
+  const [organizationType, setOrganizationType] = useState("");
 
   const getLocation = async () => {
     try {
@@ -161,6 +172,9 @@ export default function EditCompany() {
       case "subcategories":
         setSubcategories(value);
         break;
+      case "organizationType":
+        setOrganizationType(value);
+        break;
       default:
         break;
     }
@@ -188,6 +202,9 @@ export default function EditCompany() {
     if (subcategorySelected.length > 0) {
       updatedData.subcategories = subcategorySelected;
     }
+    if (organizationType.trim() !== "") {
+      updatedData.organizationType = organizationType.trim();
+    }
 
     updatedData.id = user.company.id;
 
@@ -214,6 +231,27 @@ export default function EditCompany() {
   return (
     <div className="p-5 m-2">
       <div>
+        <div className="mb-3">
+          <label className="block font-bold mb-2 bg-[#fcfcfc] p-2 border-l-4 border-primary-500">
+            Tipo de Organización
+          </label>
+          <div className="flex flex-wrap">
+            {organizationTypes.map((type, index) => (
+              <div key={index} className="w-1/2 mb-2">
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    id={`organizationType${index}`}
+                    value={type}
+                    checked={organizationType === type}
+                    onChange={(e) => handleInputChange(e, "organizationType")}
+                  />
+                  <span className="ml-2">{type}</span>
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="mb-3">
           <label className="block font-bold mb-2 bg-[#fcfcfc] p-2 border-l-4 border-primary-500">
             Seleccionar ubicaciones
