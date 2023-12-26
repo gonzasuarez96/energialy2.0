@@ -143,27 +143,6 @@ export default function DetallesEmpresa() {
     <div className="p-5 m-2">
       <div>
         <div className="space-y-2">
-          <div className="mb-3">
-            <label className="block font-bold mb-2 bg-[#fcfcfc] p-2 border-l-4 border-primary-500">
-              Tipo de Organización
-            </label>
-            <div className="flex flex-wrap">
-              {organizationTypes.map((type, index) => (
-                <div key={index} className="w-1/2 mb-2">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      id={`organizationType${index}`}
-                      value={type}
-                      checked={organizationType === type}
-                      onChange={(e) => handleInputChange(e, "organizationType")}
-                    />
-                    <span className="ml-2">{type}</span>
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
 
           <div className="mb-3">
             <label className="block font-bold mb-2 bg-[#fcfcfc] p-2 border-l-4 border-primary-500">

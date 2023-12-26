@@ -63,7 +63,9 @@ const SubscriptionBlocks = () => {
     {
       name: "GRATIS",
       pricePerMonth: null,
+      linkMounth: null,
       pricePerSemester: null,
+      linkSemester: null,
       features: [
         "Presencia en el Directorio energético.",
         "Página de Empresa.",
@@ -78,7 +80,9 @@ const SubscriptionBlocks = () => {
     {
       name: "BASE",
       pricePerMonth: "19",
+      linkMonth: "https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=2c9380848c5ac783018c5b75641d0088",
       pricePerSemester: "95",
+      linkSemester: "https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=2c9380848c5ac790018c5b74aa7b008a",
       features: [
         "Suscripción GRATIS incluída.",
         "Recibí Invitaciones.",
@@ -89,7 +93,9 @@ const SubscriptionBlocks = () => {
     {
       name: "PLUS",
       pricePerMonth: "69",
+      linkMonth: "https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=2c9380847b62931d017b88b8f4931d36",
       pricePerSemester: "345",
+      linkSemester: "https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=2c9380848c5ac783018c5b71ed4c0084",
       features: [
         "Suscripción BASE incluída.",
         "Creá Licitaciones Privadas.",
@@ -111,10 +117,10 @@ const SubscriptionBlocks = () => {
         <div className="w-2/5 p-4 text-center bg-bgGris">
           <div className="flex flex-col gap-2">
             <button
-              className={`px-4 py-2 text-white ${
+              className={`border-2 py-2 ${
                 selectedOption === "MENSUAL"
-                  ? "bg-primary-500"
-                  : "bg-secondary-500 hover:bg-[#191654] transition duration-300"
+                  ? "bg-secondary-500 text-white"
+                  : "hover:bg-[#191654] transition duration-300 hover:text-white"
               }`}
               onClick={() => handleOptionClick("MENSUAL")}
             >
@@ -123,7 +129,7 @@ const SubscriptionBlocks = () => {
             <button
               className={`border-2 py-2 ${
                 selectedOption === "SEMESTRAL"
-                  ? "text-white bg-primary-500"
+                  ? "bg-secondary-500 text-white"
                   : "hover:bg-[#191654] transition duration-300 hover:text-white"
               }`}
               onClick={() => handleOptionClick("SEMESTRAL")}
@@ -142,25 +148,15 @@ const SubscriptionBlocks = () => {
               pricePerMonth={plan.pricePerMonth}
               pricePerSemester={plan.pricePerSemester}
               features={plan.features}
+              linkMonth={plan.linkMonth}
+              linkSemester={plan.linkSemester}
               handleOptionSelected={handleOptionSelected}
               selectedPlan={selectedPlan}
+              selectedOption={selectedOption}
             />
           ))}
         </div>
       </div>
-      <div className="flex justify-end m-2 p-2">
-        <button
-          onClick={handleSubmit}
-          className="px-4 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-        >
-          Lo Quiero
-        </button>
-      </div>
-      {error && (
-        <div className="flex justify-center text-danger mt-2 mb-2">
-          {error}
-        </div>
-      )}
     </div>
   );
 };
