@@ -28,36 +28,17 @@ module.exports = (sequelize) => {
     },
     annualRevenue: {
       type: DataTypes.ENUM,
-      values: [
-        'No Revelado',
-        '0 - 10M U$S',
-        '10M - 100M U$D',
-        '100M - 1B U$S',
-        '+1B U$S',
-      ],
+      values: ['No Revelado', '0 - 10M U$S', '10M - 100M U$D', '100M - 1B U$S', '+1B U$S'],
       allowNull: false,
     },
     employeeCount: {
       type: DataTypes.ENUM,
-      values: [
-        'Menos de 50 empleados',
-        'De 50 a 200 empleados',
-        'De 200 a 1000 empleados',
-        'De 1000 a 5000 empleados',
-        'Mas de 5000 empleados',
-      ],
+      values: ['Menos de 50 empleados', 'De 50 a 200 empleados', 'De 200 a 1000 empleados', 'De 1000 a 5000 empleados', 'Mas de 5000 empleados'],
       allowNull: false,
     },
     organizationType: {
       type: DataTypes.ENUM,
-      values: [
-        'Organismo Público',
-        'Operadora',
-        'PyME',
-        'Cámara/Cluster/Federación',
-        'Profesional independiente',
-        'Servicios especiales',
-      ],
+      values: ['Organismo Público', 'Operadora', 'PyME', 'Cámara/Cluster/Federación', 'Profesional independiente', 'Servicios especiales'],
       allowNull: false,
       defaultValue: 'PyME',
     },
@@ -86,6 +67,11 @@ module.exports = (sequelize) => {
       //   "position": "CEO",
       //   "phoneNumber": "+5491112345678"
       // },
+    },
+    subscription: {
+      type: DataTypes.ENUM,
+      values: ['free', 'base', 'plus'],
+      defaultValue: 'free',
     },
     website: {
       type: DataTypes.STRING,
