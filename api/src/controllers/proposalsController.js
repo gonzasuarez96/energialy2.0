@@ -35,13 +35,35 @@ const cleanProposals = (proposals) => {
   }
 };
 
-const calculateFee = (totalAmount, serviceFeePercentage) => {
+const calculateServiceFeePercentage = (totalAmount) => {
+  if (totalAmount <= 10000) {
+    return 2.5;
+  } else if (totalAmount <= 50000) {
+    return 2.25;
+  } else if (totalAmount <= 100000) {
+    return 2;
+  } else if (totalAmount <= 250000) {
+    return 1.75;
+  } else if (totalAmount <= 500000) {
+    return 1.5;
+  } else if (totalAmount <= 1000000) {
+    return 1;
+  } else {
+    return 0.5;
+  }
+};
+
+const calculateFee = (totalAmount) => {
+  const serviceFeePercentage = calculateServiceFeePercentage(totalAmount);
+
   if (typeof serviceFeePercentage !== 'number' || serviceFeePercentage < 0 || serviceFeePercentage > 100) {
     throw new Error('Service fee percentage must be a number between 0 and 100.');
   }
+
   const serviceAmount = (totalAmount * serviceFeePercentage) / 100;
   const receiverAmount = totalAmount - serviceAmount;
-  return { serviceAmount, receiverAmount };
+
+  return { serviceAmount, receiverAmount, serviceFeePercentage };
 };
 
 const getAllProposals = async () => {
@@ -102,7 +124,6 @@ const createProposal = async (body) => {
     error.status = 400;
     throw error;
   }
-  const { serviceAmount, receiverAmount } = calculateFee(totalAmount, 1); // Hardcoded serviceFee; hay que ajustar el fee conforme la suscripción del usuario
 
   const foundTender = await Tenders.findByPk(tenderId, {
     include: {
@@ -110,12 +131,20 @@ const createProposal = async (body) => {
       attributes: ['id', 'name'],
     },
   });
-  const foundCompany = await Companies.findByPk(companyId);
   if (foundTender.Company.id === companyId) {
     const error = new Error("Can't create a proposal over your own tender.");
     error.status = 400;
     throw error;
   }
+
+  const foundCompany = await Companies.findByPk(companyId);
+  if (foundCompany.subscription === 'free') {
+    const error = new Error("Free subscriptions can't create proposals.");
+    error.status = 400;
+    throw error;
+  }
+
+  const { serviceAmount, receiverAmount } = calculateFee(totalAmount);
   const newProposal = await Proposals.create({ totalAmount, serviceAmount, receiverAmount, projectDuration, description, attachments });
   await newProposal.setTender(foundTender);
   await newProposal.setCompany(foundCompany);
