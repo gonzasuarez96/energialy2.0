@@ -35,7 +35,7 @@ const getAllUsers = async () => {
   const allUsers = await Users.findAll({
     include: {
       model: Companies,
-      attributes: ['id', 'name'],
+      attributes: ['id', 'name', 'subscription'],
     },
   });
   return cleanUsers(allUsers);
@@ -45,7 +45,7 @@ const getUserById = async (id) => {
   const foundUser = await Users.findByPk(id, {
     include: {
       model: Companies,
-      attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+      attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
     },
   });
   if (!foundUser) {
@@ -61,7 +61,7 @@ const getUserByEmail = async (email) => {
     where: { email: email },
     include: {
       model: Companies,
-      attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+      attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
     },
   });
   if (!foundUser) {
@@ -76,7 +76,7 @@ const updateUserProfile = async (id, newData) => {
   const foundUser = await Users.findByPk(id, {
     include: {
       model: Companies,
-      attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+      attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
     },
   });
   if (!foundUser) {
