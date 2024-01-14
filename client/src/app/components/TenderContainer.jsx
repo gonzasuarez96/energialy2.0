@@ -25,6 +25,8 @@ function TenderContainer({data}) {
     setCurrentPage(page);
   };
 
+  
+
   useEffect(() => {
     dispatch(setAllTenders(data));
   }, []);

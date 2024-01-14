@@ -23,6 +23,10 @@ import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import getLocalStorage from "@/app/Func/localStorage";
 import { urlProduction } from "@/app/data/dataGeneric";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
+
 
 
 
@@ -67,9 +71,10 @@ function CreateTenderForm() {
   });
   const [categorieSelected, setCategorieSelected] = useState([]);
   const [subCatSelected, setSubCatSelected] = useState([]);
-  const [isShow, setIsShow] = useState(false)
+  const [isShow, setIsShow] = useState(true)
   const [isPrivateCheqed, setIsPrivateCheqed] = useState(false);
   const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
+  const [editorValue, setEditorValue] = useState('');
   
   //Handlers
   const handleChangeCategories = (e) => {
@@ -105,20 +110,23 @@ function CreateTenderForm() {
     }
   };
 
-  const handleShowChange = (e) => {
-    if(isShow === false){
-      setIsShow(true);
-       setTenderData({ ...tenderData, showBudget: true });
-    }else{
-      setIsShow(false)
-       setTenderData({ ...tenderData, showBudget: false });
-    }
+  const handleShowChange = () => {
+    // if(isShow === false){
+    //   setIsShow(true);
+    //    setTenderData({ ...tenderData, showBudget: true });
+    // }else{
+    //   setIsShow(false)
+    //    setTenderData({ ...tenderData, showBudget: false });
+    // }
+    setIsShow(!isShow)
+    setTenderData({ ...tenderData, showBudget: isShow })
+  }
    
-  }
+
   
-  const handleDescriptionChange = (data) => {
-    setTenderData({ ...tenderData, description: data });
-  }
+  // const handleDescriptionChange = (data) => {
+  //   setTenderData({ ...tenderData, description: data });
+  // }
 
   const handleInputsChanges = (e) => {
     setTenderData({ ...tenderData, [e.target.name]: e.target.value });
@@ -445,10 +453,13 @@ function CreateTenderForm() {
               </Typography>
             </div>
             <div className="ml-5 flex flex-col gap-2">
-              <EditorForm dataSet={handleDescriptionChange} />
-              {inputError.description !== "" ? (
+              <textarea  className="w-full border-1 border-gray-300 rounded-md p-3" name="description" onChange={handleInputsChanges} placeholder="Ingresa el detalle de la Licitación"></textarea>
+              {/* <EditorForm dataSet={handleDescriptionChange} /> */}
+              {/* <EditorForm/> */}
+              {/* <ReactQuill theme="snow" value={editorValue} onChange={setEditorValue} placeholder="Ingresa el detalle de la Licitación" /> */}
+              {/* {inputError.description !== "" ? (
                 <ErrorMensage message={inputError.description} />
-              ) : null}
+              ) : null} */}
             </div>
           </div>
           <button
@@ -458,7 +469,7 @@ function CreateTenderForm() {
             Crear Licitación
           </button>
         </Card>
-        <ToastContainer style={{ marginTop: "100px" }} />
+        <ToastContainer style={{ marginTop: "300px" }} />
       </FormGroup>
     </>
   );
