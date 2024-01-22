@@ -151,12 +151,48 @@ const getTenderById = async (id) => {
 };
 
 const createTender = async (body) => {
-  const { title, description, contractType, majorSector, projectDuration, budget, validityDate, locationId, subcategories, companyId } = body;
-  if (!title || !description || !contractType || !majorSector || !projectDuration || !budget || !validityDate || !locationId || !subcategories || !companyId) {
+  const {
+    title,
+    description,
+    contractType,
+    majorSector,
+    projectDuration,
+    budget,
+    validityDate,
+    locationId,
+    subcategories,
+    companyId,
+    public,
+    showBudget,
+  } = body;
+  if (
+    !title ||
+    !description ||
+    !contractType ||
+    !majorSector ||
+    !projectDuration ||
+    !budget ||
+    !validityDate ||
+    !locationId ||
+    !subcategories ||
+    !companyId
+  ) {
     const error = new Error('Missing required attributes.');
     error.status = 400;
     throw error;
   }
+  const foundCompany = await Companies.findByPk(companyId);
+  if (foundCompany.subscription !== 'plus' && public === false) {
+    const error = new Error("Can't create private tenders on Free or Base accounts");
+    error.status = 400;
+    throw error;
+  }
+  if (foundCompany.subscription !== 'plus' && showBudget === false) {
+    const error = new Error("Can't create tender with hide budget on Free or Base accounts");
+    error.status = 400;
+    throw error;
+  }
+
   const newTender = await Tenders.create(body);
   for (const subcategoryId of subcategories) {
     const foundSubcategory = await Subcategories.findByPk(subcategoryId);
@@ -166,13 +202,12 @@ const createTender = async (body) => {
   }
   const foundLocation = await Locations.findByPk(locationId);
   await newTender.setLocation(foundLocation);
-  const foundCompany = await Companies.findByPk(companyId);
   await newTender.setCompany(foundCompany);
   const createdTender = await Tenders.findByPk(newTender.id, {
     include: [
       {
         model: Companies,
-        attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+        attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
       },
       {
         model: Categories,
@@ -202,7 +237,7 @@ const createTender = async (body) => {
 };
 
 const updateTender = async (id, body) => {
-  const { locationId, subcategories } = body;
+  const { locationId, subcategories, public, showBudget } = body;
   const foundTender = await Tenders.findByPk(id, {
     include: [{ model: Companies }, { model: Categories }, { model: Subcategories }, { model: Locations }],
   });
@@ -211,6 +246,17 @@ const updateTender = async (id, body) => {
     error.status = 404;
     throw error;
   }
+  if (foundTender.Company.subscription !== 'plus' && public === false) {
+    const error = new Error(`Free or Base accounts can't set private tenders`);
+    error.status = 400;
+    throw error;
+  }
+  if (foundTender.Company.subscription !== 'plus' && showBudget === false) {
+    const error = new Error(`Free or Base accounts can't hide tender budget`);
+    error.status = 400;
+    throw error;
+  }
+
   await foundTender.update(body);
   if (locationId) {
     const foundLocation = await Locations.findByPk(locationId);
@@ -234,7 +280,7 @@ const updateTender = async (id, body) => {
     include: [
       {
         model: Companies,
-        attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
+        attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
       },
       {
         model: Categories,

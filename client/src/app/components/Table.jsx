@@ -6,7 +6,7 @@ import {
 import {
   EyeIcon,
   CheckCircleIcon,
-  DocumentMagnifyingGlassIcon
+  DocumentMagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
 import {
   Card,
@@ -33,8 +33,6 @@ import BankModal from "./Modals/BankModal";
 import TextModal from "./Modals/TextModal";
 import PaginationComponent from "./PaginationComponent";
 
-
-
 const TABS = [
   {
     label: "Todos",
@@ -54,16 +52,15 @@ const TABS = [
   },
 ];
 
-
-export function SortableTableAccount({data, isLoading}) {
-  const router = useRouter()
+export function SortableTableAccount({ data, isLoading }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openTextModal, setOpenTextModal] = useState(false);
-  const [idAttachments, setIdAttachments] = useState('')
-  const [filteredData, setFilteredData] = useState(data)
-  const [modalData, setModalData] = useState(null)
-  
+  const [idAttachments, setIdAttachments] = useState("");
+  const [filteredData, setFilteredData] = useState(data);
+  const [modalData, setModalData] = useState(null);
+
   //---- Logica de Paginación ----//
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -73,6 +70,7 @@ export function SortableTableAccount({data, isLoading}) {
   const endIndex = startIndex + itemsPerPage;
 
   const banckAccountToShow = filteredData?.slice(startIndex, endIndex);
+  console.log(banckAccountToShow);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -80,38 +78,33 @@ export function SortableTableAccount({data, isLoading}) {
 
   //---- fin logica de paginación ----//
 
-  
-  
   const handleFilter = (status) => {
-      if(status === 'all') {
-        setFilteredData(data)
-        return
-      }
-      const filtered = filterData(data, status)
-      setFilteredData(filtered)
-  }
-  
+    if (status === "all") {
+      setFilteredData(data);
+      return;
+    }
+    const filtered = filterData(data, status);
+    setFilteredData(filtered);
+  };
 
   const handleOpen = (id) => {
-    setIdAttachments(id)
-    setOpen((cur) => !cur)
-  }; 
+    setIdAttachments(id);
+    setOpen((cur) => !cur);
+  };
 
   const handleOpenModal = (id, company) => {
-    setModalData({id: id, company: company})
-    setOpenModal((cur) => !cur)
-  }
+    setModalData({ id: id, company: company });
+    setOpenModal((cur) => !cur);
+  };
 
   const handleOpenTextModal = (id, company) => {
     setModalData({ id: id, company: company });
     setOpenTextModal((cur) => !cur);
   };
 
-  useEffect(()=> {
-    setFilteredData(data)
-  }, [])
-
-
+  useEffect(() => {
+    setFilteredData(data);
+  }, []);
 
   return (
     <>
@@ -166,6 +159,9 @@ export function SortableTableAccount({data, isLoading}) {
                 <thead>
                   <tr className="bg-gray-100">
                     <th className="py-2 px-3">Empresa</th>
+                    <th className="py-2 px-3">Titular</th>
+                    <th className="py-2 px-3">Email</th>
+                    <th className="py-2 px-3">Telefono</th>
                     <th className="py-2 px-3">Tipo de Cuenta</th>
                     <th className="py-2 px-3">Estado</th>
                     <th className="py-2 px-3">Acciones</th>
@@ -175,7 +171,20 @@ export function SortableTableAccount({data, isLoading}) {
                 <tbody>
                   {filterData.length > 0 ? (
                     banckAccountToShow?.map(
-                      ({ id, company, status, statusMessage }, index) => {
+                      (
+                        {
+                          id,
+                          company,
+                          status,
+                          statusMessage,
+                          users,
+                          legalManager,
+                        },
+                        index
+                      ) => {
+                        console.log(banckAccountToShow);
+                        console.log(company.users);
+                        console.log(company.legalManager);
                         const isLast = index === data.length - 1;
                         const classes = isLast
                           ? "p-4"
@@ -202,7 +211,7 @@ export function SortableTableAccount({data, isLoading}) {
                                 <Typography
                                   variant="small"
                                   color="blue-gray"
-                                  className="font-bold"
+                                  className="font-normal"
                                 >
                                   {company.name}
                                 </Typography>
@@ -213,7 +222,42 @@ export function SortableTableAccount({data, isLoading}) {
                                 <Typography
                                   variant="small"
                                   color="blue-gray"
-                                  className="font-bold"
+                                  className="font-normal"
+                                >
+                                  {company.users && company.users.length > 0
+                                    ? `${company.users[0].firstName} ${company.users[0].lastName}`
+                                    : "Sin Usuario"}
+                                </Typography>
+                              </div>
+                            </td>
+                            <td className={classes}>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {company?.users[0]?.email}
+                                </Typography>
+                              </div>
+                            </td> 
+                            <td className={classes}>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {company?.legalManager?.phoneNumber}
+                                </Typography>
+                              </div>
+                            </td>
+                            <td className={classes}>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
                                 >
                                   Cuenta Empresa
                                 </Typography>
@@ -287,7 +331,7 @@ export function SortableTableAccount({data, isLoading}) {
                                 <Typography
                                   variant="small"
                                   color="blue-gray"
-                                  className="font-bold"
+                                  className="font-normal"
                                 >
                                   {statusMessage
                                     ? statusMessage
@@ -347,5 +391,5 @@ export function SortableTableAccount({data, isLoading}) {
         </>
       )}
     </>
-  );  
+  );
 }

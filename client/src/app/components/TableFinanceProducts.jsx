@@ -57,6 +57,8 @@ const TABLE_HEAD = [
   "Producto",
   "Estado",
   "Mail de la Empresa",
+  "Titular",
+  "Telefono",
   "Monto",
   "Acciones",
 ];
@@ -72,6 +74,7 @@ export function SortableTableProducts({ data, isLoading }) {
   //const [financialProductsToShow, setFinancialProductsToShow] = useState(null)
   //---- Logica de Paginación ----//
   const itemsPerPage = 6;
+  console.log(data)
 
   const totalPages = Math.ceil(filteredData?.length / itemsPerPage);
 
@@ -243,6 +246,30 @@ export function SortableTableProducts({ data, isLoading }) {
                             </td>
                             <td className={classes}>
                               {bankAccount.Company.companyEmail}
+                            </td>
+                            <td className={classes}>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {bankAccount.Company.users && bankAccount.Company.users.length > 0
+                                    ? `${bankAccount.Company.users[0].firstName} ${bankAccount.Company.users[0].lastName}`
+                                    : "Sin Usuario"}
+                                </Typography>
+                              </div>
+                            </td>
+                            <td className={classes}>
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal"
+                                >
+                                  {bankAccount.Company?.legalManager?.phoneNumber}
+                                </Typography>
+                              </div>
                             </td>
                             <td className={classes}>
                               {additionalData

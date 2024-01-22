@@ -15,6 +15,7 @@ const cleanCompanies = (companies) => {
       annualRevenue: company.annualRevenue,
       employeeCount: company.employeeCount,
       organizationType: company.organizationType,
+      subscription: company.subscription,
       isActive: company.isActive,
     }));
     return cleanCompaniesArray;
@@ -39,6 +40,7 @@ const cleanCompanies = (companies) => {
       cuit: companies.cuit,
       companyEmail: companies.companyEmail,
       legalManager: companies.legalManager,
+      subscription: companies.subscription,
       documents: companies.Documents,
       bankAccount: companies.BankAccount,
       multimedia: companies.multimedia,
@@ -58,7 +60,18 @@ const cleanCompanies = (companies) => {
 
 const getAllCompanies = async () => {
   const allCompanies = await Companies.findAll({
-    attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'foundationYear', 'annualRevenue', 'employeeCount', 'organizationType', 'isActive'],
+    attributes: [
+      'id',
+      'name',
+      'profilePicture',
+      'bannerPicture',
+      'foundationYear',
+      'annualRevenue',
+      'employeeCount',
+      'organizationType',
+      'subscription',
+      'isActive',
+    ],
     include: [
       {
         model: Locations,
@@ -161,8 +174,21 @@ const getCompanyById = async (id) => {
 };
 
 const createCompany = async (body) => {
-  const { name, description, locations, subcategories, profilePicture, bannerPicture, foundationYear, annualRevenue, employeeCount, cuit, userId } = body;
-  if (!name || !description || !locations || !subcategories || !profilePicture || !bannerPicture || !foundationYear || !annualRevenue || !employeeCount || !cuit || !userId) {
+  const { name, description, locations, subcategories, profilePicture, bannerPicture, foundationYear, annualRevenue, employeeCount, cuit, userId } =
+    body;
+  if (
+    !name ||
+    !description ||
+    !locations ||
+    !subcategories ||
+    !profilePicture ||
+    !bannerPicture ||
+    !foundationYear ||
+    !annualRevenue ||
+    !employeeCount ||
+    !cuit ||
+    !userId
+  ) {
     const error = new Error('Missing required attributes.');
     error.status = 400;
     throw error;
