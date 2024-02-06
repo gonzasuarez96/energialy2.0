@@ -95,7 +95,7 @@ export default function Imagenes() {
 
     try {
       const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dbraa6jpj/image/upload",
+        "https://api.cloudinary.com/v1_1/dkgpfpz6o/image/upload",
         data
       );
       const file = res.data;
