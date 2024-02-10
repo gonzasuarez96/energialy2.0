@@ -15,8 +15,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import getLocalStorage from '@/app/Func/localStorage';
 import { urlProduction } from '@/app/data/dataGeneric';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 
 function CreateTenderForm() {
   //fetch states
@@ -399,12 +397,6 @@ function CreateTenderForm() {
                 onChange={handleInputsChanges}
                 placeholder="Ingresa el detalle de la Licitación"
               ></textarea>
-              {/* <EditorForm dataSet={handleDescriptionChange} /> */}
-              {/* <EditorForm/> */}
-              {/* <ReactQuill theme="snow" value={editorValue} onChange={setEditorValue} placeholder="Ingresa el detalle de la Licitación" /> */}
-              {/* {inputError.description !== "" ? (
-                <ErrorMensage message={inputError.description} />
-              ) : null} */}
             </div>
           </div>
           <button className="bg-primary-600 text-white font-semibold rounded-md p-2 mt-4" onClick={handleSubmit}>
