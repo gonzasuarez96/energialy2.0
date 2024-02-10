@@ -57,19 +57,7 @@ export default function Navigation() {
 
                 {isAuthenticated() ? (
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8 sm:items-center">
-                    {user.company?.id ? null : (
-                      <Link
-                        href="/registerCompany"
-                        prefetch
-                        className={`${
-                          pathname === "/registerCompany"
-                            ? "no-underline bg-secondary-600 text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide"
-                            : "no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide transition duration-300 ease-in-out hover:bg-secondary-600"
-                        }`}
-                      >
-                        Registra tu empresa
-                      </Link>
-                    )}
+                    {user.company?.id ?                     <div>
                     <div
                       onClick={() => {
                         router.refresh();
@@ -96,6 +84,46 @@ export default function Navigation() {
                     >
                       Licitaciones
                     </div>
+                    </div> : (
+                      <Link
+                        href="/registerCompany"
+                        prefetch
+                        className={`${
+                          pathname === "/registerCompany"
+                            ? "no-underline bg-secondary-600 text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide"
+                            : "no-underline bg-[#191654] text-white py-2 px-2 rounded-lg inline-block text-center uppercase font-semibold tracking-wide transition duration-300 ease-in-out hover:bg-secondary-600"
+                        }`}
+                      >
+                        Registra tu empresa
+                      </Link>
+                    )}
+
+                    {/* <div
+                      onClick={() => {
+                        router.refresh();
+                        router.push("/directory");
+                      }}
+                      className={`${
+                        pathname === "/directory"
+                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium cursor-pointer"
+                          : "border-transparent no-underline  text-gray-600 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
+                      }`}
+                    >
+                      Directorio
+                    </div>
+                    <div
+                      onClick={() => {
+                        router.refresh();
+                        router.push("/tenders");
+                      }}
+                      className={`${
+                        pathname === "/tenders"
+                          ? "border-secondary-600 no-underline h-full inline-flex items-center px-1 text-secondary-600 pt-1 border-b-2 text-sm font-medium"
+                          : "border-transparent no-underline  text-gray-800 dark:text-gray-300 hover:text-secondary-500 inline-flex items-center px-1 pt-1 border-b-2 test-sm font-medium cursor-pointer"
+                      }`}
+                    >
+                      Licitaciones
+                    </div> */}
                     <div className="cursor-pointer">
                       <UserProfile />
                     </div>
