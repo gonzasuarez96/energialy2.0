@@ -74,7 +74,6 @@ export function ProposalModal({open, handleOpen, data}) {
 
 
     const createProposal = async (proposal) => {
-      console.log(proposal)
       try {
         const response = await axios.post(
           `${urlProduction}/proposals`,

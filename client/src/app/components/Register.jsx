@@ -170,7 +170,7 @@ export default function Register() {
         window.location.href = '/login';
       }, 2000);
     } catch (error) {
-      console.log("Error:", error.response.data.error);
+      // console.log("Error:", error.response.data.error);
       displayFailedMessage(error.response.data.error);
     }
   };

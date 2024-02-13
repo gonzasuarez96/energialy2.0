@@ -1,8 +1,9 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 //import "tw-elements/dist/css/tw-elements.min.css";
 import PaginationComp from "./Pagination";
 import { useRouter } from "next/navigation";
+
 // Initialization for ES Users
 
 function FormattedString({ content }) {
@@ -11,14 +12,16 @@ function FormattedString({ content }) {
 
 const CardTender = ({item}) => {
   const router = useRouter();
+
   
+
     useEffect(() => {
       const init = async () => {
         const { Ripple, initTE } = await import("tw-elements");
         initTE({ Ripple });
       };
       init();
-  }, []);
+    }, []);
 
   return (
     <div className="rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700 md:min-w-[1000px] mb-4 flex justify-between">
