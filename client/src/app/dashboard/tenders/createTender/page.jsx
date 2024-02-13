@@ -156,7 +156,7 @@ function CreateTenderForm() {
 
     const hasErrors = !validation(tenderData);
 
-    console.log(tenderData);
+    // console.log(tenderData);
 
     if (!hasErrors) {
       console.log(tenderData);
