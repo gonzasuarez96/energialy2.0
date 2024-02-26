@@ -2,7 +2,6 @@
 import { useGetCategoriesQuery } from '@/app/redux/services/categoriesApi';
 import { useGetLocationsQuery } from '@/app/redux/services/locationApi';
 import { Card, Input, Checkbox, Button, Typography, CardHeader, Switch } from '@material-tailwind/react';
-import EditorForm from '@/app/components/Editor';
 import { FormGroup } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import Select from 'react-select';
