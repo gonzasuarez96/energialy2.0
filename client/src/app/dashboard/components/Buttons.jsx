@@ -28,7 +28,7 @@ export default function Buttons() {
 
   const handleOption = (index) => {
     if (index === 0) {
-      if (!companyInfo || !companyInfo.bankAccount) {
+      if (!companyInfo) {
         Swal.fire({
           title: 'No tienes una empresa registrada',
           text: 'Para invitar empresas a que se sumen a Energialy, debes registrar tu empresa primero.',
@@ -38,7 +38,7 @@ export default function Buttons() {
         handleOpenModal();
       }
     } else if (index === 1) {
-      if (!companyInfo || !companyInfo.bankAccount) {
+      if (!companyInfo) {
         Swal.fire({
           title: 'No tienes una empresa registrada',
           text: 'Para crear una licitación, debes registrar tu empresa primero',
@@ -50,7 +50,7 @@ export default function Buttons() {
     } else if (index === 2) {
       if (!companyInfo || !companyInfo.bankAccount) {
         Swal.fire({
-          title: 'No tienes una cuenta',
+          title: 'No tienes una cuenta bancaria',
           text: 'Para solicitar algún producto debes solicitar una apertura de cuenta, dirígete a Financiamiento > Apertura de Cuenta',
           icon: 'warning',
         });
