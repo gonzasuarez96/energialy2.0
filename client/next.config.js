@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    domains: ['logodix.com', 'shutterstock.com', 'picsum.photos', 'res.cloudinary.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -10,9 +11,9 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'sutterstock.com',
+        hostname: 'shutterstock.com',
         port: '',
-        pathname: '/logos/**',
+        pathname: '/image-photo/**',
       },
       {
         protocol: 'https',
