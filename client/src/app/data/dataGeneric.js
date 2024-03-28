@@ -27,6 +27,4 @@ export const duration = ['Menos de una semana', 'Menos de un mes', 'De 1 a 3 mes
 
 export const etapa = ['Upstream', 'Midstream', 'Downstream'];
 
-// export const urlProduction = "http://localhost:3001";
-
-export const urlProduction = 'https://api-energialy.vercel.app';
+export const urlProduction = process.env.NEXT_PUBLIC_BASE_URL;
