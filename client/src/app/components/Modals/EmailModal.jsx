@@ -3,22 +3,22 @@ import { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { displaySuccessMessage, displayFailedMessage } from '@/app/components/Toastify';
 import axios from 'axios';
-import { urlProduction } from '@/app/data/dataGeneric';
 
 function EmailModal({ open, handleOpen, id, company }) {
-  const [emails, setEmails] = useState([]);
   const [email, setEmail] = useState('');
-
-  const endpoint = 'inviteCompanies';
-  console.log('companyID', id);
-  const sendObj = {
+  const body = {
     companyId: id,
-    emails: emails,
+    email: email,
+  };
+
+  const isValidEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+    return emailPattern.test(email);
   };
 
   const handleStatus = async () => {
-    if (emails.length <= 0) {
-      displayFailedMessage('Agregá al menos un email para enviar la invitación');
+    if (!isValidEmail(email)) {
+      displayFailedMessage('Agregá un email válido para enviar la invitación');
     } else {
       try {
         const response = await sendInvitations();
@@ -28,30 +28,18 @@ function EmailModal({ open, handleOpen, id, company }) {
         }, 3000);
       } catch (error) {
         displayFailedMessage('Error al invitar empresas');
+        console.log(error);
       }
     }
   };
 
-  const hanbleEmail = (e) => {
+  const handleEmailChange = (e) => {
     setEmail(e.target.value);
-  };
-
-  const saveEmail = (e) => {
-    e.preventDefault();
-    setEmails([...emails, email]);
-    e.target.reset();
-    setEmail('');
-  };
-
-  const removeEmail = (index) => {
-    const updatedEmails = [...emails];
-    updatedEmails.splice(index, 1);
-    setEmails(updatedEmails);
   };
 
   const sendInvitations = async () => {
     try {
-      const response = axios.post(`${urlProduction}/${endpoint}`, sendObj);
+      const response = axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/inviteCompanies`, body);
       console.log(response.data);
     } catch (error) {
       console.log(error);
@@ -64,39 +52,29 @@ function EmailModal({ open, handleOpen, id, company }) {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50">
           <div className="bg-white p-5 rounded flex flex-col justify-center items-center gap-5 h-screem">
             <h4 className="">
-              Invita a otras empresas a formar parte de Energialy! <span className="font-bold">{company}</span>
+              ¡Invita a otras empresas a formar parte de Energialy! <span className="font-bold">{company}</span>
             </h4>
             <div className="w-full">
-              <form onSubmit={saveEmail} className="flex gap-2 w-full">
-                <input
-                  className="p-2 rounded-sm w-full border-1 border-gray-100"
-                  type="text"
-                  placeholder="Correo electrónico"
-                  onChange={hanbleEmail}
-                />
-                <button className="rounded-md bg-secondary-400 font-semibold text-white px-4 py-2" type="submit">
-                  Agregar
-                </button>
-              </form>
+              <input
+                className="p-2 rounded-sm w-full border-1 bg-gray-100"
+                type="text"
+                placeholder="Correo electrónico"
+                onChange={handleEmailChange}
+              />
             </div>
-            {emails.length > 0 && (
-              <div className="grid grid-cols-3 gap-4">
-                {emails.map((email, index) => (
-                  <div key={index} className="bg-gray-400 text-gray-50 flex gap-2  text-xs px-2 py-2 rounded-full justify-between items-center">
-                    <span className="font-semibold">{email}</span>
-                    <button onClick={() => removeEmail(index)} className="bg-gray-700 w-5 h-5 rounded-full">
-                      x
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
             <div className="flex gap-2">
-              <button className="bg-primary-500 py-2 px-4 rounded-md text-white font-bold m-5" onClick={handleStatus}>
-                Enviar
+              <button
+                className="font-bold m-5 bg-white border-1 border-primary-500 py-2 px-4 rounded-md text-primary-500 hover:bg-gray-600 transition duration-300"
+                onClick={handleOpen}
+              >
+                Cancelar
               </button>
-              <button className="bg-secondary-500 py-2 px-4 rounded-md text-white font-bold m-5" onClick={handleOpen}>
-                Cerrar
+              <button
+                className="bg-primary-500 py-2 px-8 rounded-md
+               text-white font-bold m-5 hover:bg-secondary-600 transition duration-300"
+                onClick={handleStatus}
+              >
+                Enviar
               </button>
             </div>
             <ToastContainer style={{ marginTop: '100px' }} />
