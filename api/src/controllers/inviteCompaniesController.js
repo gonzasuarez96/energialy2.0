@@ -2,14 +2,14 @@ const { Companies, Users } = require('../db');
 const { sendInviteCompanies } = require('../services/resend');
 
 const postInviteCompanies = async (body) => {
-  const { companyId, emails } = body;
+  const { companyId, email } = body;
   if (!companyId) {
     const error = new Error('Missing sender company ID.');
     error.status = 400;
     throw error;
   }
-  if (!emails) {
-    const error = new Error('Missing receiver emails.');
+  if (!email) {
+    const error = new Error('Missing receiver email.');
     error.status = 400;
     throw error;
   }
@@ -17,8 +17,7 @@ const postInviteCompanies = async (body) => {
     include: [{ model: Users }],
   });
   const companyName = foundCompany.name;
-  console.log(companyName);
-  const resendResponse = await sendInviteCompanies(emails, companyName);
+  const resendResponse = await sendInviteCompanies(email, companyName);
   return resendResponse;
 };
 

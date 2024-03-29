@@ -132,7 +132,7 @@ const generateSendInviteCompanies = (companyName) => {
     <p>E-CHEQS | CHEQUES </p>
     <p>COMEX </p>
     <p>Energialy es la plataforma para integrar a la Cadena de Valor, gestionar contrataciones entre Pymes y acceder a financiamiento. </p>
-    <p>Ingresá ahora y creá tu Cuenta gratis! </p>
+    <p>Ingresá ahora y <a href="https://energialy.vercel.app">creá tu cuenta gratis</a>! </p>
   </body>
   `;
   return html;

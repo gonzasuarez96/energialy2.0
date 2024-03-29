@@ -10,7 +10,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
   const [company, setCompany] = useState(null);
   useEffect(() => {
     const user = getLocalStorage();
-    setCompany(user.company?.id || null);
+    setCompany(user?.company?.id || null);
   }, []);
 
   const [subMenuOpen, setSubMenuOpen] = useState(false);
