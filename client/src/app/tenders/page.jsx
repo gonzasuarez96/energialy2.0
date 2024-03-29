@@ -1,13 +1,11 @@
-"use client";
+'use client';
 
-import FilterBar from "../components/FilterBar";
-import { useGetTendersQuery } from "@/app/redux/services/tendersApi";
-import TenderContainer from "../components/TenderContainer";
-
+import FilterBar from '../components/FilterBar';
+import { useGetTendersQuery } from '@/app/redux/services/tendersApi';
+import TenderContainer from '../components/TenderContainer';
 
 function page() {
- 
-  const {data, isLoading} = useGetTendersQuery()
+  const { data, isLoading } = useGetTendersQuery();
 
   return (
     <>
@@ -15,11 +13,7 @@ function page() {
         <div className="hidden  md:w-1/3 md:flex  md:justify-center md:mx-4">
           <FilterBar />
         </div>
-        <div className="flex flex-col justify-center items-center">
-          {
-            isLoading ? <h1>Cargando...</h1> : <TenderContainer data={data}/>
-          }
-        </div>
+        <div className="flex flex-col justify-center items-center">{isLoading ? <h1>Cargando...</h1> : <TenderContainer data={data} />}</div>
       </div>
     </>
   );
