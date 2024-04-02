@@ -13,24 +13,19 @@ const basename = path.basename(__filename);
 
 const modelDefiners = [];
 
-// Loading model files from the '/models' directory and pushing their definitions (exported objects) into the modelDefiners array.
 fs.readdirSync(path.join(__dirname, '/models'))
   .filter((file) => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js')
   .forEach((file) => {
     modelDefiners.push(require(path.join(__dirname, '/models', file)));
   });
 
-// Injecting the Sequelize instance into each model definition
 modelDefiners.forEach((model) => model(sequelize));
-// Capitalizing the model names for consistency. ie: product => Product
 let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-// Destructuring models
 const { Users, Companies, Categories, Subcategories, Locations, Tenders, Proposals, Documents, BankAccounts, FinanceProducts } = sequelize.models;
 
-// Associations
 Companies.hasMany(Users);
 Users.belongsTo(Companies);
 
@@ -74,6 +69,6 @@ BankAccounts.hasMany(FinanceProducts);
 FinanceProducts.belongsTo(BankAccounts);
 
 module.exports = {
-  ...sequelize.models, // to import models like this: const { Product, User } = require('./db.js');
-  conn: sequelize, // to import the connection { conn } = require('./db.js');
+  ...sequelize.models,
+  conn: sequelize,
 };
