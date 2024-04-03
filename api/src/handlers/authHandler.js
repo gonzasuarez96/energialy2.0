@@ -1,4 +1,4 @@
-const { userLogin } = require('../controllers/authController');
+const { userLogin, requestResetPassword, resetPassword } = require('../controllers/authController');
 
 const userLoginHandler = async (req, res) => {
   try {
@@ -11,4 +11,24 @@ const userLoginHandler = async (req, res) => {
   }
 };
 
-module.exports = { userLoginHandler }
+const requestResetPasswordHandler = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const link = await requestResetPassword(email);
+    res.status(200).json({ link });
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
+
+const resetPasswordHandler = async (req, res) => {
+  try {
+    const { userId, token, password } = req.body;
+    const response = await resetPassword(userId, token, password);
+    res.status(200).json('Password reset was successful.');
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
+
+module.exports = { userLoginHandler, requestResetPasswordHandler, resetPasswordHandler };
