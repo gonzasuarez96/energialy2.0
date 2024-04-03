@@ -45,7 +45,7 @@ const requestResetPassword = async (email) => {
   let resetToken = crypto.randomBytes(32).toString('hex');
   const hash = await bcrypt.hash(resetToken, 10);
   await foundUser.update({ resetToken: hash });
-  const resetLink = `${process.env.BASE_URL}/emailPassword?token=${resetToken}&id=${foundUser.id}`;
+  const resetLink = `${process.env.BASE_URL}/reset-password?token=${resetToken}&id=${foundUser.id}`;
   await sendPasswordResetRequestEmail(email, foundUser.firstName, resetLink);
   return resetLink;
 };
