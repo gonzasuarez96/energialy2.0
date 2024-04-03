@@ -1,7 +1,7 @@
-"use client";
-
+'use client';
 
 import React, { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -10,28 +10,32 @@ import { urlProduction } from '../data/dataGeneric';
 const ResetPasswordForm = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const searchParams = useSearchParams();
+
+  const token = searchParams.get('token');
+  const userId = searchParams.get('id');
 
   const handleResetPassword = async () => {
+    if (!newPassword || !confirmPassword) {
+      setMessage('Por favor, completa los campos.');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setMessage('Las contraseñas no coinciden.');
+      return;
+    }
+
     try {
-      if (newPassword !== confirmPassword) {
-        setMessage('Las contraseñas no coinciden.');
-        return;
-      }
-
-      const response = await axios.post(`${urlProduction}/users/reset-password/${email}`, {
-        newPassword,
+      const response = await axios.post(`${urlProduction}/auth/resetPassword`, {
+        userId,
+        token,
+        password: newPassword,
       });
-
-      if (response.status === 200) {
-        setMessage('Contraseña restablecida con éxito.');
-      } else {
-        setMessage('Error al restablecer la contraseña. Verifica tus datos.');
-      }
+      setMessage('Contraseña restablecida con éxito!');
     } catch (error) {
-      console.error('Error al restablecer la contraseña:', error);
-      setMessage('Error interno del servidor.');
+      console.log('Error al restablecer la contraseña:', error.response);
+      setMessage('No fue posible restablecer la contraseña, intente enviando un nuevo email de restablecimiento.');
     }
   };
 
@@ -39,14 +43,6 @@ const ResetPasswordForm = () => {
     <div className="flex items-center justify-center h-screen">
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h2 className="text-2xl mb-4">Restablecer Contraseña</h2>
-        <p>Ingresa tu nueva contraseña y presiona el botón para restablecerla.</p>
-        <input
-          type="text"
-          placeholder="Correo Electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mt-4 p-2 border rounded"
-        />
         <input
           type="password"
           placeholder="Nueva Contraseña"
