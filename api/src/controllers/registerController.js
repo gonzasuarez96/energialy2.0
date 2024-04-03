@@ -1,7 +1,5 @@
 const { Users } = require('../db');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { sendConfirmationEmail } = require('../services/sendEmail');
 
 const newUserRegister = async (body) => {
   const { email, password, firstName, lastName, position, role } = body;
@@ -27,10 +25,6 @@ const newUserRegister = async (body) => {
     position,
     role,
   });
-
-  const token = jwt.sign({ userId: newUser.id }, 'secretKey', { expiresIn: '1d' });
-
-  sendConfirmationEmail(email, token);
 
   return newUser;
 };

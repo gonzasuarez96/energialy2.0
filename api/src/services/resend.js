@@ -10,6 +10,8 @@ const {
   generateCompanyEmailFinanceProductAccepted,
   generateCompanyEmailFinanceProductDeclined,
   generateSendInviteCompanies,
+  generatePasswordResetRequestEmail,
+  generatePasswordResetSuccessfullyEmail,
 } = require('./emailTemplates');
 
 const sendEmployerEmailProposalReceived = async (receiver, employerName, supplierCompanyName, tenderTitle, proposalAmount, proposalDuration) => {
@@ -122,6 +124,28 @@ const sendInviteCompanies = async (receiver, companyName) => {
   console.log(response);
 };
 
+const sendPasswordResetRequestEmail = async (receiver, username, link) => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const response = await resend.emails.send({
+    from: 'Energialy <hola@energialy.ar>',
+    to: [`${receiver}`],
+    subject: 'Restablece tu contraseña de Energialy',
+    html: generatePasswordResetRequestEmail(username, link),
+  });
+  console.log(response);
+};
+
+const sendPasswordResetSuccessfullyEmail = async (receiver, username) => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const response = await resend.emails.send({
+    from: 'Energialy <hola@energialy.ar>',
+    to: [`${receiver}`],
+    subject: 'Contraseña restablecida correctamente',
+    html: generatePasswordResetSuccessfullyEmail(username),
+  });
+  console.log(response);
+};
+
 module.exports = {
   sendEmployerEmailProposalReceived,
   sendSupplierEmailProposalAccepted,
@@ -133,4 +157,6 @@ module.exports = {
   sendCompanyEmailFinanceProductAccepted,
   sendCompanyEmailFinanceProductDeclined,
   sendInviteCompanies,
+  sendPasswordResetRequestEmail,
+  sendPasswordResetSuccessfullyEmail,
 };

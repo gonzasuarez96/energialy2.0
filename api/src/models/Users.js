@@ -23,6 +23,9 @@ module.exports = (sequelize) => {
     refreshToken: {
       type: DataTypes.STRING,
     },
+    resetToken: {
+      type: DataTypes.STRING,
+    },
     firstName: {
       type: DataTypes.STRING,
     },

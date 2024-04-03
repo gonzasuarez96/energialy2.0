@@ -138,6 +138,32 @@ const generateSendInviteCompanies = (companyName) => {
   return html;
 };
 
+const generatePasswordResetRequestEmail = (username, link) => {
+  const html = `
+  <body>
+    <p>Hola ${username},</p>
+    <p>Por favor, hacé clic en el link de acá abajo para restablecer tu contraseña.</p>
+    <p><a href="${link}">Restablecer Contraseña</a></p>
+    <p>Si no solicitaste el restablecimiento de tu contraseña, podés ignorar este email.</p>
+    <p>Gracias!</p>
+    <p>El equipo de Energialy</p>
+  </body>
+  `;
+  return html;
+};
+
+const generatePasswordResetSuccessfullyEmail = (username) => {
+  const html = `
+  <body>
+    <p>Hola ${username},</p>
+    <p>Tu contraseña fue restablecida con éxito.</p>
+    <p>Gracias!</p>
+    <p>El equipo de Energialy</p>
+  </body>
+  `;
+  return html;
+};
+
 module.exports = {
   generateEmployerEmailProposalReceived,
   generateSupplierEmailProposalAccepted,
@@ -149,4 +175,6 @@ module.exports = {
   generateCompanyEmailFinanceProductAccepted,
   generateCompanyEmailFinanceProductDeclined,
   generateSendInviteCompanies,
+  generatePasswordResetRequestEmail,
+  generatePasswordResetSuccessfullyEmail,
 };

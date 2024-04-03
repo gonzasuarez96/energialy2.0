@@ -1,22 +1,4 @@
-const {
-  getAllUsers,
-  getUserById,
-  getUserByEmail,
-  updateUserProfile,
-  resetPassword
-} = require('../controllers/usersController');
-
-const { sendPasswordEmail } = require("../services/sendPasswordEmail");
-
-const sendEmailHandler = async (req, res) => {
-  try {
-    const { email } = req.body;
-    sendPasswordEmail(email);
-    res.status(200).json({ message: 'Correo electrónico enviado correctamente' });
-  } catch (error) {
-    res.status(error.status || 500).json({ error: error.message });
-  }
-};
+const { getAllUsers, getUserById, getUserByEmail, updateUserProfile } = require('../controllers/usersController');
 
 const getUsersHandler = async (req, res) => {
   try {
@@ -49,21 +31,8 @@ const updateUserProfileHandler = async (req, res) => {
   }
 };
 
-const resetPasswordHandler = async (req, res) => {
-  try {
-    await resetPassword(req, res); 
-  } catch (error) {
-    console.error('Error en el handler de restablecimiento de contraseña:', error);
-    return res.status(error.status || 500).json({ error: error.message || 'Error interno del servidor.' });
-  }
-};
-
 module.exports = {
   getUsersHandler,
   getUserByIdHandler,
   updateUserProfileHandler,
-  sendEmailHandler,
-  resetPasswordHandler
 };
-
-

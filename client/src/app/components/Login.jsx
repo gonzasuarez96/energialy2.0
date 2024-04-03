@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setAccessToken, setUserData } from '../redux/features/userSlice';
 import { displayFailedMessage, displaySuccessMessage } from './Toastify';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
+import Link from 'next/link';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -125,7 +126,7 @@ export default function Login() {
   };
 
   return (
-    <div className="h-[90vh] w-full flex items-center justify-center">
+    <div className="h-[70vh] w-full flex items-center justify-center">
       <div className="bg-white shadow rounded w-[70%]">
         <h3 className=" mb-0 p-4 bg-gray-100 border-b border-gray-300">Iniciar sesión</h3>
         <form className="mb-2 pl-4 pr-4 pt-4">
@@ -171,9 +172,9 @@ export default function Login() {
           {error && <div className="flex justify-center text-danger mt-2 mb-2">{error}</div>}
         </form>
         <div className="text-center p-2">
-          <a href="#" className="text-decoration-none text-muted">
+          <Link className="text-black" href="/forgot-password">
             ¿Olvidaste tu contraseña?
-          </a>
+          </Link>
         </div>
       </div>
       <ToastContainer style={{ marginTop: '100px' }} />
