@@ -29,12 +29,16 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
       if (isBankAccountOpen) {
         router.push(url);
       } else {
-        Swal.fire({
-          title: 'No tienes una cuenta abierta',
-          text: 'Para solicitar algún producto debes solicitar una apertura de cuenta, dirígete a Financiamiento > Apertura de Cuenta ',
-          icon: 'warning',
-        });
-        console.log('Necesitas una cuenta bancaria para solicitar un producto.');
+        router.push(url);
+
+        //*tanto como si tiene cuenta bancaria como si no, se redirige a /dashboard/finanzas/solicitarProducto
+        
+        // Swal.fire({
+        //   title: 'No tienes una cuenta abierta',
+        //   text: 'Para solicitar algún producto debes solicitar una apertura de cuenta, dirígete a Financiamiento > Apertura de Cuenta ',
+        //   icon: 'warning',
+        // });
+        // console.log('Necesitas una cuenta bancaria para solicitar un producto.');
       }
     } else if (url === '/dashboard/finanzas/aperturaCuenta') {
       if (!company) {

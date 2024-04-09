@@ -29,7 +29,7 @@ export default function SoloFirmaLoan() {
   const [destination, setDestination] = useState("");
   const [amountToRequest, setAmountToRequest] = useState("");
   const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
-  const bankAccountId = userCompany?.bankAccount.id;
+  const bankAccountId = userCompany?.bankAccount?.id;
   const [currency, setCurrency] = useState("AR$");
 
   const router = useRouter();

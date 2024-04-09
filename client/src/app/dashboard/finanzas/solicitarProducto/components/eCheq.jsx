@@ -29,7 +29,7 @@ export default function ECheq() {
     caracter: "A la Orden",
   });
   const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
-  const bankAccountId = userCompany?.bankAccount.id;
+  const bankAccountId = userCompany?.bankAccount?.id;
 
   const router = useRouter();
 
