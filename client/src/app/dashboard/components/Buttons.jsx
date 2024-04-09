@@ -49,7 +49,7 @@ export default function Buttons() {
         router.push('/dashboard/tenders/createTender');
       }
     } else if (index === 2) {
-      if (!company || !company.bankAccount) {
+      if (!company ) {
         Swal.fire({
           title: 'No tienes una cuenta bancaria',
           text: 'Para solicitar algún producto debes solicitar una apertura de cuenta, dirígete a Financiamiento > Apertura de Cuenta',
