@@ -25,11 +25,10 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-         return; // Detener la ejecución si no hay una empresa registrada
+         return; 
       } else {
         router.push(url);
       }
-      //*tanto como si tiene cuenta bancaria como si no, se redirige a /dashboard/finanzas/solicitarProducto
       
 
     } else if (url === '/dashboard/finanzas/aperturaCuenta') {
@@ -39,7 +38,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
+        return; 
       }
       if (isBankAccountOpen) {
         Swal.fire({
@@ -57,7 +56,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
+        return; 
       } else {
         router.push(url);
       }
@@ -68,7 +67,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
+        return;
       } else {
         router.push(url);
       }
@@ -79,7 +78,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
+        return;
       } else {
         router.push(url);
       }
