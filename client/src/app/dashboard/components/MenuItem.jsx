@@ -18,28 +18,20 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
   const router = useRouter();
   const handleProductRequest = (url) => {
     if (url === '/dashboard/finanzas/solicitarProducto') {
+      
       if (!company) {
         Swal.fire({
           title: 'No tienes una empresa registrada',
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
-      }
-      if (isBankAccountOpen) {
-        router.push(url);
+         return; // Detener la ejecución si no hay una empresa registrada
       } else {
         router.push(url);
-
-        //*tanto como si tiene cuenta bancaria como si no, se redirige a /dashboard/finanzas/solicitarProducto
-        
-        // Swal.fire({
-        //   title: 'No tienes una cuenta abierta',
-        //   text: 'Para solicitar algún producto debes solicitar una apertura de cuenta, dirígete a Financiamiento > Apertura de Cuenta ',
-        //   icon: 'warning',
-        // });
-        // console.log('Necesitas una cuenta bancaria para solicitar un producto.');
       }
+      //*tanto como si tiene cuenta bancaria como si no, se redirige a /dashboard/finanzas/solicitarProducto
+      
+
     } else if (url === '/dashboard/finanzas/aperturaCuenta') {
       if (!company) {
         Swal.fire({
