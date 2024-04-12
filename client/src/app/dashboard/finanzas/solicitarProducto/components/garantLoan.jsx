@@ -30,7 +30,7 @@ export default function GarantLoan() {
   const [amountToRequest, setAmountToRequest] = useState("");
   const [garantType, setGarantType] = useState("");
   const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
-  const bankAccountId = userCompany?.bankAccount.id;
+  const bankAccountId = userCompany?.bankAccount?.id;
   const [currency, setCurrency] = useState("AR$");
 
   const router = useRouter();
