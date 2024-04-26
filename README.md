@@ -17,12 +17,12 @@ CREATE DATABASE energialy;
 Para las variables de entorno, crear un archivo `.env` y pegar las siguientes variables.
 ```sh
 # .env
-DB_USER={your_postgres_name_user} // por default es postgres
+DB_USER={your_postgres_name_user} # por default es postgres
 DB_PASSWORD={your_postgres_password}
 DB_HOST=localhost:5432
 DB_NAME=energialy
-SSL_MODE= // este debe quedar vacío
-BASE_URL=http://localhost:3000 // esto es el servidor del frontend en local
+SSL_MODE= # este debe quedar vacío
+BASE_URL=http://localhost:3000 # esto es el servidor del frontend en local
 
 ACCESS_TOKEN_SECRET=your_access_secret
 REFRESH_TOKEN_SECRET=your_refresh_secret
