@@ -47,7 +47,7 @@ Si todo está bien, deberías ver el siguiente mensaje:
 
 ## Levantar Frontend
 
-Una vez clonado el repo:
+Una vez clonado el repositorio:
 
 ```sh
 cd client
