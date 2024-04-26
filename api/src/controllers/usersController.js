@@ -1,12 +1,15 @@
-const { Users, Companies } = require('../db');
+const { Users, Companies, Message } = require('../db');
 
 const cleanUsers = (users) => {
   if (Array.isArray(users)) {
     const cleanUsersArray = users.map((user) => ({
       id: user.id,
+      fullName: `${user.firstName} ${user.lastName}`,
       email: user.email,
       role: user.role,
       company: user.Company,
+      mensajesEnviados: user.mensajesEnviados,
+      mensajesRecibidos: user.mensajesRecibidos,
       isActive: user.isActive,
     }));
     return cleanUsersArray;
@@ -22,6 +25,8 @@ const cleanUsers = (users) => {
       position: users.position,
       role: users.role,
       company: users.Company,
+      mensajesEnviados: users.mensajesEnviados,
+      mensajesRecibidos: users.mensajesRecibidos,
       isActive: users.isActive,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
@@ -32,10 +37,24 @@ const cleanUsers = (users) => {
 
 const getAllUsers = async () => {
   const allUsers = await Users.findAll({
-    include: {
-      model: Companies,
-      attributes: ['id', 'name', 'subscription'],
-    },
+    include: [
+      {
+        model: Companies,
+        attributes: ['id', 'name', 'subscription'],
+      }, 
+      {
+        model: Message,
+        as: 'mensajesEnviados',
+        foreignKey: 'remitenteId',
+        attributes: ['id', 'text'],
+      },
+      {
+        model: Message,
+        as: 'mensajesRecibidos',
+        foreignKey: 'destinatarioId',
+        attributes: ['id', 'text'],
+      },
+    ],
   });
   return cleanUsers(allUsers);
 };
@@ -58,10 +77,24 @@ const getUserById = async (id) => {
 const getUserByEmail = async (email) => {
   const foundUser = await Users.findOne({
     where: { email: email },
-    include: {
-      model: Companies,
-      attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
-    },
+    include: [
+      {
+        model: Companies,
+        attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
+      },
+      {
+        model: Message,
+        as: 'mensajesEnviados',
+        foreignKey: 'remitenteId',
+        attributes: ['id', 'text'],
+      },
+      {
+        model: Message,
+        as: 'mensajesRecibidos',
+        foreignKey: 'destinatarioId',
+        attributes: ['id', 'text'],
+      },
+    ]
   });
   if (!foundUser) {
     const error = new Error(`User with email ${email} not found.`);

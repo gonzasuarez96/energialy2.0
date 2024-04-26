@@ -98,6 +98,7 @@ export default function Login() {
 
       // Guardar en localStorage
       sessionStorage.setItem('accessToken', accessToken);
+      sessionStorage.setItem('companyId', userDetails.company.id);
       sessionStorage.setItem('user', JSON.stringify(userDetails));
 
       dispatch(setUserData(userDetails));
