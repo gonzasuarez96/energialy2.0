@@ -26,7 +26,7 @@ export default function FacturaCredito() {
   const [cuitRecived, setCuilRecived] = useState(""); // CUIT empresa receptora
   const [error, setError] = useState("");
   const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
-  const bankAccountId = userCompany?.bankAccount.id;
+  const bankAccountId = userCompany?.bankAccount?.id;
   const [currency, setCurrency] = useState("AR$");
 
   const handleChange = (e) => {

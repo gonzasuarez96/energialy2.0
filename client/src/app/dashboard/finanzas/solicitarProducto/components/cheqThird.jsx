@@ -32,7 +32,7 @@ export default function CheqThird() {
   const { data: userCompany, isLoading } = useGetCompaniesByIdQuery(company.id);
   console.log(company.id);
   console.log("data:", userCompany);
-  const bankAccountId = userCompany?.bankAccount.id;
+  const bankAccountId = userCompany?.bankAccount?.id;
 
   const router = useRouter();
 

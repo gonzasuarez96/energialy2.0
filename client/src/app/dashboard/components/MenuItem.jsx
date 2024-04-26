@@ -18,24 +18,19 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
   const router = useRouter();
   const handleProductRequest = (url) => {
     if (url === '/dashboard/finanzas/solicitarProducto') {
+      
       if (!company) {
         Swal.fire({
           title: 'No tienes una empresa registrada',
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
-      }
-      if (isBankAccountOpen) {
-        router.push(url);
+         return; 
       } else {
-        Swal.fire({
-          title: 'No tienes una cuenta abierta',
-          text: 'Para solicitar algún producto debes solicitar una apertura de cuenta, dirígete a Financiamiento > Apertura de Cuenta ',
-          icon: 'warning',
-        });
-        console.log('Necesitas una cuenta bancaria para solicitar un producto.');
+        router.push(url);
       }
+      
+
     } else if (url === '/dashboard/finanzas/aperturaCuenta') {
       if (!company) {
         Swal.fire({
@@ -43,7 +38,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
+        return; 
       }
       if (isBankAccountOpen) {
         Swal.fire({
@@ -61,7 +56,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
+        return; 
       } else {
         router.push(url);
       }
@@ -72,7 +67,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
+        return;
       } else {
         router.push(url);
       }
@@ -83,7 +78,7 @@ function MenuItem({ menuItem, index, isOpen, user, isBankAccountOpen }) {
           text: 'Por favor registra tu empresa para avanzar.',
           icon: 'warning',
         });
-        return; // Detener la ejecución si no hay una empresa registrada
+        return;
       } else {
         router.push(url);
       }
