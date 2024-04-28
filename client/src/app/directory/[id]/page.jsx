@@ -10,13 +10,8 @@ import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import axios from "axios";
 import { axiosGetAllMessages, axiosGetAllUsers, axiosGetDetailCompany, axiosPostMessage } from "@/app/Func/axios";
+import { getCompanyId, getUserId } from "@/app/Func/sessionStorage";
 const socketIo = io("http://localhost:3001");
-
-function getCompanyId() {
-  if (typeof window !== 'undefined') {
-    return sessionStorage.getItem('companyId');
-  }
-}
 
 function page(props) {
   const { id } = props.params;
@@ -27,13 +22,15 @@ function page(props) {
   const [allUsers, setAllUsers] = useState([]);
 
   // * MENSAJES RECIBIDOS
-  const remitente = allUsers.find(function(el) {
+  const destinatario = allUsers.find(function(el) {
     return el.company.id === id;
   });
 
   // * MENSAJES ENVIADOS
   const companyId = getCompanyId();
-  const destinatario = allUsers.find(function(el) {
+  const userId = getUserId();
+  // console.log("userId:", userId)
+  const remitente = allUsers.find(function(el) {
     return el.company.id === companyId;
   });
   const [messageText, setMessageText] = useState("");
@@ -46,12 +43,12 @@ function page(props) {
       if (remitente && destinatario) {
         const newMessage = {
           text: message,
-          // remitente: remitente,
-          // destinatario: destinatario,
-          remitente: destinatario,
-          destinatario: remitente,
+          remitente: remitente,
+          destinatario: destinatario,
+          // remitente: destinatario,
+          // destinatario: remitente,
         }
-        // console.log("newMessage", newMessage)
+        console.log("newMessage", newMessage)
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     });
@@ -70,10 +67,10 @@ function page(props) {
     setMessageText("");
     axiosPostMessage({
       text: messageText,
-      // remitenteId: remitente?.id,
-      // destinatarioId: destinatario?.id,
-      remitenteId: destinatario?.id,
-      destinatarioId: remitente?.id,
+      remitenteId: remitente?.id,
+      destinatarioId: destinatario?.id,
+      // remitenteId: destinatario?.id,
+      // destinatarioId: remitente?.id,
     });
   };
 
@@ -116,38 +113,35 @@ function page(props) {
           </div>
           <h1>HISTORIAL DE CHAT</h1>
           <div>
-            {allMessages.map(function(el, index) {
-                const companyOne = !el.remitente.Company ? el.remitente.company.name : el.remitente.Company.name;
-                const companyTwo = !el.destinatario.Company ? el.destinatario.company.name : el.destinatario.Company.name;
-
+            {allMessages.map(function(message, index) {
                 return (
-                  <div key={el.id || index}>
-                    {/* MENSAJE EMPRESA 1 */}
-                    <div
-                      className={
-                        `mb-2 ${companyOne ? 'flex justify-end' : 'flex justify-start'}`
-                      }
-                    >
+                  <div
+                    key={message.id || index}
+                    className={`${
+                      message.remitente.id === userId ? 'text-right' : 'text-left'
+                    } mb-2`}
+                  >
+                    {message.remitente.id === userId ? (
                       <div className="bg-gray-200 p-3 rounded-lg">
-                        <strong>Empresa - 1: </strong>
-                        <p className="font-semibold">{companyOne}</p>
-                        <p className="text-xs text-gray-500">{el.createdAt}</p>
-                        <p>{el.text}</p>
+                        <p><strong>Tú: </strong>
+                          {!message.remitente.fullName ? (
+                            `${message.remitente.firstName} ${message.remitente.lastName}`
+                          ) : message.remitente.fullName}
+                        </p>
+                        <p><strong>Mensaje: </strong>{message.text}</p>
+                        <p><strong>Fecha: </strong>{message.createdAt}</p>
                       </div>
-                    </div>
-                    {/* MENSAJE EMPRESA 2 */}
-                    <div
-                      className={
-                        `mb-2 ${companyTwo ? 'flex justify-start' : 'flex justify-end'}`
-                      }
-                    >
-                      <div className="bg-gray-200 p-3 rounded-lg">
-                        <strong>Empresa - 2: </strong>
-                        <p className="font-semibold">{companyTwo}</p>
-                        <p className="text-xs text-gray-500">{el.createdAt}</p>
-                        <p>{el.text}</p>
+                    ) : (
+                      <div className="bg-purple-200 p-3 rounded-lg">
+                        <p><strong>Usuario: </strong>
+                          {!message.remitente.fullName ? (
+                            `${message.remitente.firstName} ${message.remitente.lastName}`
+                          ) : message.remitente.fullName}
+                        </p>
+                        <p><strong>Mensaje: </strong>{message.text}</p>
+                        <p><strong>Fecha: </strong>{message.createdAt}</p>
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
             })}

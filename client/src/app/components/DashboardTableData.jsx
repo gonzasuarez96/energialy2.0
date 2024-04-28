@@ -78,6 +78,7 @@ function DashboardTableData({title, data}) {
                       </th>
                     </tr>
                   </thead>
+                  
                   {/* <tbody>
                     {!data ? <h5>No existen licitaciones</h5> : (data.length === 0 ? (
                       <h5>No existen licitaciones</h5>

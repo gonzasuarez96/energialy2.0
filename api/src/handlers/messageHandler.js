@@ -26,7 +26,7 @@ const getAllMessages = async (_, res) => {
         {
           model: Users,
           as: 'remitente',
-          attributes: ['id', 'email'],
+          attributes: ['id', 'firstName', 'lastName', 'email'],
           include: [
             {
               model: Companies,

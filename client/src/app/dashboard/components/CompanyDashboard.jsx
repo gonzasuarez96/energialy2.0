@@ -13,13 +13,8 @@ import {
   axiosGetAllUsers,
   axiosPostMessage,
 } from "@/app/Func/axios";
+import { getCompanyId, getUserId } from "@/app/Func/sessionStorage";
 const socketIo = io("http://localhost:3001");
-
-function getCompanyId() {
-  if (typeof window !== "undefined") {
-    return sessionStorage.getItem("companyId");
-  }
-}
 
 function CompanyDashboard({ user }) {
   const [userProposals, setUserProposals] = useState([]);
@@ -33,6 +28,8 @@ function CompanyDashboard({ user }) {
 
   // * MENSAJES ENVIADOS
   const companyId = getCompanyId();
+  const userId = getUserId();
+  // console.log("userId:", userId)
   const remitente = allUsers.find(function (el) {
     return el.company.id === companyId;
   });
@@ -51,7 +48,7 @@ function CompanyDashboard({ user }) {
     });
     return filterMessage;
   });
-  
+
   const [messageText, setMessageText] = useState("");
 
   useEffect(() => {
@@ -97,7 +94,7 @@ function CompanyDashboard({ user }) {
       destinatarioId: destinatario?.id,
     });
   };
-  
+
   useEffect(() => {
     axiosGetAllUsers(setAllUsers);
     axiosGetAllMessages(setAllMessages);
@@ -124,8 +121,14 @@ function CompanyDashboard({ user }) {
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
           <div className="w-1/2">
             <DashboardTextCard title={"Ingresos"} content={"-"} />
-            <DashboardKpiCard title={"Propuestas Enviadas En Otras Licitaciones"} content={userProposals} />
-            <DashboardKpiCard title={"Propuestas Recibidas En Mis Licitaciones"} content={proposalsToUser} />
+            <DashboardKpiCard
+              title={"Propuestas Enviadas En Otras Licitaciones"}
+              content={userProposals}
+            />
+            <DashboardKpiCard
+              title={"Propuestas Recibidas En Mis Licitaciones"}
+              content={proposalsToUser}
+            />
           </div>
           <div className="w-1/2">
             <div className="flex justify-between gap-2">
@@ -135,49 +138,47 @@ function CompanyDashboard({ user }) {
             <div className="h-full flex flex-col">
               <div className="max-h-80 overflow-y-auto" id="chatMessages">
                 <h1 className="text-xl font-bold mb-4">Historial de Chat</h1>
-                {allMessages.map((el, index) => {
-                  const isSenderCompany1 = !el.remitente.Company ? el.remitente.company.name : el.remitente.Company.name;
-                  const isSenderCompany2 = !el.destinatario.Company ? el.destinatario.company.name : el.destinatario.Company.name;
-                  const sendMessage = allUsers.filter(function(user) {
-                    return user.id === el.destinatario.id;
-                  }).flat(1).filter(function(msg) {
-                    if (msg.mensajesEnviados.length >= 1) {
-                      return user.mensajesEnviados.filter(function(text) {
-                        return text.id === el.id;
-                      });
-                    }
-                  })
-                  // console.log("isSenderCompany1", isSenderCompany1)
-
+                {allMessages.map((message, index) => {
                   return (
-                    <div key={el.id || index}>
-
-                      <div className={`mb-2 ${isSenderCompany1 ? "flex justify-start" : "flex justify-end"}`}>
+                    <div
+                      key={message.id || index}
+                      className={`${message.remitente.id === userId ? "text-right" : "text-left"} mb-2`}
+                    >
+                      {message.remitente.id === userId ? (
                         <div className="bg-gray-200 p-3 rounded-lg">
-                          <strong>Empresa - 1: </strong><p className="font-semibold">{isSenderCompany1}</p>
-                          <p className="text-xs text-gray-500">{el.createdAt}</p>
-                          <p>{el.text}</p>
+                          <p>
+                            <strong>Tú: </strong>
+                            {!message.remitente.fullName
+                              ? `${message.remitente.firstName} ${message.remitente.lastName}`
+                              : message.remitente.fullName}
+                          </p>
+                          <p>
+                            <strong>Mensaje: </strong>
+                            {message.text}
+                          </p>
+                          <p>
+                            <strong>Fecha: </strong>
+                            {message.createdAt}
+                          </p>
                         </div>
-                      </div>
-
-                      <div className={`mb-2 ${isSenderCompany2 ? "flex justify-end" : "flex justify-start"}`}>
-                        <div className="bg-gray-200 p-3 rounded-lg">
-                          <strong>Empresa - 2: </strong><p className="font-semibold">{isSenderCompany2}</p>
-                          <p className="text-xs text-gray-500">{el.createdAt}</p>
-                          {/* <p>{el.text}</p> */}
-                          {
-                            sendMessage?.map(function(el, idx) {
-                              // console.log("el", el)
-                              return (
-                                <div key={el.id || idx}>
-                                  <p>{el.text}</p>
-                                </div>
-                              );
-                            })
-                          }
+                      ) : (
+                        <div className="bg-purple-200 p-3 rounded-lg">
+                          <p>
+                            <strong>Usuario: </strong>
+                            {!message.remitente.fullName
+                              ? `${message.remitente.firstName} ${message.remitente.lastName}`
+                              : message.remitente.fullName}
+                          </p>
+                          <p>
+                            <strong>Mensaje: </strong>
+                            {message.text}
+                          </p>
+                          <p>
+                            <strong>Fecha: </strong>
+                            {message.createdAt}
+                          </p>
                         </div>
-                      </div>
-
+                      )}
                     </div>
                   );
                 })}
@@ -187,7 +188,7 @@ function CompanyDashboard({ user }) {
                   type="text"
                   className="flex-1 mr-2 border rounded px-4 py-2 focus:outline-none"
                   value={messageText}
-                  onChange={e => setMessageText(e.target.value)}
+                  onChange={(e) => setMessageText(e.target.value)}
                   placeholder="Escribe tu mensaje..."
                 />
                 <button
