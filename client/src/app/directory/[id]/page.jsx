@@ -1,15 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { urlProduction } from "@/app/data/dataGeneric";
 
 import CollapsedBar from "./components/collapsedBar";
-import { setAllCompanies } from "@/app/redux/features/companieSlice";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import io from "socket.io-client";
-import axios from "axios";
-import { axiosGetAllMessages, axiosGetAllUsers, axiosGetDetailCompany, axiosPostMessage } from "@/app/Func/axios";
+import {
+  axiosGetAllMessages,
+  axiosGetAllUsers,
+  axiosGetDetailCompany,
+  axiosPostMessage,
+} from "@/app/Func/axios";
 import { getCompanyId, getUserId } from "@/app/Func/sessionStorage";
 const socketIo = io("http://localhost:3001");
 
@@ -21,16 +21,16 @@ function page(props) {
   const [showChatBox, setShowChatBox] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
 
-  // * MENSAJES RECIBIDOS
-  const destinatario = allUsers.find(function(el) {
+  // * QUIEN RECIBE EL MENSAJE
+  const destinatario = allUsers.find(function (el) {
     return el.company.id === id;
   });
 
-  // * MENSAJES ENVIADOS
+  // * QUIEN ENVIA EL MENSAJE
   const companyId = getCompanyId();
   const userId = getUserId();
-  // console.log("userId:", userId)
-  const remitente = allUsers.find(function(el) {
+  // * SE VERIFICA QUE TENGA UNA COMPAÑIA CREADA
+  const remitente = allUsers.find(function (el) {
     return el.company.id === companyId;
   });
   const [messageText, setMessageText] = useState("");
@@ -39,16 +39,13 @@ function page(props) {
     if (!socketIo) return;
 
     socketIo.on("message", (message) => {
-      // console.log("message", message)  
+      // * SE CREA UN OBJETO RAMDON TEMPORAL PARA LA VISUALIZACION EN TIEMPO REAL
       if (remitente && destinatario) {
         const newMessage = {
           text: message,
           remitente: remitente,
           destinatario: destinatario,
-          // remitente: destinatario,
-          // destinatario: remitente,
-        }
-        console.log("newMessage", newMessage)
+        };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     });
@@ -69,16 +66,14 @@ function page(props) {
       text: messageText,
       remitenteId: remitente?.id,
       destinatarioId: destinatario?.id,
-      // remitenteId: destinatario?.id,
-      // destinatarioId: remitente?.id,
     });
   };
 
   useEffect(() => {
-    axiosGetAllUsers(setAllUsers)
-    axiosGetAllMessages(setAllMessages)
+    axiosGetAllUsers(setAllUsers);
+    axiosGetAllMessages(setAllMessages);
     if (id) {
-      axiosGetDetailCompany(id, setCompany)
+      axiosGetDetailCompany(id, setCompany);
     }
   }, []);
 
@@ -113,66 +108,80 @@ function page(props) {
           </div>
           <h1>HISTORIAL DE CHAT</h1>
           <div>
-            {allMessages.map(function(message, index) {
-                return (
-                  <div
-                    key={message.id || index}
-                    className={`${
-                      message.remitente.id === userId ? 'text-right' : 'text-left'
-                    } mb-2`}
-                  >
-                    {message.remitente.id === userId ? (
-                      <div className="bg-gray-200 p-3 rounded-lg">
-                        <p><strong>Tú: </strong>
-                          {!message.remitente.fullName ? (
-                            `${message.remitente.firstName} ${message.remitente.lastName}`
-                          ) : message.remitente.fullName}
-                        </p>
-                        <p><strong>Mensaje: </strong>{message.text}</p>
-                        <p><strong>Fecha: </strong>{message.createdAt}</p>
-                      </div>
-                    ) : (
-                      <div className="bg-purple-200 p-3 rounded-lg">
-                        <p><strong>Usuario: </strong>
-                          {!message.remitente.fullName ? (
-                            `${message.remitente.firstName} ${message.remitente.lastName}`
-                          ) : message.remitente.fullName}
-                        </p>
-                        <p><strong>Mensaje: </strong>{message.text}</p>
-                        <p><strong>Fecha: </strong>{message.createdAt}</p>
-                      </div>
-                    )}
-                  </div>
-                );
+            {allMessages.map(function (message, index) {
+              return (
+                <div
+                  key={message.id || index}
+                  className={`${
+                    message.remitente.id === userId ? "text-right" : "text-left"
+                  } mb-2`}
+                >
+                  {message.remitente.id === userId ? (
+                    <div className="bg-gray-200 p-3 rounded-lg">
+                      <p>
+                        <strong>Tú: </strong>
+                        {!message.remitente.fullName
+                          ? `${message.remitente.firstName} ${message.remitente.lastName}`
+                          : message.remitente.fullName}
+                      </p>
+                      <p>
+                        <strong>Mensaje: </strong>
+                        {message.text}
+                      </p>
+                      <p>
+                        <strong>Fecha: </strong>
+                        {message.createdAt}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="bg-purple-200 p-3 rounded-lg">
+                      <p>
+                        <strong>Usuario: </strong>
+                        {!message.remitente.fullName
+                          ? `${message.remitente.firstName} ${message.remitente.lastName}`
+                          : message.remitente.fullName}
+                      </p>
+                      <p>
+                        <strong>Mensaje: </strong>
+                        {message.text}
+                      </p>
+                      <p>
+                        <strong>Fecha: </strong>
+                        {message.createdAt}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
             })}
           </div>
           <button
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-              onClick={() => setShowChatBox(!showChatBox)}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            onClick={() => setShowChatBox(!showChatBox)}
           >
-              Open Chat
+            Open Chat
           </button>
           {showChatBox && (
-              <div className="bg-gray-200 p-4 rounded mt-4">
+            <div className="bg-gray-200 p-4 rounded mt-4">
               <div className="bg-gray-200 p-4 rounded">
-                  <form className="flex">
-                      <input
-                          type="text"
-                          className="flex-1 mr-2 border rounded px-4 py-2 focus:outline-none"
-                          value={messageText}
-                          onChange={(e) => setMessageText(e.target.value)}
-                          placeholder="Type your message..."
-                      />
-                      <button
-                          type="sumit"
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                          onClick={sendMessage}
-                      >
-                          Send
-                      </button>
-                  </form>
+                <form className="flex">
+                  <input
+                    type="text"
+                    className="flex-1 mr-2 border rounded px-4 py-2 focus:outline-none"
+                    value={messageText}
+                    onChange={(e) => setMessageText(e.target.value)}
+                    placeholder="Type your message..."
+                  />
+                  <button
+                    type="sumit"
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                    onClick={sendMessage}
+                  >
+                    Send
+                  </button>
+                </form>
               </div>
-              </div>
+            </div>
           )}
         </div>
       )}

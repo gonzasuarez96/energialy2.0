@@ -4,14 +4,12 @@ const { formatDate } = require("../services/formatDate.JS");
 const createMessage = async (req, res,) => {
   try {
     const message = req.body;
-    // console.log("message", message)
 
     const createMessage = await Message.create({ 
       text: message.text, 
       remitenteId: message.remitenteId, 
       destinatarioId: message.destinatarioId, 
     });
-    // console.log("createMessage:",JSON.parse(JSON.stringify(createMessage)))
 
     return res.status(201).json(createMessage);
   } catch (error) {

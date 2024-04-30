@@ -16,8 +16,8 @@ function getCompanyId() {
 function CompanyCardContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   const filterCompanies = useSelector((state) => state.company.filterCompanies);
-  const companyId = getCompanyId();
   // * SE OBTIENEN TODAS LA COMPAÑIAS MENOS A LA QUE EL USUARIO PERTENECE
+  const companyId = getCompanyId();
   const filterCompanyById = filterCompanies.filter(function(el) {
     return el.id !== companyId;
   })

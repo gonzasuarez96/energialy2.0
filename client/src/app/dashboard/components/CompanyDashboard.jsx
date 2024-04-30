@@ -26,15 +26,14 @@ function CompanyDashboard({ user }) {
 
   const [allUsers, setAllUsers] = useState([]);
 
-  // * MENSAJES ENVIADOS
+  // * QUIEN ENVIA EL MENSAJE
   const companyId = getCompanyId();
   const userId = getUserId();
-  // console.log("userId:", userId)
   const remitente = allUsers.find(function (el) {
     return el.company.id === companyId;
   });
 
-  // * MENSAJES RECIBIDOS
+  // * QUIEN RECIBE EL MENSAJE
   const [allMessages, setAllMessages] = useState([]);
   const destinatario = allUsers.find(function (el) {
     const { mensajesRecibidos } = el;
@@ -55,14 +54,13 @@ function CompanyDashboard({ user }) {
     if (!socketIo) return;
 
     socketIo.on("message", (message) => {
-      // console.log("message", message)
+      // * SE CREA UN OBJETO RAMDON TEMPORAL PARA LA VISUALIZACION EN TIEMPO REAL
       if (remitente && destinatario) {
         const newMessage = {
           text: message,
           remitente: remitente,
           destinatario: destinatario,
         };
-        // console.log("newMessage", newMessage)
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
         scrollToBottom();
       }
