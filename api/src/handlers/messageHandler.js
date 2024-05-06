@@ -1,66 +1,27 @@
-const { Message, Users, Companies } = require("../db");
-const { formatDate } = require("../services/formatDate.JS");
+const { createMessageController, getAllMessagesController } = require("../controllers/messagesController");
 
-const createMessage = async (req, res,) => {
+const createMessageHandler = async (req, res) => {
   try {
     const message = req.body;
 
-    const createMessage = await Message.create({ 
-      text: message.text, 
-      remitenteId: message.remitenteId, 
-      destinatarioId: message.destinatarioId, 
-    });
+    const createMessage = await createMessageController(message);
 
     return res.status(201).json(createMessage);
   } catch (error) {
-    console.log("Error en createMessage por:", error)
+    console.log("Error en createMessageHandler por:", error)
+    return res.status(error.status || 500).json({ error: error.message });
   }
 };
 
-const getAllMessages = async (_, res) => {
+const getAllMessagesHandler = async (_, res) => {
   try {
-    const messages = await Message.findAll({
-      include: [
-        {
-          model: Users,
-          as: 'remitente',
-          attributes: ['id', 'firstName', 'lastName', 'email'],
-          include: [
-            {
-              model: Companies,
-              attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
-            }
-          ],
-        },
-        {
-          model: Users,
-          as: 'destinatario',
-          attributes: ['id', 'email'],
-          include: [
-            {
-              model: Companies,
-              attributes: ['id', 'name', 'profilePicture', 'bannerPicture'],
-            }
-          ],
-        },
-      ],
-    });
-
-    const cleanMessages = messages.map(function(el) {
-      return {
-        id: el.id,
-        text: el.text,
-        remitente: el.remitente,
-        destinatario: el.destinatario,
-        createdAt: formatDate(el.createdAt),
-        updatedAt: formatDate(el.updatedAt),
-      }
-    })
+    const messages = await getAllMessagesController();
     
-    return res.status(200).json(cleanMessages);
+    return res.status(200).json(messages);
   } catch (error) {
-    console.log("Error en getAllMessages por:", error)
+    console.log("Error en getAllMessagesHandler por:", error)
+    return res.status(error.status || 500).json({ error: error.message });
   }
 };
 
-module.exports = { createMessage, getAllMessages };
+module.exports = { createMessageHandler, getAllMessagesHandler };

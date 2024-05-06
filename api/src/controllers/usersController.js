@@ -1,4 +1,4 @@
-const { Users, Companies, Message } = require('../db');
+const { Users, Companies, Messages } = require('../db');
 
 const cleanUsers = (users) => {
   if (Array.isArray(users)) {
@@ -8,8 +8,8 @@ const cleanUsers = (users) => {
       email: user.email,
       role: user.role,
       company: user.Company,
-      mensajesEnviados: user.mensajesEnviados,
-      mensajesRecibidos: user.mensajesRecibidos,
+      sentMessages: user.sentMessages,
+      receivedMessages: user.receivedMessages,
       isActive: user.isActive,
     }));
     return cleanUsersArray;
@@ -25,8 +25,8 @@ const cleanUsers = (users) => {
       position: users.position,
       role: users.role,
       company: users.Company,
-      mensajesEnviados: users.mensajesEnviados,
-      mensajesRecibidos: users.mensajesRecibidos,
+      sentMessages: users.sentMessages,
+      receivedMessages: users.receivedMessages,
       isActive: users.isActive,
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
@@ -43,15 +43,15 @@ const getAllUsers = async () => {
         attributes: ['id', 'name', 'subscription'],
       }, 
       {
-        model: Message,
-        as: 'mensajesEnviados',
-        foreignKey: 'remitenteId',
+        model: Messages,
+        as: 'sentMessages',
+        foreignKey: 'senderId',
         attributes: ['id', 'text'],
       },
       {
-        model: Message,
-        as: 'mensajesRecibidos',
-        foreignKey: 'destinatarioId',
+        model: Messages,
+        as: 'receivedMessages',
+        foreignKey: 'receiverId',
         attributes: ['id', 'text'],
       },
     ],
@@ -83,15 +83,15 @@ const getUserByEmail = async (email) => {
         attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
       },
       {
-        model: Message,
-        as: 'mensajesEnviados',
-        foreignKey: 'remitenteId',
+        model: Messages,
+        as: 'sentMessages',
+        foreignKey: 'senderId',
         attributes: ['id', 'text'],
       },
       {
-        model: Message,
-        as: 'mensajesRecibidos',
-        foreignKey: 'destinatarioId',
+        model: Messages,
+        as: 'receivedMessages',
+        foreignKey: 'receiverId',
         attributes: ['id', 'text'],
       },
     ]

@@ -29,17 +29,17 @@ function CompanyDashboard({ user }) {
   // * QUIEN ENVIA EL MENSAJE
   const companyId = getCompanyId();
   const userId = getUserId();
-  const remitente = allUsers.find(function (el) {
+  const sender = allUsers.find(function (el) {
     return el.company.id === companyId;
   });
 
   // * QUIEN RECIBE EL MENSAJE
   const [allMessages, setAllMessages] = useState([]);
-  const destinatario = allUsers.find(function (el) {
-    const { mensajesRecibidos } = el;
-    const filterMessage = mensajesRecibidos.find(function (mensajeRecibido) {
+  const receiver = allUsers.find(function (el) {
+    const { receivedMessages } = el;
+    const filterMessage = receivedMessages.find(function (receivedMessage) {
       const findMatchMessage = allMessages.find(function (eachMessage) {
-        if (eachMessage.id === mensajeRecibido.id) {
+        if (eachMessage.id === receivedMessage.id) {
           return el;
         }
       });
@@ -55,11 +55,11 @@ function CompanyDashboard({ user }) {
 
     socketIo.on("message", (message) => {
       // * SE CREA UN OBJETO RAMDON TEMPORAL PARA LA VISUALIZACION EN TIEMPO REAL
-      if (remitente && destinatario) {
+      if (sender && receiver) {
         const newMessage = {
           text: message,
-          remitente: remitente,
-          destinatario: destinatario,
+          sender: sender,
+          receiver: receiver,
         };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
         scrollToBottom();
@@ -80,7 +80,7 @@ function CompanyDashboard({ user }) {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    if (!socketIo || !messageText.trim() || !destinatario) {
+    if (!socketIo || !messageText.trim() || !receiver) {
       setMessageText("");
       return;
     }
@@ -88,8 +88,8 @@ function CompanyDashboard({ user }) {
     setMessageText("");
     axiosPostMessage({
       text: messageText,
-      remitenteId: remitente?.id,
-      destinatarioId: destinatario?.id,
+      senderId: sender?.id,
+      receiverId: receiver?.id,
     });
   };
 
@@ -140,15 +140,15 @@ function CompanyDashboard({ user }) {
                   return (
                     <div
                       key={message.id || index}
-                      className={`${message.remitente.id === userId ? "text-right" : "text-left"} mb-2`}
+                      className={`${message.sender.id === userId ? "text-right" : "text-left"} mb-2`}
                     >
-                      {message.remitente.id === userId ? (
+                      {message.sender.id === userId ? (
                         <div className="bg-gray-200 p-3 rounded-lg">
                           <p>
                             <strong>Tú: </strong>
-                            {!message.remitente.fullName
-                              ? `${message.remitente.firstName} ${message.remitente.lastName}`
-                              : message.remitente.fullName}
+                            {!message.sender.fullName
+                              ? `${message.sender.firstName} ${message.sender.lastName}`
+                              : message.sender.fullName}
                           </p>
                           <p>
                             <strong>Mensaje: </strong>
@@ -163,9 +163,9 @@ function CompanyDashboard({ user }) {
                         <div className="bg-purple-200 p-3 rounded-lg">
                           <p>
                             <strong>Usuario: </strong>
-                            {!message.remitente.fullName
-                              ? `${message.remitente.firstName} ${message.remitente.lastName}`
-                              : message.remitente.fullName}
+                            {!message.sender.fullName
+                              ? `${message.sender.firstName} ${message.sender.lastName}`
+                              : message.sender.fullName}
                           </p>
                           <p>
                             <strong>Mensaje: </strong>

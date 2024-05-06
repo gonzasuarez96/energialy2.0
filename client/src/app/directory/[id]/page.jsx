@@ -22,7 +22,7 @@ function page(props) {
   const [allUsers, setAllUsers] = useState([]);
 
   // * QUIEN RECIBE EL MENSAJE
-  const destinatario = allUsers.find(function (el) {
+  const receiver = allUsers.find(function (el) {
     return el.company.id === id;
   });
 
@@ -30,7 +30,7 @@ function page(props) {
   const companyId = getCompanyId();
   const userId = getUserId();
   // * SE VERIFICA QUE TENGA UNA COMPAÑIA CREADA
-  const remitente = allUsers.find(function (el) {
+  const sender = allUsers.find(function (el) {
     return el.company.id === companyId;
   });
   const [messageText, setMessageText] = useState("");
@@ -40,11 +40,11 @@ function page(props) {
 
     socketIo.on("message", (message) => {
       // * SE CREA UN OBJETO RAMDON TEMPORAL PARA LA VISUALIZACION EN TIEMPO REAL
-      if (remitente && destinatario) {
+      if (sender && receiver) {
         const newMessage = {
           text: message,
-          remitente: remitente,
-          destinatario: destinatario,
+          sender: sender,
+          receiver: receiver,
         };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
       }
@@ -64,8 +64,8 @@ function page(props) {
     setMessageText("");
     axiosPostMessage({
       text: messageText,
-      remitenteId: remitente?.id,
-      destinatarioId: destinatario?.id,
+      senderId: sender?.id,
+      receiverId: receiver?.id,
     });
   };
 
@@ -113,16 +113,16 @@ function page(props) {
                 <div
                   key={message.id || index}
                   className={`${
-                    message.remitente.id === userId ? "text-right" : "text-left"
+                    message.sender.id === userId ? "text-right" : "text-left"
                   } mb-2`}
                 >
-                  {message.remitente.id === userId ? (
+                  {message.sender.id === userId ? (
                     <div className="bg-gray-200 p-3 rounded-lg">
                       <p>
                         <strong>Tú: </strong>
-                        {!message.remitente.fullName
-                          ? `${message.remitente.firstName} ${message.remitente.lastName}`
-                          : message.remitente.fullName}
+                        {!message.sender.fullName
+                          ? `${message.sender.firstName} ${message.sender.lastName}`
+                          : message.sender.fullName}
                       </p>
                       <p>
                         <strong>Mensaje: </strong>
@@ -137,9 +137,9 @@ function page(props) {
                     <div className="bg-purple-200 p-3 rounded-lg">
                       <p>
                         <strong>Usuario: </strong>
-                        {!message.remitente.fullName
-                          ? `${message.remitente.firstName} ${message.remitente.lastName}`
-                          : message.remitente.fullName}
+                        {!message.sender.fullName
+                          ? `${message.sender.firstName} ${message.sender.lastName}`
+                          : message.sender.fullName}
                       </p>
                       <p>
                         <strong>Mensaje: </strong>
