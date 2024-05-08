@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 app.use('/', routes);
 
 app.get('/', (req, res) => {
-  res.send('API de Energialy');
+  res.send('Energialy API');
 });
 
 // Error catching endware.
