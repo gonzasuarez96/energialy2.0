@@ -1,6 +1,6 @@
-"use client";
-import { useGetCategoriesQuery } from "@/app/redux/services/categoriesApi";
-import { useGetLocationsQuery } from "@/app/redux/services/locationApi";
+'use client'
+import { useGetCategoriesQuery } from '@/app/redux/services/categoriesApi'
+import { useGetLocationsQuery } from '@/app/redux/services/locationApi'
 import {
   Card,
   Input,
@@ -9,112 +9,112 @@ import {
   Typography,
   CardHeader,
   Switch,
-} from "@material-tailwind/react";
-import { FormGroup } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import Select from "react-select";
-import { useState } from "react";
-import { duration, etapa, tendersTypes } from "@/app/data/dataGeneric";
-import axios from "axios";
+} from '@material-tailwind/react'
+import { FormGroup } from 'react-bootstrap'
+import { useSelector } from 'react-redux'
+import Select from 'react-select'
+import { useState } from 'react'
+import { duration, etapa, tendersTypes } from '@/app/data/dataGeneric'
+import axios from 'axios'
 import {
   displayFailedMessage,
   displaySuccessMessage,
-} from "@/app/components/Toastify";
-import ErrorMensage from "@/app/components/ErrorMensage";
-import { ToastContainer, toast } from "react-toastify";
-import { useRouter } from "next/navigation";
-import getLocalStorage from "@/app/Func/localStorage";
-import { urlProduction } from "@/app/data/dataGeneric";
+} from '@/app/components/Toastify'
+import ErrorMensage from '@/app/components/ErrorMensage'
+import { ToastContainer, toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
+import getLocalStorage from '@/app/Func/localStorage'
+import { urlProduction } from '@/app/data/dataGeneric'
 
 function CreateTenderForm() {
   //fetch states
 
   const { data: categories, isLoading: categoriesLoading } =
-    useGetCategoriesQuery();
+    useGetCategoriesQuery()
   const { data: locations, isLoading: loadingLocations } =
-    useGetLocationsQuery();
+    useGetLocationsQuery()
 
-  const userData = getLocalStorage();
+  const userData = getLocalStorage()
 
-  const router = useRouter();
+  const router = useRouter()
   //local states
   const [tenderData, setTenderData] = useState({
-    title: "",
-    description: "",
-    contractType: "",
+    title: '',
+    description: '',
+    contractType: '',
     budget: 0,
     showBudget: false,
-    majorSector: "",
-    projectDuration: "",
-    validityDate: "",
-    locationId: "",
+    majorSector: '',
+    projectDuration: '',
+    validityDate: '',
+    locationId: '',
     subcategories: [],
     //address:"",
     companyId: userData?.company.id,
-  });
+  })
 
   const [inputError, setInputError] = useState({
-    title: "",
-    description: "",
-    contractType: "",
-    budget: "",
-    majorSector: "",
-    projectDuration: "",
-    validityDate: "",
-    locationId: "",
-    subcategories: "",
+    title: '',
+    description: '',
+    contractType: '',
+    budget: '',
+    majorSector: '',
+    projectDuration: '',
+    validityDate: '',
+    locationId: '',
+    subcategories: '',
     //address:""
-  });
-  const [categorieSelected, setCategorieSelected] = useState([]);
-  const [subCatSelected, setSubCatSelected] = useState([]);
-  const [isShow, setIsShow] = useState(true);
-  const [isPrivateCheqed, setIsPrivateCheqed] = useState(false);
-  const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
-  const [isFileAttached, setIsFileAttached] = useState(false);
-  const [editorValue, setEditorValue] = useState("");
+  })
+  const [categorieSelected, setCategorieSelected] = useState([])
+  const [subCatSelected, setSubCatSelected] = useState([])
+  const [isShow, setIsShow] = useState(true)
+  const [isPrivateCheqed, setIsPrivateCheqed] = useState(false)
+  const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false)
+  const [isFileAttached, setIsFileAttached] = useState(false)
+  const [editorValue, setEditorValue] = useState('')
 
   //Handlers
   const handleChangeCategories = (e) => {
     //crear las subcategorias para el select
     const subcategories = categories?.find(
       (cat) => cat.id === e.value
-    ).subcategories;
+    ).subcategories
     setSubCatSelected(
       subcategories.map((subcat) => ({ name: subcat.name, value: subcat.id }))
-    );
-  };
+    )
+  }
   const handleSubcategorieChange = (e) => {
-    const arr = [];
-    arr.push(e.value);
-    setTenderData({ ...tenderData, subcategories: arr });
-  };
+    const arr = []
+    arr.push(e.value)
+    setTenderData({ ...tenderData, subcategories: arr })
+  }
 
   const handleChangeLocation = (e) => {
-    setTenderData({ ...tenderData, locationId: e.value });
-  };
+    setTenderData({ ...tenderData, locationId: e.value })
+  }
   const handlePrivateChange = (e) => {
     if (isPrivateCheqed === false) {
-      setIsPrivateCheqed(true);
+      setIsPrivateCheqed(true)
     } else {
-      setIsPrivateCheqed(false);
+      setIsPrivateCheqed(false)
     }
-  };
+  }
 
   const handleFilesAttachedPermission = (e) => {
     if (isFileAttached === false) {
-      setIsFileAttached(true);
+      setIsFileAttached(true)
     } else {
-      setIsFileAttached(false);
+      setIsFileAttached(false)
     }
-  };
+  }
 
   const handleSponsoredChange = (e) => {
     if (isSponsoredCheqed === false) {
-      setIsSponsoredCheqed(true);
+      setIsSponsoredCheqed(true)
     } else {
-      setIsSponsoredCheqed(false);
+      setIsSponsoredCheqed(false)
     }
-  };
+  }
 
   const handleShowChange = () => {
     // if(isShow === false){
@@ -124,79 +124,79 @@ function CreateTenderForm() {
     //   setIsShow(false)
     //    setTenderData({ ...tenderData, showBudget: false });
     // }
-    setIsShow(!isShow);
-    setTenderData({ ...tenderData, showBudget: isShow });
-  };
+    setIsShow(!isShow)
+    setTenderData({ ...tenderData, showBudget: isShow })
+  }
 
   // const handleDescriptionChange = (data) => {
   //   setTenderData({ ...tenderData, description: data });
   // }
 
   const handleInputsChanges = (e) => {
-    setTenderData({ ...tenderData, [e.target.name]: e.target.value });
-    console.log(tenderData);
-  };
+    setTenderData({ ...tenderData, [e.target.name]: e.target.value })
+    console.log(tenderData)
+  }
 
   const validation = (tenderData) => {
-    console.log("entro acá");
-    console.log(tenderData);
-    const errors = {};
+    console.log('entro acá')
+    console.log(tenderData)
+    const errors = {}
 
-    if (tenderData.title === "") {
-      errors.title = "El titulo de la Licitación no puede estar vacío";
+    if (tenderData.title === '') {
+      errors.title = 'El titulo de la Licitación no puede estar vacío'
     }
-    if (tenderData.description === "") {
-      errors.description = "La Licitación debe tener una descripción";
+    if (tenderData.description === '') {
+      errors.description = 'La Licitación debe tener una descripción'
     }
-    if (tenderData.contractType === "") {
-      errors.contractType = "El tipo de contrato es requerido";
+    if (tenderData.contractType === '') {
+      errors.contractType = 'El tipo de contrato es requerido'
     }
-    if (tenderData.majorSector === "") {
-      errors.majorSector = "El sector es requerido";
+    if (tenderData.majorSector === '') {
+      errors.majorSector = 'El sector es requerido'
     }
-    if (tenderData.projectDuration === "") {
-      errors.projectDuration = "La duración del proyecto es requerida";
+    if (tenderData.projectDuration === '') {
+      errors.projectDuration = 'La duración del proyecto es requerida'
     }
-    if (tenderData.validityDate === "") {
+    if (tenderData.validityDate === '') {
       errors.validityDate =
-        "La fecha límite para enviar propuestas es requerida";
+        'La fecha límite para enviar propuestas es requerida'
     }
-    if (tenderData.locationId === "") {
-      errors.locationId = "La ubicación del proyecto es requerida";
+    if (tenderData.locationId === '') {
+      errors.locationId = 'La ubicación del proyecto es requerida'
     }
     if (tenderData.subcategories.length === 0) {
-      errors.subcategories = "Las subcategorias del proyecto son requeridas";
+      errors.subcategories = 'Las subcategorias del proyecto son requeridas'
     }
-    if (tenderData.address === "") {
-      errors.locationId = "La ubicación del proyecto es requerida";
+    if (tenderData.address === '') {
+      errors.locationId = 'La ubicación del proyecto es requerida'
     }
     if (tenderData.budget === 0) {
-      errors.budget = "El presupuesto del proyecto es requerido";
+      errors.budget = 'El presupuesto del proyecto es requerido'
     }
 
-    setInputError(errors);
-    return Object.keys(errors).length === 0;
-  };
+    setInputError(errors)
+    return Object.keys(errors).length === 0
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const hasErrors = !validation(tenderData);
+    const hasErrors = !validation(tenderData)
 
     // console.log(tenderData);
 
     if (!hasErrors) {
-      console.log(tenderData);
+      console.log(tenderData)
       try {
-        const tender = await axios.post(`${urlProduction}/tenders`, tenderData);
-        displaySuccessMessage("Licitación creada con éxito");
-        setTimeout(() => router.back(), 2000);
+        const tender = await axios.post(`${urlProduction}/tenders`, tenderData)
+        displaySuccessMessage('Licitación creada con éxito')
+        setTimeout(() => router.back(), 2000)
       } catch (error) {
-        console.log(error);
-        displayFailedMessage(error.response.data.error);
+        console.log(error)
+        displayFailedMessage(error.response.data.error)
       }
     }
-  };
+  }
 
   return (
     <>
@@ -227,7 +227,7 @@ function CreateTenderForm() {
                 name="title"
                 onChange={handleInputsChanges}
               />
-              {inputError.title !== "" ? (
+              {inputError.title !== '' ? (
                 <ErrorMensage message={inputError.title} />
               ) : null}
               <div className="md:flex md:gap-3">
@@ -241,7 +241,7 @@ function CreateTenderForm() {
                     <option>{type}</option>
                   ))}
                 </select>
-                {inputError.contractType !== "" ? (
+                {inputError.contractType !== '' ? (
                   <ErrorMensage message={inputError.contractType} />
                 ) : null}
                 <select
@@ -254,7 +254,7 @@ function CreateTenderForm() {
                     <option>{d}</option>
                   ))}
                 </select>
-                {inputError.projectDuration !== "" ? (
+                {inputError.projectDuration !== '' ? (
                   <ErrorMensage message={inputError.projectDuration} />
                 ) : null}
               </div>
@@ -269,7 +269,7 @@ function CreateTenderForm() {
                     <option>{e}</option>
                   ))}
                 </select>
-                {inputError.majorSector !== "" ? (
+                {inputError.majorSector !== '' ? (
                   <ErrorMensage message={inputError.majorSector} />
                 ) : null}
                 <div className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500 flex justify-between">
@@ -280,7 +280,7 @@ function CreateTenderForm() {
                     name="validityDate"
                     onChange={handleInputsChanges}
                   />
-                  {inputError.validityDate !== "" ? (
+                  {inputError.validityDate !== '' ? (
                     <ErrorMensage message={inputError.validityDate} />
                   ) : null}
                 </div>
@@ -293,7 +293,7 @@ function CreateTenderForm() {
                   onChange={handleInputsChanges}
                   placeholder="Presupuesto en U$S"
                 />
-                {inputError.budget !== "" ? (
+                {inputError.budget !== '' ? (
                   <ErrorMensage message={inputError.budget} />
                 ) : null}
               </div>
@@ -308,7 +308,7 @@ function CreateTenderForm() {
                     class="inline-block pl-[0.15rem] hover:cursor-pointer"
                     for="flexSwitchCheckDefault"
                   >
-                    {isShow ? "Mostrar Presupuesto" : "No Mostrar Presupuesto"}
+                    {isShow ? 'Mostrar Presupuesto' : 'No Mostrar Presupuesto'}
                   </label>
 
                   <input
@@ -330,7 +330,7 @@ function CreateTenderForm() {
               </Typography>
             </div>
             <div className="ml-5 flex flex-col gap-2">
-              {categoriesLoading && "Loading..."}
+              {categoriesLoading && 'Loading...'}
               <Select
                 options={categories?.map((cat) => ({
                   value: cat.id,
@@ -350,7 +350,7 @@ function CreateTenderForm() {
               </Typography>
             </div>
             <div className="ml-5 flex flex-col gap-2">
-              {categoriesLoading && "Loading..."}
+              {categoriesLoading && 'Loading...'}
               <Select
                 options={subCatSelected?.map((subCat) => ({
                   label: subCat.name,
@@ -361,7 +361,7 @@ function CreateTenderForm() {
                 placeholder="SUBCATEGORIA"
                 onChange={handleSubcategorieChange}
               />
-              {inputError.subcategories !== "" ? (
+              {inputError.subcategories !== '' ? (
                 <ErrorMensage message={inputError.subcategories} />
               ) : null}
             </div>
@@ -374,7 +374,7 @@ function CreateTenderForm() {
               </Typography>
             </div>
             <div className="ml-5 flex flex-col gap-2">
-              {loadingLocations && "Loading..."}
+              {loadingLocations && 'Loading...'}
               <Select
                 options={locations?.map((loc) => ({
                   value: loc.id,
@@ -383,7 +383,7 @@ function CreateTenderForm() {
                 placeholder="SELECCIONAR UBICACIÓN"
                 onChange={handleChangeLocation}
               />
-              {inputError.locationId !== "" ? (
+              {inputError.locationId !== '' ? (
                 <ErrorMensage message={inputError.locationId} />
               ) : null}
               <input
@@ -406,7 +406,7 @@ function CreateTenderForm() {
                   class="inline-block pl-[0.15rem] hover:cursor-pointer"
                   for="flexSwitchCheckDefault"
                 >
-                  {isSponsoredCheqed ? "Destacar" : "No destacar"}
+                  {isSponsoredCheqed ? 'Destacar' : 'No destacar'}
                 </label>
                 <input
                   class="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
@@ -428,7 +428,7 @@ function CreateTenderForm() {
                   class="inline-block pl-[0.15rem] hover:cursor-pointer"
                   for="flexSwitchCheckDefault"
                 >
-                  {isPrivateCheqed ? "Privada" : "Publica"}
+                  {isPrivateCheqed ? 'Privada' : 'Publica'}
                 </label>
 
                 <input
@@ -470,7 +470,7 @@ function CreateTenderForm() {
                   class="inline-block pl-[0.15rem] hover:cursor-pointer"
                   for="flexSwitchCheckDefault"
                 >
-                  {isFileAttached ? "Permitir" : "No Permitir"}
+                  {isFileAttached ? 'Permitir' : 'No Permitir'}
                 </label>
 
                 <input
@@ -491,10 +491,10 @@ function CreateTenderForm() {
             Crear Licitación
           </button>
         </Card>
-        <ToastContainer style={{ marginTop: "300px" }} />
+        <ToastContainer style={{ marginTop: '300px' }} />
       </FormGroup>
     </>
-  );
+  )
 }
 
-export default CreateTenderForm;
+export default CreateTenderForm
