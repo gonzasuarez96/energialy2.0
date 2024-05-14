@@ -430,7 +430,14 @@ function CreateTenderForm() {
                 />
               </div>
             </div>
-            <div></div>
+            {isFileAttached && (
+              <div className="flex border-dashed w-full border-2 border-gray-300 rounded-md p-3 justify-between items-center">
+                <button className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm">
+                  Selecciona Archivos
+                </button>
+                <Typography className="mb-0">Puedes cargar archivos-documentación requerida por la Empresa.</Typography>
+              </div>
+            )}
           </div>
           <button className="bg-primary-600 text-white font-semibold rounded-md p-2 mt-4" onClick={handleSubmit}>
             Crear Licitación
