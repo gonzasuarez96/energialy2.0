@@ -1,16 +1,15 @@
 'use client';
 import { useGetCategoriesQuery } from '@/app/redux/services/categoriesApi';
 import { useGetLocationsQuery } from '@/app/redux/services/locationApi';
-import { Card, Input, Checkbox, Button, Typography, CardHeader, Switch } from '@material-tailwind/react';
+import { Card, Typography, Dialog, DialogHeader, DialogBody, DialogFooter } from '@material-tailwind/react';
 import { FormGroup } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import { useState } from 'react';
 import { duration, etapa, tendersTypes } from '@/app/data/dataGeneric';
 import axios from 'axios';
 import { displayFailedMessage, displaySuccessMessage } from '@/app/components/Toastify';
 import ErrorMensage from '@/app/components/ErrorMensage';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import getLocalStorage from '@/app/Func/localStorage';
 import { urlProduction } from '@/app/data/dataGeneric';
@@ -59,6 +58,9 @@ function CreateTenderForm() {
   const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
   const [isFileAttached, setIsFileAttached] = useState(false);
   const [editorValue, setEditorValue] = useState('');
+  const [open, setOpen] = useState(null);
+
+  const handleOpen = () => setOpen((prev) => !prev);
 
   //Handlers
   const handleChangeCategories = (e) => {
@@ -432,10 +434,23 @@ function CreateTenderForm() {
             </div>
             {isFileAttached && (
               <div className="flex border-dashed w-full border-2 border-gray-300 rounded-md p-3 justify-between items-center">
-                <button className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm">
+                <button
+                  onClick={handleOpen}
+                  className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm"
+                >
                   Selecciona Archivos
                 </button>
                 <Typography className="mb-0">Puedes cargar archivos-documentación requerida por la Empresa.</Typography>
+                <Dialog open={open} size="xs" handler={handleOpen} className="flex flex-col">
+                  <DialogHeader>Adjuntar Archivos</DialogHeader>
+                  <DialogBody>
+                    <input type="file" />
+                  </DialogBody>
+                  <DialogFooter>
+                    <button>Cancelar</button>
+                    <button>Confirmar</button>
+                  </DialogFooter>
+                </Dialog>
               </div>
             )}
           </div>
