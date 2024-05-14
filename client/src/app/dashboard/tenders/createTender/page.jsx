@@ -1,42 +1,29 @@
-'use client'
-import { useGetCategoriesQuery } from '@/app/redux/services/categoriesApi'
-import { useGetLocationsQuery } from '@/app/redux/services/locationApi'
-import {
-  Card,
-  Input,
-  Checkbox,
-  Button,
-  Typography,
-  CardHeader,
-  Switch,
-} from '@material-tailwind/react'
-import { FormGroup } from 'react-bootstrap'
-import { useSelector } from 'react-redux'
-import Select from 'react-select'
-import { useState } from 'react'
-import { duration, etapa, tendersTypes } from '@/app/data/dataGeneric'
-import axios from 'axios'
-import {
-  displayFailedMessage,
-  displaySuccessMessage,
-} from '@/app/components/Toastify'
-import ErrorMensage from '@/app/components/ErrorMensage'
-import { ToastContainer, toast } from 'react-toastify'
-import { useRouter } from 'next/navigation'
-import getLocalStorage from '@/app/Func/localStorage'
-import { urlProduction } from '@/app/data/dataGeneric'
+'use client';
+import { useGetCategoriesQuery } from '@/app/redux/services/categoriesApi';
+import { useGetLocationsQuery } from '@/app/redux/services/locationApi';
+import { Card, Input, Checkbox, Button, Typography, CardHeader, Switch } from '@material-tailwind/react';
+import { FormGroup } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import Select from 'react-select';
+import { useState } from 'react';
+import { duration, etapa, tendersTypes } from '@/app/data/dataGeneric';
+import axios from 'axios';
+import { displayFailedMessage, displaySuccessMessage } from '@/app/components/Toastify';
+import ErrorMensage from '@/app/components/ErrorMensage';
+import { ToastContainer, toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
+import getLocalStorage from '@/app/Func/localStorage';
+import { urlProduction } from '@/app/data/dataGeneric';
 
 function CreateTenderForm() {
   //fetch states
 
-  const { data: categories, isLoading: categoriesLoading } =
-    useGetCategoriesQuery()
-  const { data: locations, isLoading: loadingLocations } =
-    useGetLocationsQuery()
+  const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
+  const { data: locations, isLoading: loadingLocations } = useGetLocationsQuery();
 
-  const userData = getLocalStorage()
+  const userData = getLocalStorage();
 
-  const router = useRouter()
+  const router = useRouter();
   //local states
   const [tenderData, setTenderData] = useState({
     title: '',
@@ -51,7 +38,7 @@ function CreateTenderForm() {
     subcategories: [],
     //address:"",
     companyId: userData?.company.id,
-  })
+  });
 
   const [inputError, setInputError] = useState({
     title: '',
@@ -64,57 +51,53 @@ function CreateTenderForm() {
     locationId: '',
     subcategories: '',
     //address:""
-  })
-  const [categorieSelected, setCategorieSelected] = useState([])
-  const [subCatSelected, setSubCatSelected] = useState([])
-  const [isShow, setIsShow] = useState(true)
-  const [isPrivateCheqed, setIsPrivateCheqed] = useState(false)
-  const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false)
-  const [isFileAttached, setIsFileAttached] = useState(false)
-  const [editorValue, setEditorValue] = useState('')
+  });
+  const [categorieSelected, setCategorieSelected] = useState([]);
+  const [subCatSelected, setSubCatSelected] = useState([]);
+  const [isShow, setIsShow] = useState(true);
+  const [isPrivateCheqed, setIsPrivateCheqed] = useState(false);
+  const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
+  const [isFileAttached, setIsFileAttached] = useState(false);
+  const [editorValue, setEditorValue] = useState('');
 
   //Handlers
   const handleChangeCategories = (e) => {
     //crear las subcategorias para el select
-    const subcategories = categories?.find(
-      (cat) => cat.id === e.value
-    ).subcategories
-    setSubCatSelected(
-      subcategories.map((subcat) => ({ name: subcat.name, value: subcat.id }))
-    )
-  }
+    const subcategories = categories?.find((cat) => cat.id === e.value).subcategories;
+    setSubCatSelected(subcategories.map((subcat) => ({ name: subcat.name, value: subcat.id })));
+  };
   const handleSubcategorieChange = (e) => {
-    const arr = []
-    arr.push(e.value)
-    setTenderData({ ...tenderData, subcategories: arr })
-  }
+    const arr = [];
+    arr.push(e.value);
+    setTenderData({ ...tenderData, subcategories: arr });
+  };
 
   const handleChangeLocation = (e) => {
-    setTenderData({ ...tenderData, locationId: e.value })
-  }
+    setTenderData({ ...tenderData, locationId: e.value });
+  };
   const handlePrivateChange = (e) => {
     if (isPrivateCheqed === false) {
-      setIsPrivateCheqed(true)
+      setIsPrivateCheqed(true);
     } else {
-      setIsPrivateCheqed(false)
+      setIsPrivateCheqed(false);
     }
-  }
+  };
 
   const handleFilesAttachedPermission = (e) => {
     if (isFileAttached === false) {
-      setIsFileAttached(true)
+      setIsFileAttached(true);
     } else {
-      setIsFileAttached(false)
+      setIsFileAttached(false);
     }
-  }
+  };
 
   const handleSponsoredChange = (e) => {
     if (isSponsoredCheqed === false) {
-      setIsSponsoredCheqed(true)
+      setIsSponsoredCheqed(true);
     } else {
-      setIsSponsoredCheqed(false)
+      setIsSponsoredCheqed(false);
     }
-  }
+  };
 
   const handleShowChange = () => {
     // if(isShow === false){
@@ -124,79 +107,78 @@ function CreateTenderForm() {
     //   setIsShow(false)
     //    setTenderData({ ...tenderData, showBudget: false });
     // }
-    setIsShow(!isShow)
-    setTenderData({ ...tenderData, showBudget: isShow })
-  }
+    setIsShow(!isShow);
+    setTenderData({ ...tenderData, showBudget: isShow });
+  };
 
   // const handleDescriptionChange = (data) => {
   //   setTenderData({ ...tenderData, description: data });
   // }
 
   const handleInputsChanges = (e) => {
-    setTenderData({ ...tenderData, [e.target.name]: e.target.value })
-    console.log(tenderData)
-  }
+    setTenderData({ ...tenderData, [e.target.name]: e.target.value });
+    console.log(tenderData);
+  };
 
   const validation = (tenderData) => {
-    console.log('entro acá')
-    console.log(tenderData)
-    const errors = {}
+    console.log('entro acá');
+    console.log(tenderData);
+    const errors = {};
 
     if (tenderData.title === '') {
-      errors.title = 'El titulo de la Licitación no puede estar vacío'
+      errors.title = 'El titulo de la Licitación no puede estar vacío';
     }
     if (tenderData.description === '') {
-      errors.description = 'La Licitación debe tener una descripción'
+      errors.description = 'La Licitación debe tener una descripción';
     }
     if (tenderData.contractType === '') {
-      errors.contractType = 'El tipo de contrato es requerido'
+      errors.contractType = 'El tipo de contrato es requerido';
     }
     if (tenderData.majorSector === '') {
-      errors.majorSector = 'El sector es requerido'
+      errors.majorSector = 'El sector es requerido';
     }
     if (tenderData.projectDuration === '') {
-      errors.projectDuration = 'La duración del proyecto es requerida'
+      errors.projectDuration = 'La duración del proyecto es requerida';
     }
     if (tenderData.validityDate === '') {
-      errors.validityDate =
-        'La fecha límite para enviar propuestas es requerida'
+      errors.validityDate = 'La fecha límite para enviar propuestas es requerida';
     }
     if (tenderData.locationId === '') {
-      errors.locationId = 'La ubicación del proyecto es requerida'
+      errors.locationId = 'La ubicación del proyecto es requerida';
     }
     if (tenderData.subcategories.length === 0) {
-      errors.subcategories = 'Las subcategorias del proyecto son requeridas'
+      errors.subcategories = 'Las subcategorias del proyecto son requeridas';
     }
     if (tenderData.address === '') {
-      errors.locationId = 'La ubicación del proyecto es requerida'
+      errors.locationId = 'La ubicación del proyecto es requerida';
     }
     if (tenderData.budget === 0) {
-      errors.budget = 'El presupuesto del proyecto es requerido'
+      errors.budget = 'El presupuesto del proyecto es requerido';
     }
 
-    setInputError(errors)
-    return Object.keys(errors).length === 0
-  }
+    setInputError(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const hasErrors = !validation(tenderData)
+    const hasErrors = !validation(tenderData);
 
     // console.log(tenderData);
 
     if (!hasErrors) {
-      console.log(tenderData)
+      console.log(tenderData);
       try {
-        const tender = await axios.post(`${urlProduction}/tenders`, tenderData)
-        displaySuccessMessage('Licitación creada con éxito')
-        setTimeout(() => router.back(), 2000)
+        const tender = await axios.post(`${urlProduction}/tenders`, tenderData);
+        displaySuccessMessage('Licitación creada con éxito');
+        setTimeout(() => router.back(), 2000);
       } catch (error) {
-        console.log(error)
-        displayFailedMessage(error.response.data.error)
+        console.log(error);
+        displayFailedMessage(error.response.data.error);
       }
     }
-  }
+  };
 
   return (
     <>
@@ -208,8 +190,7 @@ function CreateTenderForm() {
               Publicar Licitación
             </Typography>
             <Typography variant="small" className="mb-4">
-              Publicar licitación publica o privada para que una empresa pueda
-              postularse y luego contratarla.
+              Publicar licitación publica o privada para que una empresa pueda postularse y luego contratarla.
             </Typography>
           </div>
           {/*First Step Data*/}
@@ -227,9 +208,7 @@ function CreateTenderForm() {
                 name="title"
                 onChange={handleInputsChanges}
               />
-              {inputError.title !== '' ? (
-                <ErrorMensage message={inputError.title} />
-              ) : null}
+              {inputError.title !== '' ? <ErrorMensage message={inputError.title} /> : null}
               <div className="md:flex md:gap-3">
                 <select
                   className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500"
@@ -241,9 +220,7 @@ function CreateTenderForm() {
                     <option>{type}</option>
                   ))}
                 </select>
-                {inputError.contractType !== '' ? (
-                  <ErrorMensage message={inputError.contractType} />
-                ) : null}
+                {inputError.contractType !== '' ? <ErrorMensage message={inputError.contractType} /> : null}
                 <select
                   className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500"
                   name="projectDuration"
@@ -254,9 +231,7 @@ function CreateTenderForm() {
                     <option>{d}</option>
                   ))}
                 </select>
-                {inputError.projectDuration !== '' ? (
-                  <ErrorMensage message={inputError.projectDuration} />
-                ) : null}
+                {inputError.projectDuration !== '' ? <ErrorMensage message={inputError.projectDuration} /> : null}
               </div>
               <div className="md:flex md:gap-3">
                 <select
@@ -269,20 +244,11 @@ function CreateTenderForm() {
                     <option>{e}</option>
                   ))}
                 </select>
-                {inputError.majorSector !== '' ? (
-                  <ErrorMensage message={inputError.majorSector} />
-                ) : null}
+                {inputError.majorSector !== '' ? <ErrorMensage message={inputError.majorSector} /> : null}
                 <div className="w-1/2 border-1 bg-transparent border-gray-300 rounded-md p-3 text-gray-500 flex justify-between">
                   <label htmlFor="">Fecha límite para enviar Propuestas</label>
-                  <input
-                    className="focus:border-none"
-                    type="date"
-                    name="validityDate"
-                    onChange={handleInputsChanges}
-                  />
-                  {inputError.validityDate !== '' ? (
-                    <ErrorMensage message={inputError.validityDate} />
-                  ) : null}
+                  <input className="focus:border-none" type="date" name="validityDate" onChange={handleInputsChanges} />
+                  {inputError.validityDate !== '' ? <ErrorMensage message={inputError.validityDate} /> : null}
                 </div>
               </div>
               <div className="md:flex md:gap-3">
@@ -293,9 +259,7 @@ function CreateTenderForm() {
                   onChange={handleInputsChanges}
                   placeholder="Presupuesto en U$S"
                 />
-                {inputError.budget !== '' ? (
-                  <ErrorMensage message={inputError.budget} />
-                ) : null}
+                {inputError.budget !== '' ? <ErrorMensage message={inputError.budget} /> : null}
               </div>
             </div>
             <div className="flex flex-col gap-4 mt-4">
@@ -304,10 +268,7 @@ function CreateTenderForm() {
                   Presupuesto Privado
                 </Typography>
                 <div className="flex gap-4">
-                  <label
-                    class="inline-block pl-[0.15rem] hover:cursor-pointer"
-                    for="flexSwitchCheckDefault"
-                  >
+                  <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="flexSwitchCheckDefault">
                     {isShow ? 'Mostrar Presupuesto' : 'No Mostrar Presupuesto'}
                   </label>
 
@@ -361,9 +322,7 @@ function CreateTenderForm() {
                 placeholder="SUBCATEGORIA"
                 onChange={handleSubcategorieChange}
               />
-              {inputError.subcategories !== '' ? (
-                <ErrorMensage message={inputError.subcategories} />
-              ) : null}
+              {inputError.subcategories !== '' ? <ErrorMensage message={inputError.subcategories} /> : null}
             </div>
           </div>
           {/*Location Data*/}
@@ -383,9 +342,7 @@ function CreateTenderForm() {
                 placeholder="SELECCIONAR UBICACIÓN"
                 onChange={handleChangeLocation}
               />
-              {inputError.locationId !== '' ? (
-                <ErrorMensage message={inputError.locationId} />
-              ) : null}
+              {inputError.locationId !== '' ? <ErrorMensage message={inputError.locationId} /> : null}
               <input
                 className="w-full border-1 border-gray-300 rounded-md p-3"
                 type="text"
@@ -402,10 +359,7 @@ function CreateTenderForm() {
                 Licitación Destacada
               </Typography>
               <div className="flex gap-4">
-                <label
-                  class="inline-block pl-[0.15rem] hover:cursor-pointer"
-                  for="flexSwitchCheckDefault"
-                >
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="flexSwitchCheckDefault">
                   {isSponsoredCheqed ? 'Destacar' : 'No destacar'}
                 </label>
                 <input
@@ -424,10 +378,7 @@ function CreateTenderForm() {
                 Licitación Privada
               </Typography>
               <div className="flex gap-4">
-                <label
-                  class="inline-block pl-[0.15rem] hover:cursor-pointer"
-                  for="flexSwitchCheckDefault"
-                >
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="flexSwitchCheckDefault">
                   {isPrivateCheqed ? 'Privada' : 'Publica'}
                 </label>
 
@@ -466,10 +417,7 @@ function CreateTenderForm() {
                 Archivos Adjuntos
               </Typography>
               <div className="flex gap-4">
-                <label
-                  class="inline-block pl-[0.15rem] hover:cursor-pointer"
-                  for="flexSwitchCheckDefault"
-                >
+                <label class="inline-block pl-[0.15rem] hover:cursor-pointer" for="flexSwitchCheckDefault">
                   {isFileAttached ? 'Permitir' : 'No Permitir'}
                 </label>
 
@@ -484,17 +432,14 @@ function CreateTenderForm() {
             </div>
             <div></div>
           </div>
-          <button
-            className="bg-primary-600 text-white font-semibold rounded-md p-2 mt-4"
-            onClick={handleSubmit}
-          >
+          <button className="bg-primary-600 text-white font-semibold rounded-md p-2 mt-4" onClick={handleSubmit}>
             Crear Licitación
           </button>
         </Card>
         <ToastContainer style={{ marginTop: '300px' }} />
       </FormGroup>
     </>
-  )
+  );
 }
 
-export default CreateTenderForm
+export default CreateTenderForm;
