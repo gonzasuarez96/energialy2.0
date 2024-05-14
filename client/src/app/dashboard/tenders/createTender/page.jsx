@@ -1,7 +1,7 @@
 'use client';
 import { useGetCategoriesQuery } from '@/app/redux/services/categoriesApi';
 import { useGetLocationsQuery } from '@/app/redux/services/locationApi';
-import { Card, Typography, Dialog, DialogHeader, DialogBody, DialogFooter } from '@material-tailwind/react';
+import { Card, Typography } from '@material-tailwind/react';
 import { FormGroup } from 'react-bootstrap';
 import Select from 'react-select';
 import { useState } from 'react';
@@ -438,19 +438,10 @@ function CreateTenderForm() {
                   onClick={handleOpen}
                   className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm"
                 >
-                  Selecciona Archivos
+                  <input type="file" className="bg-transparent" />
+                  {/* Selecciona Archivos */}
                 </button>
                 <Typography className="mb-0">Puedes cargar archivos-documentación requerida por la Empresa.</Typography>
-                <Dialog open={open} size="xs" handler={handleOpen} className="flex flex-col">
-                  <DialogHeader>Adjuntar Archivos</DialogHeader>
-                  <DialogBody>
-                    <input type="file" />
-                  </DialogBody>
-                  <DialogFooter>
-                    <button>Cancelar</button>
-                    <button>Confirmar</button>
-                  </DialogFooter>
-                </Dialog>
               </div>
             )}
           </div>
