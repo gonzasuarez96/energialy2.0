@@ -7,20 +7,30 @@ import { useGetCompaniesQuery } from '@/app/redux/services/companiesApi';
 
 import PaginationComponent from './PaginationComponent';
 
+function getCompanyId() {
+  if (typeof window !== 'undefined') {
+    return sessionStorage.getItem('companyId');
+  }
+}
 
 function CompanyCardContainer() {
   const [currentPage, setCurrentPage] = useState(1);
   const filterCompanies = useSelector((state) => state.company.filterCompanies);
+  // * SE OBTIENEN TODAS LA COMPAÑIAS MENOS A LA QUE EL USUARIO PERTENECE
+  const companyId = getCompanyId();
+  const filterCompanyById = filterCompanies.filter(function(el) {
+    return el.id !== companyId;
+  })
 
   //console.log(PaginationComponent.perPage);
   //console.log(filterCompanies);
   const itemsPerPage = 6;
-  const totalPages = Math.ceil(filterCompanies.length / itemsPerPage);
+  const totalPages = Math.ceil(filterCompanyById.length / itemsPerPage);
 
   // Calcula las compañías que se mostrarán en la página actual
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const companiesToShow = filterCompanies.slice(startIndex, endIndex);
+  const companiesToShow = filterCompanyById.slice(startIndex, endIndex);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
