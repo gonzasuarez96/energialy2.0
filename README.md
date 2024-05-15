@@ -10,16 +10,19 @@ git checkout dev
 cd ./api
 npm install
 ```
-Para la base de datos se utiliza [Postgres](https://www.postgresql.org/). Se debe tener instalado Postgres y desde SQL Shell o la GUI de Postgres (pgAdmin) crear una nueva base de datos llamada energialy.
+Para la base de datos se utiliza [Postgres](https://www.postgresql.org/). Se debe tener instalado Postgres (versión 14, 15 o 16) y desde SQL Shell (psql) o la GUI de Postgres (pgAdmin 4) crear una nueva base de datos llamada energialy.
 ```sql
 CREATE DATABASE energialy;
 ```
 Para las variables de entorno, crear un archivo `.env` y pegar las siguientes variables.
 ```sh
 # .env
-DB_USER={your_postgres_name_user} // por default es postgres
+DB_USER={your_postgres_name_user} # por default es postgres
 DB_PASSWORD={your_postgres_password}
 DB_HOST=localhost:5432
+DB_NAME=energialy
+SSL_MODE= # este debe quedar vacío
+BASE_URL=http://localhost:3000 # esto es el servidor del frontend en local
 
 ACCESS_TOKEN_SECRET=your_access_secret
 REFRESH_TOKEN_SECRET=your_refresh_secret
@@ -44,7 +47,7 @@ Si todo está bien, deberías ver el siguiente mensaje:
 
 ## Levantar Frontend
 
-Una vez clonado el repo:
+Una vez clonado el repositorio:
 
 ```sh
 cd client
