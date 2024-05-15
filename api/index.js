@@ -17,7 +17,7 @@
 //     =====`-.____`.___ \_____/___.-`___.-'=====
 //                       `=---='
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-const server = require('./src/server.js');
+const { app, server } = require('./src/server.js');
 const { conn } = require('./src/db.js');
 
 const port = process.env.PORT ?? 3001;
@@ -28,4 +28,4 @@ conn.sync({ alter: true }).then(() => {
   });
 });
 
-module.exports = server;
+module.exports = app;
