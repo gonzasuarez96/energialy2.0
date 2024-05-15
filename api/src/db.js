@@ -24,10 +24,15 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Users, Companies, Categories, Subcategories, Locations, Tenders, Proposals, Documents, BankAccounts, FinanceProducts } = sequelize.models;
+const { Users, Messages, Companies, Categories, Subcategories, Locations, Tenders, Proposals, Documents, BankAccounts, FinanceProducts } = sequelize.models;
 
 Companies.hasMany(Users);
 Users.belongsTo(Companies);
+
+Users.hasMany(Messages, { foreignKey: 'senderId', as: 'sentMessages' });
+Users.hasMany(Messages, { foreignKey: 'receiverId', as: 'receivedMessages' });
+Messages.belongsTo(Users, { foreignKey: 'senderId', as: 'sender' });
+Messages.belongsTo(Users, { foreignKey: 'receiverId', as: 'receiver' });
 
 Companies.belongsToMany(Categories, { through: 'Companies_Categories' });
 Categories.belongsToMany(Companies, { through: 'Companies_Categories' });

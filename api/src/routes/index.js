@@ -16,6 +16,7 @@ const documentsRouter = require('./resources/documentsRouter');
 const bankAccountsRouter = require('./resources/bankAccountsRouter');
 const financeProductsRouter = require('./resources/financeProductsRouter');
 const inviteCompaniesRouter = require('./resources/inviteCompaniesRouter');
+const messagesRouter = require('./resources/messagesRouter');
 
 const router = Router();
 
@@ -28,6 +29,7 @@ router.use('/logout', logoutRouter);
 // Resource Server
 // router.use(verifyJWT);
 router.use('/users', usersRouter);
+router.use('/messages', messagesRouter);
 router.use('/companies', companiesRouter);
 router.use('/categories', categoriesRouter);
 router.use('/subcategories', subcategoriesRouter);
