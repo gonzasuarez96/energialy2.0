@@ -56,11 +56,7 @@ function CreateTenderForm() {
   const [isShow, setIsShow] = useState(true);
   const [isPrivateCheqed, setIsPrivateCheqed] = useState(false);
   const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
-  const [isFileAttached, setIsFileAttached] = useState(false);
   const [editorValue, setEditorValue] = useState('');
-  const [open, setOpen] = useState(null);
-
-  const handleOpen = () => setOpen((prev) => !prev);
 
   //Handlers
   const handleChangeCategories = (e) => {
@@ -82,14 +78,6 @@ function CreateTenderForm() {
       setIsPrivateCheqed(true);
     } else {
       setIsPrivateCheqed(false);
-    }
-  };
-
-  const handleFilesAttachedPermission = (e) => {
-    if (isFileAttached === false) {
-      setIsFileAttached(true);
-    } else {
-      setIsFileAttached(false);
     }
   };
 
@@ -420,10 +408,7 @@ function CreateTenderForm() {
               </Typography>
             </div>
             <div className="flex border-dashed w-full border-2 border-gray-300 rounded-md p-3 justify-between items-center">
-              <button
-                onClick={handleOpen}
-                className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm"
-              >
+              <button className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm">
                 <label htmlFor="filePicker" className="bg-transparent cursor-pointer capitalize">
                   Seleccionar archivo. Ningún archivo selec.
                 </label>
