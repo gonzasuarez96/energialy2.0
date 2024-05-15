@@ -59,6 +59,7 @@ function CreateTenderForm() {
   const [isPrivateCheqed, setIsPrivateCheqed] = useState(false);
   const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
   const [editorValue, setEditorValue] = useState('');
+  const [fileName, setFileName] = useState('');
 
   //Handlers
   const handleChangeCategories = (e) => {
@@ -112,10 +113,20 @@ function CreateTenderForm() {
     console.log(tenderData);
   };
 
-  const handleFileChange = (e) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files); // Convert FileList to array
-      setTenderData({ ...tenderData, [e.target.name]: selectedFiles });
+  const handleFileChange = async (e) => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append('file', files[0]);
+    data.append('upload_preset', 'energialy_users');
+    try {
+      const res = await axios.post('https://api.cloudinary.com/v1_1/dbraa6jpj/image/upload', data);
+      const file = res.data;
+      console.log('Respuesta de cloudinary:', res);
+      console.log({ file });
+      setFileName(file.original_filename);
+      setTenderData({ ...tenderData, [e.target.name]: file.secure_url });
+    } catch (error) {
+      console.log('Error al cargar la imagen:', error);
     }
   };
 
@@ -153,6 +164,9 @@ function CreateTenderForm() {
     }
     if (tenderData.budget === 0) {
       errors.budget = 'El presupuesto del proyecto es requerido';
+    }
+    if (tenderData.files.length === 0) {
+      errors.files = 'La documentacion es requerida';
     }
 
     setInputError(errors);
@@ -419,7 +433,7 @@ function CreateTenderForm() {
             <div className="flex border-dashed w-full border-2 border-gray-300 rounded-md p-3 justify-between items-center">
               <button className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm">
                 <label htmlFor="filePicker" className="bg-transparent cursor-pointer capitalize">
-                  {tenderData.files.length > 0 ? `Documento Cargado: ${tenderData.files[0].name}` : 'Seleccionar archivo. Ningún archivo selec.'}
+                  {tenderData.files.length > 0 ? `Documento Cargado: ${fileName}` : 'Seleccionar archivo. Ningún archivo selec.'}
                 </label>
                 <input name="files" type="file" id="filePicker" multiple className="invisible" onChange={handleFileChange} />
               </button>
