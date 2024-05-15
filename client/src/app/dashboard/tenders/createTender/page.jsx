@@ -121,8 +121,6 @@ function CreateTenderForm() {
     try {
       const res = await axios.post('https://api.cloudinary.com/v1_1/dbraa6jpj/image/upload', data);
       const file = res.data;
-      console.log('Respuesta de cloudinary:', res);
-      console.log({ file });
       setFileName(file.original_filename);
       setTenderData({ ...tenderData, [e.target.name]: file.secure_url });
     } catch (error) {
