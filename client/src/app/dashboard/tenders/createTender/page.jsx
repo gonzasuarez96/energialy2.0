@@ -37,6 +37,7 @@ function CreateTenderForm() {
     subcategories: [],
     //address:"",
     companyId: userData?.company.id,
+    files: [],
   });
 
   const [inputError, setInputError] = useState({
@@ -50,6 +51,7 @@ function CreateTenderForm() {
     locationId: '',
     subcategories: '',
     //address:""
+    files: [],
   });
   const [categorieSelected, setCategorieSelected] = useState([]);
   const [subCatSelected, setSubCatSelected] = useState([]);
@@ -108,6 +110,13 @@ function CreateTenderForm() {
   const handleInputsChanges = (e) => {
     setTenderData({ ...tenderData, [e.target.name]: e.target.value });
     console.log(tenderData);
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files); // Convert FileList to array
+      setTenderData({ ...tenderData, [e.target.name]: selectedFiles });
+    }
   };
 
   const validation = (tenderData) => {
@@ -410,9 +419,9 @@ function CreateTenderForm() {
             <div className="flex border-dashed w-full border-2 border-gray-300 rounded-md p-3 justify-between items-center">
               <button className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm">
                 <label htmlFor="filePicker" className="bg-transparent cursor-pointer capitalize">
-                  Seleccionar archivo. Ningún archivo selec.
+                  {tenderData.files.length > 0 ? `Documento Cargado: ${tenderData.files[0].name}` : 'Seleccionar archivo. Ningún archivo selec.'}
                 </label>
-                <input type="file" id="filePicker" className="invisible" />
+                <input name="files" type="file" id="filePicker" multiple className="invisible" onChange={handleFileChange} />
               </button>
               <Typography className="mb-0">
                 Puedes cargar documentación con los requisitos.
