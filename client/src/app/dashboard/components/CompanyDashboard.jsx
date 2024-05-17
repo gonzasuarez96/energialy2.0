@@ -30,7 +30,8 @@ function CompanyDashboard({ user }) {
   const companyId = getCompanyId();
   const userId = getUserId();
   const sender = allUsers.find(function (el) {
-    return el.company.id === companyId;
+    console.log("aqui"+el.company);
+   return el.company === companyId;
   });
 
   // * QUIEN RECIBE EL MENSAJE
@@ -115,6 +116,7 @@ function CompanyDashboard({ user }) {
           <Buttons />
         </div>
       </div>
+      
       <div className="w-full h-screen rounded-md flex flex-col gap-3 p-2">
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
           <div className="w-1/2">
@@ -133,7 +135,10 @@ function CompanyDashboard({ user }) {
               <DashboardTextCard title={"Ingresos Pendientes"} content={"-"} />
               <DashboardTextCard title={"Inversiones"} content={"-"} />
             </div>
-            <div className="h-full flex flex-col">
+
+            <h3>       //Chat     </h3>
+            {!companyId ? <h3>Necesitas una Empresa para acceder al chat.</h3> : 
+             <div className="h-full flex flex-col">
               <div className="max-h-80 overflow-y-auto" id="chatMessages">
                 <h1 className="text-xl font-bold mb-4">Historial de Chat</h1>
                 {allMessages.map((message, index) => {
@@ -182,6 +187,7 @@ function CompanyDashboard({ user }) {
                 })}
               </div>
               <form className="flex mt-4">
+                
                 <input
                   type="text"
                   className="flex-1 mr-2 border rounded px-4 py-2 focus:outline-none"
@@ -189,6 +195,7 @@ function CompanyDashboard({ user }) {
                   onChange={(e) => setMessageText(e.target.value)}
                   placeholder="Escribe tu mensaje..."
                 />
+                
                 <button
                   type="submit"
                   onClick={sendMessage}
@@ -196,8 +203,10 @@ function CompanyDashboard({ user }) {
                 >
                   Enviar
                 </button>
+                
               </form>
-            </div>
+            </div> }
+
           </div>
         </div>
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
