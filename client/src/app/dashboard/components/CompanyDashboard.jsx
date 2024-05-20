@@ -30,7 +30,6 @@ function CompanyDashboard({ user }) {
   const companyId = getCompanyId();
   const userId = getUserId();
   const sender = allUsers.find(function (el) {
-    console.log("aqui"+el.company);
    return el.company === companyId;
   });
 

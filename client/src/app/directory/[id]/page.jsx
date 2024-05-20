@@ -17,8 +17,6 @@ const socketIo = io("http://localhost:3001");
 
 function Page(props) {
   const { id } = props.params;
-  console.log("ACA ESTA ", props);
-
   const [company, setCompany] = useState({});
   const [allMessages, setAllMessages] = useState([]);
   const [showPopup, setShowPopup] = useState(false); // Estado para controlar el popup
@@ -27,13 +25,13 @@ function Page(props) {
 
   // * QUIEN RECIBE EL MENSAJE
    const receiver = allUsers.find(function (el) {
-     console.log(el);
-     return el.company.id === id;
+       return el.company.id === id;
    });
 
   // * QUIEN ENVIA EL MENSAJE
   const companyId = getCompanyId();
   const userId = getUserId();
+
   // * SE VERIFICA QUE TENGA UNA COMPAÑIA CREADA
   const sender = allUsers.find(function (el) {
     return el.company.id === companyId;
@@ -57,7 +55,8 @@ function Page(props) {
     return () => {
       socketIo.off("message");
     };
-  }, [socketIo, messageText]);
+  }, [sender, receiver,socketIo, messageText]);
+    
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -70,20 +69,19 @@ function Page(props) {
       receiver: receiver,
       createdAt: new Date().toISOString(), // Agrega la fecha de creación si es necesario
     };
-    upMessage(newMessage);
+    setAllMessages((prevMessages) => [...prevMessages, newMessage]);
     
-    setMessageText("");
     socketIo.emit("sendMessage", messageText);
     axiosPostMessage({
       text: messageText,
       senderId: sender?.id,
       receiverId: receiver?.id,
     });
+
+    setMessageText("");
   };
 
-    const upMessage= (newMessage) => {
-      setAllMessages((prevMessages) => [...prevMessages, newMessage]);
-      }
+  
 
   useEffect(() => {
     axiosGetAllUsers(setAllUsers);
@@ -92,7 +90,7 @@ function Page(props) {
       axiosGetDetailCompany(id, setCompany);
     }
   }, []);
-//console.log("esta es company",company);
+
   return (
     <>
       {!company ? (
@@ -131,89 +129,80 @@ function Page(props) {
                 <img
                   className="w-full h-full object-cover"
                   src={company.profilePicture}
-                  alt=""
+                  alt="Photo"
                 />
               </div>
               <span className="text-center">Inicia un Chat con {company.name}</span>
           </button>
     <Popup show={showPopup} onClose={() => setShowPopup(false)}>
-            <h2>Chat</h2>
-            <div className="chat-container">
-              <div className="message-list">
-                {allMessages.map(function (message, index) {
-                  return (
-                    <div
-                      key={message.id || index}
-                      className={`${
-                        message.sender.id === userId ? "text-right" : "text-left"
-                      } mb-2`}
-                    >
-                      {message.sender.id === userId ? (
-                        <div className="bg-gray-200 p-3 rounded-lg">
-                          <p>
-                            <strong>Tú: </strong>
-                            {!message.sender.fullName
-                              ? `${message.sender.firstName} ${message.sender.lastName}`
-                              : message.sender.fullName}
-                          </p>
-                          <p>
-                            <strong>Mensaje: </strong>
-                            {message.text}
-                          </p>
-                          <p>
-                            <strong>Fecha: </strong>
-                            {message.createdAt}
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="bg-purple-200 p-3 rounded-lg">
-                          <p>
-                            <strong>Usuario: </strong>
-                            {!message.sender.fullName
-                              ? `${message.sender.firstName} ${message.sender.lastName}`
-                              : message.sender.fullName}
-                          </p>
-                          <p>
-                            <strong>Mensaje: </strong>
-                            {message.text}
-                          </p>
-                          <p>
-                            <strong>Fecha: </strong>
-                            {message.createdAt}
-                          </p>
-                        </div>
-                      )}
+              
+              <h2>Chat</h2>
+                  <div className="max-h-[400px] overflow-y-auto">
+                    <div className="max-h-[300px] overflow-y-auto">
+                      {allMessages.map(function (message, index) {
+                        return (
+                          <div
+                            key={message.id || index}
+                            className={`${
+                              message.sender.id === userId ? "text-right" : "text-left"
+                            } mb-2`}
+                          >
+                            {message.sender.id === userId ? (
+                              <div className="bg-gray-200 p-3 rounded-lg">
+                                <p>
+                                  <strong>Tú: </strong>
+                                  {!message.sender.fullName
+                                    ? `${message.sender.firstName} ${message.sender.lastName}`
+                                    : message.sender.fullName}
+                                </p>
+                                <p>
+                                  <strong>Mensaje: </strong>
+                                  {message.text}
+                                </p>
+                                <p>
+                                  <strong>Fecha: </strong>
+                                  {message.createdAt}
+                                </p>
+                              </div>
+                            ) : (
+                              <div className="bg-purple-200 p-3 rounded-lg">
+                                <p>
+                                  <strong>Usuario: </strong>
+                                  {!message.sender.fullName
+                                    ? `${message.sender.firstName} ${message.sender.lastName}`
+                                    : message.sender.fullName}
+                                </p>
+                                <p>
+                                  <strong>Mensaje: </strong>
+                                  {message.text}
+                                </p>
+                                <p>
+                                  <strong>Fecha: </strong>
+                                  {message.createdAt}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
-              <form className="flex mt-4">
-                <input
-                  type="text"
-                  className="flex-1 mr-2 border rounded px-4 py-2 focus:outline-none"
-                  value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
-                  placeholder="Type your message..."
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                  onClick={sendMessage}
-                >
-                  Send
-                </button>
-              </form>
-            </div>
-            <style jsx>{`
-              .chat-container {
-                max-height: 400px; /* Ajusta este valor según tus necesidades */
-                overflow-y: auto;
-              }
-              .message-list {
-                max-height: 300px; /* Ajusta este valor según tus necesidades */
-                overflow-y: auto;
-              }
-            `}</style>
+                    <form className="flex mt-4" onSubmit={sendMessage}>
+                      <input
+                        type="text"
+                        className="flex-1 mr-2 border rounded px-4 py-2 focus:outline-none"
+                        value={messageText}
+                        onChange={(e) => setMessageText(e.target.value)}
+                        placeholder="Type your message..."
+                      />
+                      <button
+                        type="submit"
+                        className="bg-blue-400 hover:bg-blue-600 text-black px-4 py-2 rounded"
+                      >
+                        Send
+                      </button>
+                    </form>
+                  </div>
+
           </Popup>
         </div>
       )}
@@ -222,3 +211,4 @@ function Page(props) {
 }
 
 export default Page;
+
