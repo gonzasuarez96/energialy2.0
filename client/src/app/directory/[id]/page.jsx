@@ -45,8 +45,9 @@ function Page(props) {
       if (sender && receiver) {
         const newMessage = {
           text: message,
-          sender: sender,
-          receiver: receiver,
+          sender: receiver,
+          receiver: sender,
+          createdAt: new Date().toISOString(), // Agrega la fecha de creación si es necesario
         };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
       }

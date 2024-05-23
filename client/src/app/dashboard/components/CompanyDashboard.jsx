@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Buttons from "./Buttons";
 import DashboardTextCard from "@/app/components/DashboardTextCard";
 import DashboardKpiCard from "@/app/components/DashboardKpiCard";
@@ -47,6 +47,12 @@ function CompanyDashboard({ user }) {
     });
     return filterMessage;
   });
+
+  //* LISTA DE CONTACTOS
+  const contactos = allUsers.map(user =>{
+    return user.company
+  })
+  console.log("esta es la lista",contactos);
 
   const [messageText, setMessageText] = useState("");
 
@@ -134,11 +140,30 @@ function CompanyDashboard({ user }) {
               <DashboardTextCard title={"Ingresos Pendientes"} content={"-"} />
               <DashboardTextCard title={"Inversiones"} content={"-"} />
             </div>
+            
+            <section className="">
 
-            <h3>       //Chat     </h3>
-            {!companyId ? <h3>Necesitas una Empresa para acceder al chat.</h3> : 
+                <div className="text-center rounded-sm border-s-sky-100 border-solid">
+                  <h2 className="text-base">Mensajes ///</h2>
+                </div>
+                
+             {!companyId ? <h3>Necesitas una Empresa para acceder al chat.</h3> : 
              <div className="h-full flex flex-col">
+              
+              <div>
+                <h2>Lista de Contactos</h2>
+
+                <ul className="bg-while-800">
+                {contactos.map(user =>{
+                  return <li className="hover:border-4 border-s-red-950">
+                          {user.name}
+                          </li>
+                  })} 
+                  </ul>
+              </div>
+
               <div className="max-h-80 overflow-y-auto" id="chatMessages">
+
                 <h1 className="text-xl font-bold mb-4">Historial de Chat</h1>
                 {allMessages.map((message, index) => {
                   return (
@@ -204,8 +229,10 @@ function CompanyDashboard({ user }) {
                 </button>
                 
               </form>
-            </div> }
+             </div> }
 
+            </section>  {/* Contenedor de chat */}
+            
           </div>
         </div>
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
