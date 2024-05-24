@@ -11,7 +11,7 @@ import {
   axiosPostMessage,
 } from "@/app/Func/axios";
 import { getCompanyId, getUserId } from "@/app/Func/sessionStorage";
-import Popup from "./components/popup";
+import Popup from "./components/Popup";
 
 const socketIo = io("http://localhost:3001");
 
