@@ -2,7 +2,7 @@
 import React from 'react';
 import Draggable from 'react-draggable';
 
-const Popup = ({ show, onClose, children }) => {
+const popup = ({ show, onClose, children }) => {
   if (!show) return null;
 
   return (
@@ -19,4 +19,4 @@ const Popup = ({ show, onClose, children }) => {
   );
 };
 
-export default Popup;
+export default popup;
