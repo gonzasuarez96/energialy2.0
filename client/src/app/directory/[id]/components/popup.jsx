@@ -1,3 +1,5 @@
+"use client";
+
 function Popup ({ show, onClose, children }) {
   if (!show) return null;
 
@@ -7,7 +9,7 @@ function Popup ({ show, onClose, children }) {
         <button onClick={onClose} className="absolute top-2 right-2 bg-transparent border-none text-2xl cursor-pointer">
           X
         </button>
-        {/* {children} */}
+        {children}
       </div>
     </div>
   );
