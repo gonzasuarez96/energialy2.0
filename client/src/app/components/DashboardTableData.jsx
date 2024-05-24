@@ -78,7 +78,8 @@ function DashboardTableData({title, data}) {
                       </th>
                     </tr>
                   </thead>
-                  <tbody>
+                  
+                  {/* <tbody>
                     {!data ? <h5>No existen licitaciones</h5> : (data.length === 0 ? (
                       <h5>No existen licitaciones</h5>
                     ) : (
@@ -124,7 +125,7 @@ function DashboardTableData({title, data}) {
                       ))
                     ))}
 
-                  </tbody>
+                  </tbody> */}
                 </table>
                 <PaginationComponent
                   currentPage={currentPage}

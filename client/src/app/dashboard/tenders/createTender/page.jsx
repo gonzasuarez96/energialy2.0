@@ -1,16 +1,15 @@
 'use client';
 import { useGetCategoriesQuery } from '@/app/redux/services/categoriesApi';
 import { useGetLocationsQuery } from '@/app/redux/services/locationApi';
-import { Card, Input, Checkbox, Button, Typography, CardHeader, Switch } from '@material-tailwind/react';
+import { Card, Typography } from '@material-tailwind/react';
 import { FormGroup } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
 import Select from 'react-select';
 import { useState } from 'react';
 import { duration, etapa, tendersTypes } from '@/app/data/dataGeneric';
 import axios from 'axios';
 import { displayFailedMessage, displaySuccessMessage } from '@/app/components/Toastify';
 import ErrorMensage from '@/app/components/ErrorMensage';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import getLocalStorage from '@/app/Func/localStorage';
 import { urlProduction } from '@/app/data/dataGeneric';
@@ -38,6 +37,7 @@ function CreateTenderForm() {
     subcategories: [],
     //address:"",
     companyId: userData?.company.id,
+    files: [],
   });
 
   const [inputError, setInputError] = useState({
@@ -51,6 +51,7 @@ function CreateTenderForm() {
     locationId: '',
     subcategories: '',
     //address:""
+    files: [],
   });
   const [categorieSelected, setCategorieSelected] = useState([]);
   const [subCatSelected, setSubCatSelected] = useState([]);
@@ -58,6 +59,7 @@ function CreateTenderForm() {
   const [isPrivateCheqed, setIsPrivateCheqed] = useState(false);
   const [isSponsoredCheqed, setIsSponsoredCheqed] = useState(false);
   const [editorValue, setEditorValue] = useState('');
+  const [fileName, setFileName] = useState('');
 
   //Handlers
   const handleChangeCategories = (e) => {
@@ -81,6 +83,7 @@ function CreateTenderForm() {
       setIsPrivateCheqed(false);
     }
   };
+
   const handleSponsoredChange = (e) => {
     if (isSponsoredCheqed === false) {
       setIsSponsoredCheqed(true);
@@ -108,6 +111,21 @@ function CreateTenderForm() {
   const handleInputsChanges = (e) => {
     setTenderData({ ...tenderData, [e.target.name]: e.target.value });
     console.log(tenderData);
+  };
+
+  const handleFileChange = async (e) => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append('file', files[0]);
+    data.append('upload_preset', 'energialy_users');
+    try {
+      const res = await axios.post('https://api.cloudinary.com/v1_1/dbraa6jpj/image/upload', data);
+      const file = res.data;
+      setFileName(file.original_filename);
+      setTenderData({ ...tenderData, [e.target.name]: file.secure_url });
+    } catch (error) {
+      console.log('Error al cargar la imagen:', error);
+    }
   };
 
   const validation = (tenderData) => {
@@ -144,6 +162,9 @@ function CreateTenderForm() {
     }
     if (tenderData.budget === 0) {
       errors.budget = 'El presupuesto del proyecto es requerido';
+    }
+    if (tenderData.files.length === 0) {
+      errors.files = 'La documentacion es requerida';
     }
 
     setInputError(errors);
@@ -382,6 +403,7 @@ function CreateTenderForm() {
               </div>
             </div>
           </div>
+
           {/*Editor Data*/}
           <div className="flex flex-col gap-4 mt-4 -z-0">
             <div className="border-l-4 border-primary-600">
@@ -396,6 +418,28 @@ function CreateTenderForm() {
                 onChange={handleInputsChanges}
                 placeholder="Ingresa el detalle de la Licitación"
               ></textarea>
+            </div>
+          </div>
+
+          {/*File Attachment */}
+          <div className="flex flex-col gap-4 mt-4">
+            <div className="border-l-4 border-primary-600 flex justify-between">
+              <Typography variant="h6" className="ml-5 my-0">
+                Requisitos
+              </Typography>
+            </div>
+            <div className="flex border-dashed w-full border-2 border-gray-300 rounded-md p-3 justify-between items-center">
+              <button className="bg-secondary-500 text-white py-3 px-5 rounded-lg inline-block text-center uppercase font-semibold tracking-wide text-sm">
+                <label htmlFor="filePicker" className="bg-transparent cursor-pointer capitalize">
+                  {tenderData.files.length > 0 ? `Documento Cargado: ${fileName}` : 'Seleccionar archivo. Ningún archivo selec.'}
+                </label>
+                <input name="files" type="file" id="filePicker" multiple className="invisible" onChange={handleFileChange} />
+              </button>
+              <Typography className="mb-0">
+                Puedes cargar documentación con los requisitos.
+                <br />
+                Los Proveedores podrán descargar y luego adjuntar al momento de enviarte una Propuesta.
+              </Typography>
             </div>
           </div>
           <button className="bg-primary-600 text-white font-semibold rounded-md p-2 mt-4" onClick={handleSubmit}>
