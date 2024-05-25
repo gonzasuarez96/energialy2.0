@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
   console.log('New user connected');
     
   socket.on('sendMessage', (message) => {
-    io.emit('message', message);
+    socket.broadcast.emit('message', message);
   });
   
   socket.on('disconnect', () => {
