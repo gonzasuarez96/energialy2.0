@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const routes = require('./routes/index.js');
-const { BASE_URL } = process.env;
 const http = require('http');
 const socketIo = require('socket.io');
 
@@ -30,9 +29,9 @@ io.on('connection', (socket) => {
 
 app.name = 'API';
 
-// Ensure CORS middleware is applied first
+// CORS middleware is applied first
 app.use(cors({
-    origin: BASE_URL || '*', // Use BASE_URL if defined, otherwise allow all origins
+    origin: '*', // allow all origins
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
@@ -40,16 +39,16 @@ app.use(cors({
 
 // Handle preflight requests globally
 app.options('*', cors({
-    origin: BASE_URL || '*', // Use BASE_URL if defined, otherwise allow all origins
+    origin: '*', // allow all origins
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
 }));
 
-// Add logging to verify headers
+// Add console.log to verify headers
 app.use((req, res, next) => {
-    console.log('CORS Middleware:', BASE_URL);
-    res.header('Access-Control-Allow-Origin', BASE_URL || '*');
+    console.log('CORS Middleware:', '*');
+    res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
