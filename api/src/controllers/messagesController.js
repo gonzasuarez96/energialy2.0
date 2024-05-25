@@ -1,5 +1,5 @@
 const { Messages, Users, Companies } = require("../db");
-const { formatDate } = require("../services/formatDate.JS");
+const { formatDate } = require("../services/formatDate.js");
 
 const createMessageController = async (message) => {
   const createMessage = await Messages.create({ 
