@@ -1,4 +1,4 @@
-const { Users, Companies, Messages } = require('../db');
+const { Users, Companies } = require('../db');
 
 const cleanUsers = (users) => {
   if (Array.isArray(users)) {
@@ -42,18 +42,18 @@ const getAllUsers = async () => {
         model: Companies,
         attributes: ['id', 'name', 'subscription'],
       }, 
-      {
-        model: Messages,
-        as: 'sentMessages',
-        foreignKey: 'senderId',
-        attributes: ['id', 'text'],
-      },
-      {
-        model: Messages,
-        as: 'receivedMessages',
-        foreignKey: 'receiverId',
-        attributes: ['id', 'text'],
-      },
+      // {
+      //   model: Messages,
+      //   as: 'sentMessages',
+      //   foreignKey: 'senderId',
+      //   attributes: ['id', 'text'],
+      // },
+      // {
+      //   model: Messages,
+      //   as: 'receivedMessages',
+      //   foreignKey: 'receiverId',
+      //   attributes: ['id', 'text'],
+      // },
     ],
   });
   return cleanUsers(allUsers);
@@ -82,18 +82,18 @@ const getUserByEmail = async (email) => {
         model: Companies,
         attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
       },
-      {
-        model: Messages,
-        as: 'sentMessages',
-        foreignKey: 'senderId',
-        attributes: ['id', 'text'],
-      },
-      {
-        model: Messages,
-        as: 'receivedMessages',
-        foreignKey: 'receiverId',
-        attributes: ['id', 'text'],
-      },
+      // {
+      //   model: Messages,
+      //   as: 'sentMessages',
+      //   foreignKey: 'senderId',
+      //   attributes: ['id', 'text'],
+      // },
+      // {
+      //   model: Messages,
+      //   as: 'receivedMessages',
+      //   foreignKey: 'receiverId',
+      //   attributes: ['id', 'text'],
+      // },
     ]
   });
   if (!foundUser) {

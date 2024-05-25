@@ -30,7 +30,7 @@ function CompanyDashboard({ user }) {
   const companyId = getCompanyId();
   const userId = getUserId();
   const sender = allUsers.find(function (el) {
-   return el.company === companyId;
+    return el.company?.id === companyId;
   });
 
   // * QUIEN RECIBE EL MENSAJE
@@ -115,7 +115,7 @@ function CompanyDashboard({ user }) {
 
   return (
     <div>
-      <div className="flex items-center p-2 font-extralight font-jose text-6xl text-gray-400">
+      <div className="flex items-center p-2 font-extralight font-jose text-xl text-gray-400">
         Hola, {user.firstName}
         <div className="flex-grow">
           <Buttons />
