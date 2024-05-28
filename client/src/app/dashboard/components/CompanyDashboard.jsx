@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Buttons from "./Buttons";
 import DashboardTextCard from "@/app/components/DashboardTextCard";
 import DashboardKpiCard from "@/app/components/DashboardKpiCard";
@@ -30,7 +30,7 @@ function CompanyDashboard({ user }) {
   const companyId = getCompanyId();
   const userId = getUserId();
   const sender = allUsers.find(function (el) {
-    return el.company.id === companyId;
+    return el.company?.id === companyId;
   });
 
   // * QUIEN RECIBE EL MENSAJE
@@ -47,6 +47,12 @@ function CompanyDashboard({ user }) {
     });
     return filterMessage;
   });
+
+  //* LISTA DE CONTACTOS
+  const contactos = allUsers.map(user =>{
+    return user.company
+  })
+  console.log("esta es la lista",contactos);
 
   const [messageText, setMessageText] = useState("");
 
@@ -109,12 +115,13 @@ function CompanyDashboard({ user }) {
 
   return (
     <div>
-      <div className="flex items-center p-2 font-extralight font-jose text-6xl text-gray-400">
+      <div className="flex items-center p-2 font-extralight font-jose text-xl text-gray-400">
         Hola, {user.firstName}
         <div className="flex-grow">
           <Buttons />
         </div>
       </div>
+      
       <div className="w-full h-screen rounded-md flex flex-col gap-3 p-2">
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
           <div className="w-1/2">
@@ -133,8 +140,30 @@ function CompanyDashboard({ user }) {
               <DashboardTextCard title={"Ingresos Pendientes"} content={"-"} />
               <DashboardTextCard title={"Inversiones"} content={"-"} />
             </div>
-            <div className="h-full flex flex-col">
+            
+            <section className="">
+
+                <div className="text-center rounded-sm border-s-sky-100 border-solid">
+                  <h2 className="text-base">Mensajes ///</h2>
+                </div>
+                
+             {!companyId ? <h3>Necesitas una Empresa para acceder al chat.</h3> : 
+             <div className="h-full flex flex-col">
+              
+              <div>
+                <h2>Lista de Contactos</h2>
+
+                <ul className="bg-while-800">
+                {contactos.map(user =>{
+                  return <li className="hover:border-4 border-s-red-950">
+                          {user.name}
+                          </li>
+                  })} 
+                  </ul>
+              </div>
+
               <div className="max-h-80 overflow-y-auto" id="chatMessages">
+
                 <h1 className="text-xl font-bold mb-4">Historial de Chat</h1>
                 {allMessages.map((message, index) => {
                   return (
@@ -182,6 +211,7 @@ function CompanyDashboard({ user }) {
                 })}
               </div>
               <form className="flex mt-4">
+                
                 <input
                   type="text"
                   className="flex-1 mr-2 border rounded px-4 py-2 focus:outline-none"
@@ -189,6 +219,7 @@ function CompanyDashboard({ user }) {
                   onChange={(e) => setMessageText(e.target.value)}
                   placeholder="Escribe tu mensaje..."
                 />
+                
                 <button
                   type="submit"
                   onClick={sendMessage}
@@ -196,8 +227,12 @@ function CompanyDashboard({ user }) {
                 >
                   Enviar
                 </button>
+                
               </form>
-            </div>
+             </div> }
+
+            </section>  {/* Contenedor de chat */}
+            
           </div>
         </div>
         <div className="w-full bg-white rounded-md flex gap-3 p-2">

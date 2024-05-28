@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
   console.log('New user connected');
     
   socket.on('sendMessage', (message) => {
-    io.emit('message', message);
+    socket.broadcast.emit('message', message);
   });
   
   socket.on('disconnect', () => {
@@ -30,20 +30,24 @@ io.on('connection', (socket) => {
 
 app.name = 'API';
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
+}));
+
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cookieParser());
 app.use(morgan('dev'));
-app.use((req, res, next) => {
 
-  // res.header('Access-Control-Allow-Origin', BASE_URL);
-
+app.options('*', (req, res) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-  next();
+  res.sendStatus(204); // No Content
 });
 
 app.use('/', routes);
@@ -52,9 +56,8 @@ app.get('/', (req, res) => {
   res.send('Energialy API');
 });
 
-// Error catching endware.
+// Error catching endware
 app.use((err, req, res, next) => {
-  // eslint-disable-line no-unused-vars
   const status = err.status || 500;
   const message = err.message || err;
   console.error(err);
