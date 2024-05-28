@@ -44,15 +44,19 @@ const Page = ({ params: { id } }) => {
 
   const receiver = allUsers.find((user) => user.company.id === id);
   const sender = allUsers.find((user) => user.company.id === companyId);
+  if (!companyId) {
+    window.alert("Debe estar asociado a una empresa para utilizar el chat");
+    return;
+  }
 
   const senderId = companyId;
   const receiverId = id;
 
   useEffect(() => {
-    // Emitir evento de autenticación
+    // Emitir evento de autenticación para guardar el socket
     socketIo.emit("authenticate", { senderId });
 
-    // Escuchar eventos
+    // Escuchar eventos para saber si se conecto
     socketIo.on("connect", () => {
       console.log("Connected to server");
     });
@@ -90,7 +94,6 @@ const Page = ({ params: { id } }) => {
       const { _message, _sender, _receiver } = message;
 
       const prueba = allUsers.find((user) => user.company.id === _sender);
-      
 
       if (sender && receiver) {
         const newMessage = {
@@ -138,7 +141,11 @@ const Page = ({ params: { id } }) => {
   );
 
   if (!company) return "loading...";
-
+  /*if (!sender) {
+    window.alert("Para ingresar al chat, debe estar asociado a una compañía");
+    return;
+  }
+*/
   return (
     <div className="md:max-w-[70%] m-auto">
       <div className="flex justify-center mt-10">
@@ -177,7 +184,11 @@ const Page = ({ params: { id } }) => {
           <div className="grid grid-cols-12 gap-2">
             <div className="col-span-1">
               {buttonChat.map((item) => {
-                return <button className="mb-2 text-sm text-white bg-black">{item}</button>;
+                return (
+                  <button className="mb-2 text-sm text-white bg-black">
+                    {item}
+                  </button>
+                );
               })}
             </div>
             <div className="col-span-1">Logo sender</div>

@@ -23,7 +23,8 @@ export async function axiosGetAllUsers(setAllUsers) {
   try {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/users`);
     // console.log("get-users:", data);
-    setAllUsers(data)
+    const usersWithCompany = data.filter(user=>user.company!==null)
+    setAllUsers(usersWithCompany)
   } catch (error) {
     console.log("Error en axiosGetAllUsers por:", error);
   }

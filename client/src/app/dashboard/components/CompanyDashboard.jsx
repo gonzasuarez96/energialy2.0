@@ -1,3 +1,4 @@
+
 "use client";
 import { useState, useEffect, use } from "react";
 import Buttons from "./Buttons";
@@ -27,6 +28,7 @@ function CompanyDashboard({ user }) {
   const [allUsers, setAllUsers] = useState([]);
 
   // * QUIEN ENVIA EL MENSAJE
+  
   const companyId = getCompanyId();
   const userId = getUserId();
   const sender = allUsers.find(function (el) {
@@ -115,15 +117,15 @@ function CompanyDashboard({ user }) {
 
   return (
     <div>
-      <div className="flex items-center p-2 font-extralight font-jose text-6xl text-gray-400">
+      <div className="flex items-center p-2 text-6xl text-gray-400 font-extralight font-jose">
         Hola, {user.firstName}
         <div className="flex-grow">
           <Buttons />
         </div>
       </div>
       
-      <div className="w-full h-screen rounded-md flex flex-col gap-3 p-2">
-        <div className="w-full bg-white rounded-md flex gap-3 p-2">
+      <div className="flex flex-col w-full h-screen gap-3 p-2 rounded-md">
+        <div className="flex w-full gap-3 p-2 bg-white rounded-md">
           <div className="w-1/2">
             <DashboardTextCard title={"Ingresos"} content={"-"} />
             <DashboardKpiCard
@@ -143,12 +145,12 @@ function CompanyDashboard({ user }) {
             
             <section className="">
 
-                <div className="text-center rounded-sm border-s-sky-100 border-solid">
+                <div className="text-center border-solid rounded-sm border-s-sky-100">
                   <h2 className="text-base">Mensajes ///</h2>
                 </div>
                 
              {!companyId ? <h3>Necesitas una Empresa para acceder al chat.</h3> : 
-             <div className="h-full flex flex-col">
+             <div className="flex flex-col h-full">
               
               <div>
                 <h2>Lista de Contactos</h2>
@@ -156,15 +158,15 @@ function CompanyDashboard({ user }) {
                 <ul className="bg-while-800">
                 {contactos.map(user =>{
                   return <li className="hover:border-4 border-s-red-950">
-                          {user.name}
+                          {user?.name}
                           </li>
                   })} 
                   </ul>
               </div>
 
-              <div className="max-h-80 overflow-y-auto" id="chatMessages">
+              <div className="overflow-y-auto max-h-80" id="chatMessages">
 
-                <h1 className="text-xl font-bold mb-4">Historial de Chat</h1>
+                <h1 className="mb-4 text-xl font-bold">Historial de Chat</h1>
                 {allMessages.map((message, index) => {
                   return (
                     <div
@@ -172,7 +174,7 @@ function CompanyDashboard({ user }) {
                       className={`${message.sender.id === userId ? "text-right" : "text-left"} mb-2`}
                     >
                       {message.sender.id === userId ? (
-                        <div className="bg-gray-200 p-3 rounded-lg">
+                        <div className="p-3 bg-gray-200 rounded-lg">
                           <p>
                             <strong>Tú: </strong>
                             {!message.sender.fullName
@@ -189,7 +191,7 @@ function CompanyDashboard({ user }) {
                           </p>
                         </div>
                       ) : (
-                        <div className="bg-purple-200 p-3 rounded-lg">
+                        <div className="p-3 bg-purple-200 rounded-lg">
                           <p>
                             <strong>Usuario: </strong>
                             {!message.sender.fullName
@@ -214,7 +216,7 @@ function CompanyDashboard({ user }) {
                 
                 <input
                   type="text"
-                  className="flex-1 mr-2 border rounded px-4 py-2 focus:outline-none"
+                  className="flex-1 px-4 py-2 mr-2 border rounded focus:outline-none"
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
                   placeholder="Escribe tu mensaje..."
@@ -223,7 +225,7 @@ function CompanyDashboard({ user }) {
                 <button
                   type="submit"
                   onClick={sendMessage}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                  className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
                 >
                   Enviar
                 </button>
@@ -235,7 +237,7 @@ function CompanyDashboard({ user }) {
             
           </div>
         </div>
-        <div className="w-full bg-white rounded-md flex gap-3 p-2">
+        <div className="flex w-full gap-3 p-2 bg-white rounded-md">
           {!loadingTenders ? (
             <DashboardTableData title={"MIS LICITACIONES"} data={userTenders} />
           ) : (
