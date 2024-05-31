@@ -101,7 +101,9 @@ export default function Login() {
 
       // Guardar en localStorage
       sessionStorage.setItem('accessToken', accessToken);
-      if (userDetails.company) {
+      
+      if(userDetails.company){
+
         sessionStorage.setItem('companyId', userDetails.company.id);
       }
       sessionStorage.setItem('userId', userDetails.id);
