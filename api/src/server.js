@@ -18,9 +18,9 @@ const io = socketIo(server, {
 io.on('connection', (socket) => {
     console.log('New user connected');
     
-    socket.on('sendMessage', (message) => {
-        io.emit('message', message);
-    });
+  socket.on('sendMessage', (message) => {
+    socket.broadcast.emit('message', message);
+  });
   
     socket.on('disconnect', () => {
         console.log('User disconnected');

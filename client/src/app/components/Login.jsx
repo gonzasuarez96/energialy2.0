@@ -9,6 +9,7 @@ import { setAccessToken, setUserData } from '../redux/features/userSlice';
 import { displayFailedMessage, displaySuccessMessage } from './Toastify';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import Link from 'next/link';
+import { Button} from 'antd';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -17,6 +18,8 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const [loadings, setLoadings] = useState(false);
 
   const router = useRouter();
 
@@ -129,6 +132,28 @@ export default function Login() {
     window.location.href = '/emailPassword';
   };
 
+  const enterLoading = (index) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+    
+    setTimeout(() => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+    }, 3000);
+  };
+
+  const handleClick = () =>{
+    enterLoading(0)
+    handleLogin()
+  }
+
+
   return (
     <div className="h-[70vh] w-full flex items-center justify-center">
       <div className="bg-white shadow rounded w-[70%]">
@@ -165,13 +190,16 @@ export default function Login() {
             {passwordError && <div className="text-danger mt- mb-2">{passwordError}</div>}
           </div>
           <div className="flex justify-center border-t pt-4">
-            <button
+            <Button
+              onClick={handleClick}
               type="button"
-              className="px-8 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-              onClick={handleLogin}
+              loading={loadings[0]}
+              className="px-12 py-4 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
             >
+              <span>
               Iniciar sesión
-            </button>
+              </span>
+            </Button>
           </div>
           {error && <div className="flex justify-center text-danger mt-2 mb-2">{error}</div>}
         </form>
