@@ -1,20 +1,3 @@
-/* Mapeo con filtro
-const data = [
-  { id: 1, name: "Item 1", active: true },
-  { id: 2, name: "Item 2", active: false },
-  { id: 3, name: "Item 3", active: true },
-  { id: 4, name: "Item 4", active: false }
-];
-
-// Filtrar los elementos activos y luego mapearlos
-const filteredAndMappedData = data
-  .filter(item => item.active) // Filtrar solo los elementos activos
-  .map(item => item.name); // Mapear los elementos filtrados
-
-console.log(filteredAndMappedData);
-// Output: ["Item 1", "Item 3"]
-
-*/
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
@@ -26,48 +9,51 @@ import {
   axiosGetDetailCompany,
   axiosPostMessage,
 } from "@/app/Func/axios";
-import { getCompanyId, getUserId } from "@/app/Func/sessionStorage";
+import {
+  getCompanyId,
+  getCompanyName,
+  getUserId,
+} from "@/app/Func/sessionStorage";
 import Popup from "./components/popup";
 
 const socketIo = io("http://localhost:3001");
 
 const Page = ({ params: { id } }) => {
-  const [company, setCompany] = useState(null);
-  const [allMessages, setAllMessages] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-  const [allUsers, setAllUsers] = useState([]);
-  const [messageText, setMessageText] = useState("");
-  const [buttonChat, setButtonChat] = useState([]);
+  //id: Compañía seleccionada en el perfil
+  const [company, setCompany] = useState(null); //Carga todas las compañias
+  const [allUsers, setAllUsers] = useState([]); //Carga todos los usuarios
+  const [allMessages, setAllMessages] = useState([]); //Mantiene todos los mensajes
+  const [messageText, setMessageText] = useState(""); //Texto del mensaje a enviar
 
-  const companyId = getCompanyId();
-  const userId = getUserId();
+  //FILTRADO EN CHAT
+  const [showPopup, setShowPopup] = useState(false); //Muestra/esconce caja chat
+  const [buttonChat, setButtonChat] = useState([]); //Botones para seleccionar empresas en el chat
+  const [filteredMessages, setFilteredMessages] = useState([]); //Mensajes filtrados en chat
+  const [selectedCompany, setSelectedCompany] = useState(null); //Compañía seleccionada para mostrar en chat
 
-  const receiver = allUsers.find((user) => user.company.id === id);
-  const sender = allUsers.find((user) => user.company.id === companyId);
-  if (!companyId) {
-    window.alert("Debe estar asociado a una empresa para utilizar el chat");
-    return;
-  }
+  const [receiver, setReceiver] = useState(null);
+  const [sender, setSender] = useState(null);
 
-  const senderId = companyId;
-  const receiverId = id;
+  const companyId = getCompanyId(); //Id de compañía logueada -
+  const userId = getUserId(); //Id de usuario logueado
+  const myName = getCompanyName(); //Nombre de la compañía logueada->sirve para filtro de chat
+
+  //const receiver = allUsers.find((user) => user.company.id === id); //datos completos del que recibe el mensaje
+  //const sender = allUsers.find((user) => user.company.id === companyId); //datos completos de compañía logueda
+
+  let usuariosUnicos = new Set();
 
   useEffect(() => {
     // Emitir evento de autenticación para guardar el socket
-    socketIo.emit("authenticate", { senderId });
+    socketIo.emit("authenticate", { companyId });
 
     // Escuchar eventos para saber si se conecto
     socketIo.on("connect", () => {
       console.log("Connected to server");
     });
-    /*
-    return () => {
-      // Desconectar socket cuando la página se desmonte
-      socketIo.disconnect();
-    };
-  */
   }, []);
 
+  //Carga usurios y mensajes al comienzo, y detalles del primer destinatario
   useEffect(() => {
     axiosGetAllUsers(setAllUsers);
     axiosGetAllMessages(setAllMessages);
@@ -77,16 +63,47 @@ const Page = ({ params: { id } }) => {
   }, [id]);
 
   useEffect(() => {
-    if (allUsers.length > 0) {
-      let usuariosUnicos = new Set();
-      allUsers.forEach((item) => {
-        usuariosUnicos.add(item.company.name);
+    if (allUsers.length > 0 && id) {
+      const foundReceiver = allUsers.find((user) => user.company.id === id);
+      const foundSender = allUsers.find(
+        (user) => user.company.id === companyId
+      );
+      setReceiver(foundReceiver);
+      setSender(foundSender);
+    }
+  }, [allUsers, id, companyId]);
+
+  //FILTRA EL CHAT POR COMPAÑIA SELECCIONADA
+  useEffect(() => {
+    if (selectedCompany) {
+      const filtered = allMessages.filter((message) => {
+        const senderCompany = message.sender?.Company?.name;
+        const receiverCompany = message.receiver?.Company?.name;
+        return (
+          (senderCompany === selectedCompany && receiverCompany === myName) ||
+          (senderCompany === myName && receiverCompany === selectedCompany)
+        );
       });
-      let usuariosUnicosArray = Array.from(usuariosUnicos);
+      setFilteredMessages(filtered);
+    } else {
+      setFilteredMessages(allMessages);
+    }
+  }, [allMessages, selectedCompany, myName]);
+
+  //AGREGA LAS COMPAÑIAS A LOS BOTONES DE SELECCION DEL CHAT EXEPTO AL USUARIO
+  useEffect(() => {
+    if (allUsers.length > 0) {
+      allUsers.forEach((item) => {
+        item.company.name !== myName
+          ? usuariosUnicos.add(item.company.name)
+          : null;
+      });
+      const usuariosUnicosArray = Array.from(usuariosUnicos);
       setButtonChat(usuariosUnicosArray);
     }
   }, [allUsers]);
 
+  //RECIBE LOS MENSAJES
   useEffect(() => {
     if (!socketIo) return;
 
@@ -103,6 +120,8 @@ const Page = ({ params: { id } }) => {
           createdAt: new Date().toISOString(),
         };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
+        usuariosUnicos.add(prueba.company.name);
+        setButtonChat(Array.from(usuariosUnicos));
       }
     });
 
@@ -111,9 +130,10 @@ const Page = ({ params: { id } }) => {
     };
   }, [sender, receiver]);
 
+  //ENVIA LOS MENSAJES
   const handleSendMessage = useCallback(
-    (e) => {
-      e.preventDefault();
+    (event) => {
+      event.preventDefault();
       if (!socketIo || !messageText.trim()) return;
 
       const newMessage = {
@@ -126,13 +146,13 @@ const Page = ({ params: { id } }) => {
 
       socketIo.emit("sendMessage", {
         _message: messageText,
-        _sender: senderId,
-        _receiver: receiverId,
+        _sender: companyId,
+        _receiver: id,
       });
       axiosPostMessage({
         text: messageText,
-        senderId: sender?.id,
-        receiverId: receiver?.id,
+        senderId: sender.id,
+        receiverId: receiver.id,
       });
 
       setMessageText("");
@@ -141,11 +161,12 @@ const Page = ({ params: { id } }) => {
   );
 
   if (!company) return "loading...";
-  /*if (!sender) {
-    window.alert("Para ingresar al chat, debe estar asociado a una compañía");
-    return;
-  }
-*/
+
+  //ESTABLECE COMPAÑIA SELECCIONADA EN BOTON DEL CHAT
+  const handleSelectCompany = (companyName) => {
+    setSelectedCompany(companyName);
+  };
+
   return (
     <div className="md:max-w-[70%] m-auto">
       <div className="flex justify-center mt-10">
@@ -182,18 +203,26 @@ const Page = ({ params: { id } }) => {
         <h2>Chat</h2>
         <div className="max-h-[400px] overflow-y-auto">
           <div className="grid grid-cols-12 gap-2">
-            <div className="col-span-1">
+            <div className="col-span-2">
               {buttonChat.map((item) => {
                 return (
-                  <button className="mb-2 text-sm text-white bg-black">
+                  <button
+                    key={item}
+                    className={`w-full px-2 py-1 mb-2 text-sm text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                      selectedCompany === item
+                        ? "bg-blue-500"
+                        : "bg-gray-600 hover:bg-gray-800"
+                    }`}
+                    onClick={() => handleSelectCompany(item)}
+                  >
                     {item}
                   </button>
                 );
               })}
             </div>
-            <div className="col-span-1">Logo sender</div>
-            <div className="col-span-9 max-h-[300px] overflow-y-auto">
-              {allMessages.map((message, index) => {
+            {/*<div className="col-span-1">Logo sender</div>*/}
+            <div className="col-span-10 max-h-[300px] overflow-y-auto">
+              {filteredMessages.map((message, index) => {
                 const isSender = message.sender.id === userId;
                 return (
                   <div
@@ -223,14 +252,16 @@ const Page = ({ params: { id } }) => {
                 );
               })}
             </div>
-            <div className="col-span-1">Logo receiver</div>
+            {/*<div className="col-span-1">Logo receiver</div>*/}
           </div>
           <form className="flex mt-4" onSubmit={handleSendMessage}>
             <input
               type="text"
               className="flex-1 px-4 py-2 mr-2 border rounded focus:outline-none"
               value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
+              onChange={(event) => {
+                setMessageText(event.target.value);
+              }}
               placeholder="Type your message..."
             />
             <button

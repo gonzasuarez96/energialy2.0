@@ -9,3 +9,9 @@ export function getUserId() {
     return sessionStorage.getItem("userId");
   }
 }
+
+export function getCompanyName() {
+  if (typeof window !== "undefined") {
+    return sessionStorage.getItem("companyName");
+  }
+}

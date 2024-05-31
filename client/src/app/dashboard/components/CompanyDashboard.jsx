@@ -54,7 +54,6 @@ function CompanyDashboard({ user }) {
   const contactos = allUsers.map(user =>{
     return user.company
   })
-  console.log("esta es la lista",contactos);
 
   const [messageText, setMessageText] = useState("");
 
@@ -117,7 +116,7 @@ function CompanyDashboard({ user }) {
 
   return (
     <div>
-      <div className="flex items-center p-2 text-6xl text-gray-400 font-extralight font-jose">
+      <div className="flex items-center p-2 text-xl text-gray-400 font-extralight font-jose">
         Hola, {user.firstName}
         <div className="flex-grow">
           <Buttons />
