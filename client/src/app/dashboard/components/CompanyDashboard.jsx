@@ -7,14 +7,7 @@ import DashboardTableData from "@/app/components/DashboardTableData";
 import { useGetProposalsQuery } from "@/app/redux/services/ProposalApi";
 import { useGetTendersQuery } from "@/app/redux/services/tendersApi";
 //import getLocalStorage from "../Func/localStorage";
-import io from "socket.io-client";
-import {
-  axiosGetAllMessages,
-  axiosGetAllUsers,
-  axiosPostMessage,
-} from "@/app/Func/axios";
 import { getCompanyId, getUserId } from "@/app/Func/sessionStorage";
-const socketIo = io("http://localhost:3001");
 
 function CompanyDashboard({ user }) {
   const [userProposals, setUserProposals] = useState([]);
@@ -56,34 +49,7 @@ function CompanyDashboard({ user }) {
 
   const [messageText, setMessageText] = useState("");
 
-  useEffect(() => {
-    if (!socketIo) return;
-
-    socketIo.on("message", (message) => {
-      // * SE CREA UN OBJETO RAMDON TEMPORAL PARA LA VISUALIZACION EN TIEMPO REAL
-      if (sender && receiver) {
-        const newMessage = {
-          text: message,
-          sender: sender,
-          receiver: receiver,
-        };
-        setAllMessages((prevMessages) => [...prevMessages, newMessage]);
-        scrollToBottom();
-      }
-    });
-
-    return () => {
-      socketIo.off("message");
-    };
-  }, [socketIo, messageText]);
-
-  const scrollToBottom = () => {
-    const element = document.getElementById("chatMessages");
-    if (element) {
-      element.scrollTop = element.scrollHeight;
-    }
-  };
-
+  
   const sendMessage = (e) => {
     e.preventDefault();
     if (!socketIo || !messageText.trim() || !receiver) {
@@ -100,8 +66,6 @@ function CompanyDashboard({ user }) {
   };
 
   useEffect(() => {
-    axiosGetAllUsers(setAllUsers);
-    axiosGetAllMessages(setAllMessages);
     if (user.company) {
       setUserProposals(proposals?.filter((proposal) => proposal.company.id === user.company.id));
       setProposalsToUser(proposals?.filter((proposal) => proposal.tender.Company.id === user.company.id));
@@ -109,14 +73,10 @@ function CompanyDashboard({ user }) {
     }
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [allMessages]);
-
   return (
     <div>
-      <div className="flex items-center p-2 font-extralight font-jose text-xl text-gray-400">
-        Hola, {user.firstName}
+      <div className="flex">
+        <h1 className="flex items-center p-2 font-extralight font-jose text-xl text-gray-400">Hola, {user.firstName}</h1>
         <div className="flex-grow">
           <Buttons />
         </div>
@@ -124,17 +84,13 @@ function CompanyDashboard({ user }) {
       
       <div className="w-full h-screen rounded-md flex flex-col gap-3 p-2">
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
+          {/*Left */}
           <div className="w-1/2">
-            <DashboardTextCard title={"Ingresos"} content={"-"} />
-            <DashboardKpiCard
-              title={"Propuestas Enviadas En Otras Licitaciones"}
-              content={userProposals}
-            />
-            <DashboardKpiCard
-              title={"Propuestas Recibidas En Mis Licitaciones"}
-              content={proposalsToUser}
-            />
+            <DashboardTextCard title={'Ingresos'} content={'-'} />
+            <DashboardKpiCard title={'Propuestas Enviadas En Otras Licitaciones'} content={userProposals} />
+            <DashboardKpiCard title={'Propuestas Recibidas En Mis Licitaciones'} content={proposalsToUser} />
           </div>
+          {/*Rigth */}
           <div className="w-1/2">
             <div className="flex justify-between gap-2">
               <DashboardTextCard title={"Ingresos Pendientes"} content={"-"} />
@@ -236,15 +192,11 @@ function CompanyDashboard({ user }) {
           </div>
         </div>
         <div className="w-full bg-white rounded-md flex gap-3 p-2">
-          {!loadingTenders ? (
-            <DashboardTableData title={"MIS LICITACIONES"} data={userTenders} />
-          ) : (
-            <p>Cargando..</p>
-          )}
+          {!loadingTenders ? <DashboardTableData title={'MIS LICITACIONES'} data={userTenders} /> : <p>Cargando..</p>}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default CompanyDashboard;

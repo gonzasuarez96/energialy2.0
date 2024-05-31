@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import getLocalStorage from '../../Func/localStorage';
@@ -25,7 +25,9 @@ function Page(props) {
 
   // * QUIEN RECIBE EL MENSAJE
    const receiver = allUsers.find(function (el) {
-       return el.company.id === id;
+     if(el.company){
+      return el.company.id === id;
+    }
    });
 
   // * QUIEN ENVIA EL MENSAJE
@@ -34,11 +36,17 @@ function Page(props) {
 
   // * SE VERIFICA QUE TENGA UNA COMPAÑIA CREADA
   const sender = allUsers.find(function (el) {
-    return el.company.id === companyId;
+    if (el.company) {
+      return el.company.id === companyId;
+    }
   });
 
   useEffect(() => {
     if (!socketIo) return;
+    // fetch(`${urlProduction}/companies/${id}`)
+    //   .then((response) => response.json())
+    //   .then((data) => setCompany(data))
+    //   .catch((error) => console.error("Error fetching data:", error));
 
     socketIo.on("message", (message) => {
       // * SE CREA UN OBJETO RAMDON TEMPORAL PARA LA VISUALIZACION EN TIEMPO REAL
@@ -91,7 +99,7 @@ function Page(props) {
       axiosGetDetailCompany(id, setCompany);
     }
   }, []);
-
+    
   return (
     <>
       {!company ? (
@@ -103,18 +111,26 @@ function Page(props) {
               <Image
                 className="max-h-[60%]"
                 src={company.bannerPicture}
-                alt="compay banner picture"
                 fill={true}
               />
             </div>
           </div>
-
           <div className="mt-20">
             <CollapsedBar
               title={"Compañía"}
               company={company}
               intState={false}
             />
+            {/* <CollapsedBar
+              title={"Servicios"}
+              company={company}
+              intState={true}
+            />
+            <CollapsedBar
+              title={"Portfolio"}
+              company={company}
+              intState={true}
+            /> */}
             <CollapsedBar
               title={"Licitaciones"}
               company={company}
