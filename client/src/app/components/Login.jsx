@@ -105,17 +105,18 @@ export default function Login() {
       if(userDetails.company){
 
         sessionStorage.setItem('companyId', userDetails.company.id);
+        sessionStorage.setItem('companyName', userDetails.company.name)
+        
       }
       sessionStorage.setItem('userId', userDetails.id);
       sessionStorage.setItem('user', JSON.stringify(userDetails));
-      sessionStorage.setItem('companyName', userDetails.company.name);
 
       dispatch(setUserData(userDetails));
       dispatch(setAccessToken(accessToken));
 
       window.location.href = '/dashboard';
     } catch (error) {
-      // console.log("Error:", error);
+      console.log("Error:", error);
       if (error.response.data.error == 'Incorrect password.') {
         displayFailedMessage('Contraseña incorrecta');
       } else if (error.response.data.error == 'Email not registered.') {
@@ -192,7 +193,7 @@ export default function Login() {
             </div>
             {passwordError && <div className="mb-2 text-danger mt-">{passwordError}</div>}
           </div>
-          <div className="flex justify-center border-t pt-4">
+          <div className="flex justify-center pt-4 border-t">
             <Button
               onClick={handleClick}
               type="button"
