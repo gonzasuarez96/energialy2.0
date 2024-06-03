@@ -167,6 +167,7 @@ export default function RegisterCompany() {
       );
       console.log("Respuesta del servidor:", response);
       displaySuccessMessage("Empresa registrada con éxito");
+      
       setTimeout(() => {
         router.push("/directory");
       }, 2000);
@@ -216,7 +217,7 @@ export default function RegisterCompany() {
   // ------------------------------------------------------------------------ //
 
   return (
-    <div className="min-h-screen flex flex-col justify-center">
+    <div className="flex flex-col justify-center min-h-screen">
       {/* BANNER */}
       <div className="relative mb-4">
         <img
@@ -225,8 +226,8 @@ export default function RegisterCompany() {
           className="w-full h-auto"
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="container px-4 mx-auto relative z-10 text-center text-white font-poppins">
-            <h2 className="text-4xl font-bold mb-2">Registra tu empresa en</h2>
+          <div className="container relative z-10 px-4 mx-auto text-center text-white font-poppins">
+            <h2 className="mb-2 text-4xl font-bold">Registra tu empresa en</h2>
             <h2 className="text-4xl font-bold">Energialy</h2>
           </div>
           <div className="absolute inset-0 bg-black opacity-40"></div>
@@ -241,17 +242,17 @@ export default function RegisterCompany() {
             className="m-10 p-8 max-w-[70%] mx-auto"
             onSubmit={handleSubmit}
           >
-            <div className="mb-3 items-center">
-              <div className="w-full mb-15 mx-auto text-center font-poppins">
-                <h3 className="text-2xl leading-7 font-bold mb-4">
+            <div className="items-center mb-3">
+              <div className="w-full mx-auto text-center mb-15 font-poppins">
+                <h3 className="mb-4 text-2xl font-bold leading-7">
                   Indicános algunos datos
                 </h3>
-                <p className="text-base leading-6 mb-4">
+                <p className="mb-4 text-base leading-6">
                   Luego podrás completar el perfil desde tu cuenta.
                 </p>
               </div>
 
-              <div className="flex-grow flex justify-center items-center">
+              <div className="flex items-center justify-center flex-grow">
                 <ul className="flex p-0 mb-5">
                   {stepsForm.map((option, index) => (
                     <li key={index} className="mx-4">
@@ -278,7 +279,7 @@ export default function RegisterCompany() {
                       placeholder="Nombre de la empresa"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-3 py-2 text-lg rounded border"
+                      className="w-full px-3 py-2 text-lg border rounded"
                     />
                   </div>
                   <div className="mb-3">
@@ -287,7 +288,7 @@ export default function RegisterCompany() {
                       placeholder="Descripción de la empresa"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      className="w-full px-3 py-2 text-lg rounded border resize-y"
+                      className="w-full px-3 py-2 text-lg border rounded resize-y"
                       rows="4" // Puedes ajustar la cantidad de filas aquí
                     />
                   </div>
@@ -393,7 +394,7 @@ export default function RegisterCompany() {
                     <div className="mt-4 space-x-4">
                       <button
                         onClick={() => setStep(step - 1)}
-                        className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
+                        className="px-4 py-2 text-gray-500 transition duration-300 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
                       >
                         Volver
                       </button>
@@ -442,7 +443,7 @@ export default function RegisterCompany() {
                     <select
                       value=''
                       onChange={handleCategoryChange} 
-                      className="border rounded px-2 py-2 w-full"
+                      className="w-full px-2 py-2 border rounded"
                     >
                       <option value="">Seleccione una categoria</option>
                       {categories?.map((option) => (
@@ -473,7 +474,7 @@ export default function RegisterCompany() {
                   <div className="mt-4 space-x-4">
                     <button
                       onClick={() => setStep(step - 1)}
-                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
+                      className="px-4 py-2 text-gray-500 transition duration-300 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
                     >
                       Volver
                     </button>
@@ -495,10 +496,10 @@ export default function RegisterCompany() {
                       id="profilePicture"
                       accept="image/*"
                       onChange={(e) => uploadImage(e, "profile")}
-                      className="w-full border rounded px-2 py-1"
+                      className="w-full px-2 py-1 border rounded"
                     />
                     {profilePictureError && (
-                      <p className="text-red-500 text-sm">
+                      <p className="text-sm text-red-500">
                         {profilePictureError}
                       </p>
                     )}
@@ -515,10 +516,10 @@ export default function RegisterCompany() {
                       id="bannerPicture"
                       accept="image/*"
                       onChange={(e) => uploadImage(e, "banner")}
-                      className="w-full border rounded px-2 py-1"
+                      className="w-full px-2 py-1 border rounded"
                     />
                     {bannerPictureError && (
-                      <p className="text-red-500 text-sm">
+                      <p className="text-sm text-red-500">
                         {bannerPictureError}
                       </p>
                     )}
@@ -531,7 +532,7 @@ export default function RegisterCompany() {
                   <div className="mt-4 space-x-4">
                     <button
                       onClick={() => setStep(step - 1)}
-                      className="px-4 py-2 text-gray-500 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white transition duration-300"
+                      className="px-4 py-2 text-gray-500 transition duration-300 bg-gray-200 rounded hover:bg-secondary-600 hover:text-white"
                     >
                       Volver
                     </button>
