@@ -32,7 +32,9 @@ function CompanyDashboard({ user }) {
   const companyId = getCompanyId();
   const userId = getUserId();
   const sender = allUsers.find(function (el) {
-   return el.company === companyId;
+    if (el.company){
+      return el.company === companyId;
+    }
   });
 
   // * QUIEN RECIBE EL MENSAJE
