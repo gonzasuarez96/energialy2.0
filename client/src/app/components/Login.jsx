@@ -197,17 +197,16 @@ export default function Login() {
               onClick={handleClick}
               type="button"
               loading={loadings[0]}
-              className="px-12 py-4 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
             >
-              <span>
+              <span className="px-12 py-3 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300">
               Iniciar sesión
               </span>
             </Button>
           </div>
-          {error && <div className="flex justify-center mt-2 mb-2 text-danger">{error}</div>}
+          {error && <div className="flex justify-center mt-2 mb-2 py-3 text-danger">{error}</div>}
         </form>
         <div className="p-2 text-center">
-          <Link className="text-black" href="/forgot-password">
+          <Link className="text-black bg-secondary-600 " href="/forgot-password">
             ¿Olvidaste tu contraseña?
           </Link>
         </div>

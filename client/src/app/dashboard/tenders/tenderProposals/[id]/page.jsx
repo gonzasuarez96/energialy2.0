@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import { handleChangeStatus } from "@/app/Func/controllers";
 
 function page({params}) {
-  console.log(params)
+  console.log("y que es esto?",params)
   const { data:tender, isLoading, isError } = useGetTenderByIdQuery(params.id);
-  console.log(tender)
+  console.log("Consulta la propuesta por el ID",tender)
+
   const endpoint = 'proposals'
   const router = useRouter()
   const backPage = () => {
