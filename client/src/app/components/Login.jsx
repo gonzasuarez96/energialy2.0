@@ -9,6 +9,7 @@ import { setAccessToken, setUserData } from '../redux/features/userSlice';
 import { displayFailedMessage, displaySuccessMessage } from './Toastify';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import Link from 'next/link';
+import { Button} from 'antd';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -17,6 +18,8 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const [loadings, setLoadings] = useState(false);
 
   const router = useRouter();
 
@@ -98,7 +101,9 @@ export default function Login() {
 
       // Guardar en localStorage
       sessionStorage.setItem('accessToken', accessToken);
+      
       if(userDetails.company){
+
         sessionStorage.setItem('companyId', userDetails.company.id);
       }
       sessionStorage.setItem('userId', userDetails.id);
@@ -129,6 +134,28 @@ export default function Login() {
   const handlePasswordFormClick = () => {
     window.location.href = '/emailPassword';
   };
+
+  const enterLoading = (index) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+    
+    setTimeout(() => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+    }, 3000);
+  };
+
+  const handleClick = () =>{
+    enterLoading(0)
+    handleLogin()
+  }
+
 
   return (
     <div className="h-[70vh] w-full flex items-center justify-center">
@@ -165,14 +192,17 @@ export default function Login() {
             </div>
             {passwordError && <div className="mb-2 text-danger mt-">{passwordError}</div>}
           </div>
-          <div className="flex justify-center pt-4 border-t">
-            <button
+          <div className="flex justify-center border-t pt-4">
+            <Button
+              onClick={handleClick}
               type="button"
-              className="px-8 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-              onClick={handleLogin}
+              loading={loadings[0]}
+              className="px-12 py-4 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
             >
+              <span>
               Iniciar sesión
-            </button>
+              </span>
+            </Button>
           </div>
           {error && <div className="flex justify-center mt-2 mb-2 text-danger">{error}</div>}
         </form>
