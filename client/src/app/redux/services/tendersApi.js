@@ -8,11 +8,14 @@ export const tendersApi = createApi({
     getTenders: builder.query({
       query: () => "/tenders",
     }),
+    getTenderid: builder.query({
+      query: (id) => "/tenders",
+    }),
     getTenderById: builder.query({
       query: (id) => `/tenders/${id}`,
     })
   }),
 });
 
-export const { useGetTendersQuery, useGetTenderByIdQuery } = tendersApi;
+export const { useGetTendersQuery,useGetTenderidQuery, useGetTenderByIdQuery} = tendersApi;
 

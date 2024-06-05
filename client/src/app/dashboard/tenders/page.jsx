@@ -16,15 +16,21 @@ function Licitaciones() {
   const userData = getLocalStorage();
   const { data: tenders, isLoading } = useGetTendersQuery();
   const [currentPage, setCurrentPage] = useState(1);
+ 
 
-  //console.log(tenders)
   const userTenders = !isLoading
     ? tenders.filter((tender) => tender.company.id === userData.company.id)
     : [];
 
+  const propuestas = userTenders.map((Ids)=>(Ids.id)) //ID de cada Licitacion
+ 
+  console.log("Estos son los Ids de las propuestas",propuestas);
+ 
+  console.log("Estos son las propuestas",tenders);
+ 
   const itemsPerPage = 4;
   const totalPages = Math.ceil(userTenders.length / itemsPerPage);
-  console.log(userTenders);
+
   // Calcula las compañías que se mostrarán en la página actual
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -62,6 +68,7 @@ function Licitaciones() {
                 </button>
               </Link>
               <div>
+                
                 {tendersUserToShow.map((tender) => (
                   <CardUserTender item={tender} />
                 ))}

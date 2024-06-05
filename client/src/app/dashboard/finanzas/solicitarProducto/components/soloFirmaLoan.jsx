@@ -37,6 +37,8 @@ export default function SoloFirmaLoan() {
   const handleChange = (e) => {
     const { id, value } = e.target;
 
+   
+
     if (id === "legalManager") {
       setLegalManager({
         ...legalManager,
@@ -70,9 +72,11 @@ export default function SoloFirmaLoan() {
       }
     }
   };
+  const Company = company.id
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("esta es la compania",company);
     const additionalData = {
       businessName,
       fiscalAdress,
@@ -81,13 +85,17 @@ export default function SoloFirmaLoan() {
       legalManager,
       destination,
       amount: `${amountToRequest} ${currency}`,
+      Company,
     };
-
+  
     const accountData = {
       productName: "Préstamo a sola firma",
       bankAccountId,
-      additionalData, // Incluimos additionalData directamente aquí
+      additionalData,
     };
+
+    console.log("Información enviada:", accountData);
+    
     if (
       !businessName ||
       !fiscalAdress ||
