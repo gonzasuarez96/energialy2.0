@@ -3,7 +3,7 @@
 import { Admin, Resource, ListGuesser, EditGuesser, CreateGuesser} from "react-admin";
 import dataProvider from "./ApiProviderUsers";
 // import UserRolesChart from "./RolesChart";
-// import CustomLayout from './CustomLayout';
+import CustomLayout from './CustomLayout';
 import Register from '../Register'; 
 import RegisterCompany from '../RegisterCompany'
 
@@ -18,15 +18,11 @@ const AdminApp = () => {
   return (
     <div className="admin-app-container">
     <Admin dataProvider={dataProvider} 
-    // layout={CustomLayout}
+    layout={CustomLayout}
     >
       {/* <Resource name="Dashboard" list={UserRolesChart} /> */}
-      <Resource name="users" list={ListGuesser} edit={EditGuesser} 
-      create={Register} 
-      recordRepresentation="name" />
-      <Resource name="companies" list={ListGuesser} edit={EditGuesser} 
-      create={RegisterCompany} 
-      />
+      <Resource name="users" list={ListGuesser} edit={EditGuesser} create={Register} recordRepresentation="name"/>
+      <Resource name="companies" list={ListGuesser} edit={EditGuesser} create={RegisterCompany}/>
       <Resource name="tenders" list={ListGuesser} edit={EditGuesser} />
       <Resource name="financeProducts" list={ListGuesser} edit={EditGuesser} />
       <Resource name="bankAccounts" list={ListGuesser} edit={EditGuesser} />
