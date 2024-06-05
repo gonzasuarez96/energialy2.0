@@ -11,6 +11,10 @@ import dataProvider from "./ApiProviderUsers";
 const AdminApp = () => {
   console.log("AdminApp renderizado");
  
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   return (
     <div className="admin-app-container">
     <Admin dataProvider={dataProvider} 
