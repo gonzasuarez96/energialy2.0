@@ -12,7 +12,7 @@ export async function axiosPostMessage(body) {
 export async function axiosGetAllMessages(setAllMessages) {
   try {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/messages`);
-    console.log("get-message:", data);
+    //console.log("get-message:", data);
     setAllMessages(data)
   } catch (error) {
     console.log("Error en axiosGetAllMessages por:", error);
@@ -47,6 +47,6 @@ export async function axiosGetAllCompanies(setAllCompanies) {
     const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/companies`)
     setAllCompanies(data)
   } catch (error) {
-    
+    console.log("Error en axiosGetAllCompanies por:", error);
   }
 }

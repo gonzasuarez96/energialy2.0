@@ -87,11 +87,11 @@ const Page = ({ params: { id } }) => {
           (senderCompany === myName && receiverCompany === selectedCompany)
         );
       });
-      const newReceiver = allUsers.find(
-        (user) => user.company.name === selectedCompany
-      );
-      setReceiver(newReceiver);
+      const newReceiver = allUsers.find((user) => {
+        return user.company.name === selectedCompany;
+      });
       setFilteredMessages(filtered);
+      setReceiver(newReceiver);
     } else {
       setFilteredMessages(allMessages);
     }
@@ -125,7 +125,7 @@ const Page = ({ params: { id } }) => {
         (user) => user.company.id === _receiver
       );
 
-      if (sender && receiver) {
+      if (foundSender && foundReceiver) {
         const newMessage = {
           text: _message,
           sender: foundReceiver,
@@ -140,7 +140,7 @@ const Page = ({ params: { id } }) => {
     return () => {
       socketIo.off("message", messageListener);
     };
-  }, [allUsers, sender, receiver]);
+  }, [allMessages, allUsers, sender, receiver]);
 
   //ENVIA LOS MENSAJES
   const handleSendMessage = useCallback(
