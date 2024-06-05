@@ -8,6 +8,7 @@ import {
   axiosGetAllUsers,
   axiosGetDetailCompany,
   axiosPostMessage,
+  axiosGetAllCompanies,
 } from "@/app/Func/axios";
 import {
   getCompanyId,
@@ -24,6 +25,7 @@ const Page = ({ params: { id } }) => {
   const [allUsers, setAllUsers] = useState([]); //Carga todos los usuarios
   const [allMessages, setAllMessages] = useState([]); //Mantiene todos los mensajes
   const [messageText, setMessageText] = useState(""); //Texto del mensaje a enviar
+  const [allCompanies, setAllCompanies] = useState([]);
 
   //FILTRADO EN CHAT
   const [showPopup, setShowPopup] = useState(false); //Muestra/esconce caja chat
@@ -57,11 +59,13 @@ const Page = ({ params: { id } }) => {
   useEffect(() => {
     axiosGetAllUsers(setAllUsers);
     axiosGetAllMessages(setAllMessages);
+    axiosGetAllCompanies(setAllCompanies);
     if (id) {
       axiosGetDetailCompany(id, setCompany);
     }
   }, [id]);
 
+  //CARGA SENDER Y RECEIVER
   useEffect(() => {
     if (allUsers.length > 0 && id) {
       const foundReceiver = allUsers.find((user) => user.company.id === id);
@@ -84,6 +88,12 @@ const Page = ({ params: { id } }) => {
           (senderCompany === myName && receiverCompany === selectedCompany)
         );
       });
+      const newReceiver = allCompanies.find(
+        (company) => company.name === selectedCompany
+      );
+      //setReceiver(newReceiver);
+      console.log("newReceiver",newReceiver)
+      console.log("receiver", receiver)
       setFilteredMessages(filtered);
     } else {
       setFilteredMessages(allMessages);
@@ -107,28 +117,41 @@ const Page = ({ params: { id } }) => {
   useEffect(() => {
     if (!socketIo) return;
 
-    socketIo.on("message", (message) => {
+    const messageListener = (message) => {
       const { _message, _sender, _receiver } = message;
 
-      const prueba = allUsers.find((user) => user.company.id === _sender);
+      //OJO CUANDO RECIBO EL MEMSAJE PARA MI->YO SOY EL RECEIVER
+      const foundReceiver = allUsers.find(
+        (user) => user.company.id === _sender
+      );
+      const foundSender = allUsers.find(
+        (user) => user.company.id === _receiver
+      );
 
       if (sender && receiver) {
         const newMessage = {
           text: _message,
-          sender: prueba, //receiver,
-          receiver: sender,
+          sender: foundReceiver,
+          receiver: foundSender,
           createdAt: new Date().toISOString(),
         };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
-        usuariosUnicos.add(prueba.company.name);
-        setButtonChat(Array.from(usuariosUnicos));
+        setReceiver(foundSender);
+        console.log("foundSender ", foundSender);
+        console.log("receiver ", receiver);
+        /*
+        usuariosUnicos.add(foundReceiver.company.name);
+        const usuariosUnicosArray = Array.from(usuariosUnicos) 
+        setButtonChat(usuariosUnicosArray);
+        */
       }
-    });
+    };
 
+    socketIo.on("message", messageListener);
     return () => {
       socketIo.off("message");
     };
-  }, [sender, receiver]);
+  }, [filteredMessages, receiver, allMessages, selectedCompany]);
 
   //ENVIA LOS MENSAJES
   const handleSendMessage = useCallback(
@@ -147,8 +170,9 @@ const Page = ({ params: { id } }) => {
       socketIo.emit("sendMessage", {
         _message: messageText,
         _sender: companyId,
-        _receiver: id,
+        _receiver: id, //Modificar aqui para enviar al destinatario
       });
+
       axiosPostMessage({
         text: messageText,
         senderId: sender.id,
@@ -157,7 +181,7 @@ const Page = ({ params: { id } }) => {
 
       setMessageText("");
     },
-    [messageText, sender, receiver]
+    [allMessages, messageText, sender, receiver]
   );
 
   if (!company) return "loading...";
