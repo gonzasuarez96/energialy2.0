@@ -8,7 +8,6 @@ import {
   axiosGetAllUsers,
   axiosGetDetailCompany,
   axiosPostMessage,
-  axiosGetAllCompanies,
 } from "@/app/Func/axios";
 import {
   getCompanyId,
@@ -16,6 +15,7 @@ import {
   getUserId,
 } from "@/app/Func/sessionStorage";
 import Popup from "./components/popup";
+import { all } from "axios";
 
 const socketIo = io("http://localhost:3001");
 
@@ -25,10 +25,9 @@ const Page = ({ params: { id } }) => {
   const [allUsers, setAllUsers] = useState([]); //Carga todos los usuarios
   const [allMessages, setAllMessages] = useState([]); //Mantiene todos los mensajes
   const [messageText, setMessageText] = useState(""); //Texto del mensaje a enviar
-  const [allCompanies, setAllCompanies] = useState([]);
 
   //FILTRADO EN CHAT
-  const [showPopup, setShowPopup] = useState(false); //Muestra/esconce caja chat
+  const [showPopup, setShowPopup] = useState(false); //Muestra/esconde caja chat
   const [buttonChat, setButtonChat] = useState([]); //Botones para seleccionar empresas en el chat
   const [filteredMessages, setFilteredMessages] = useState([]); //Mensajes filtrados en chat
   const [selectedCompany, setSelectedCompany] = useState(null); //Compañía seleccionada para mostrar en chat
@@ -39,9 +38,6 @@ const Page = ({ params: { id } }) => {
   const companyId = getCompanyId(); //Id de compañía logueada -
   const userId = getUserId(); //Id de usuario logueado
   const myName = getCompanyName(); //Nombre de la compañía logueada->sirve para filtro de chat
-
-  //const receiver = allUsers.find((user) => user.company.id === id); //datos completos del que recibe el mensaje
-  //const sender = allUsers.find((user) => user.company.id === companyId); //datos completos de compañía logueda
 
   let usuariosUnicos = new Set();
 
@@ -55,15 +51,14 @@ const Page = ({ params: { id } }) => {
     });
   }, []);
 
-  //Carga usurios y mensajes al comienzo, y detalles del primer destinatario
+  //Carga usuarios y mensajes al comienzo, y detalles del primer destinatario
   useEffect(() => {
     axiosGetAllUsers(setAllUsers);
     axiosGetAllMessages(setAllMessages);
-    axiosGetAllCompanies(setAllCompanies);
     if (id) {
       axiosGetDetailCompany(id, setCompany);
     }
-  }, [id]);
+  }, []);
 
   //CARGA SENDER Y RECEIVER
   useEffect(() => {
@@ -74,7 +69,11 @@ const Page = ({ params: { id } }) => {
       );
       setReceiver(foundReceiver);
       setSender(foundSender);
+      if (foundReceiver) {
+        setSelectedCompany(foundReceiver.company.name);
+      }
     }
+    // Set initial selected company for filtering chat
   }, [allUsers, id, companyId]);
 
   //FILTRA EL CHAT POR COMPAÑIA SELECCIONADA
@@ -88,30 +87,28 @@ const Page = ({ params: { id } }) => {
           (senderCompany === myName && receiverCompany === selectedCompany)
         );
       });
-      const newReceiver = allCompanies.find(
-        (company) => company.name === selectedCompany
+      const newReceiver = allUsers.find(
+        (user) => user.company.name === selectedCompany
       );
-      //setReceiver(newReceiver);
-      console.log("newReceiver",newReceiver)
-      console.log("receiver", receiver)
+      setReceiver(newReceiver);
       setFilteredMessages(filtered);
     } else {
       setFilteredMessages(allMessages);
     }
-  }, [allMessages, selectedCompany, myName]);
+  }, [allMessages, selectedCompany, myName, allUsers]);
 
   //AGREGA LAS COMPAÑIAS A LOS BOTONES DE SELECCION DEL CHAT EXEPTO AL USUARIO
   useEffect(() => {
     if (allUsers.length > 0) {
       allUsers.forEach((item) => {
-        item.company.name !== myName
-          ? usuariosUnicos.add(item.company.name)
-          : null;
+        if (item.company.name !== myName) {
+          usuariosUnicos.add(item.company.name);
+        }
       });
       const usuariosUnicosArray = Array.from(usuariosUnicos);
       setButtonChat(usuariosUnicosArray);
     }
-  }, [allUsers]);
+  }, [allUsers, myName]);
 
   //RECIBE LOS MENSAJES
   useEffect(() => {
@@ -120,7 +117,7 @@ const Page = ({ params: { id } }) => {
     const messageListener = (message) => {
       const { _message, _sender, _receiver } = message;
 
-      //OJO CUANDO RECIBO EL MEMSAJE PARA MI->YO SOY EL RECEIVER
+      //OJO CUANDO RECIBO EL MENSAJE PARA MI->YO SOY EL RECEIVER
       const foundReceiver = allUsers.find(
         (user) => user.company.id === _sender
       );
@@ -136,22 +133,14 @@ const Page = ({ params: { id } }) => {
           createdAt: new Date().toISOString(),
         };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
-        setReceiver(foundSender);
-        console.log("foundSender ", foundSender);
-        console.log("receiver ", receiver);
-        /*
-        usuariosUnicos.add(foundReceiver.company.name);
-        const usuariosUnicosArray = Array.from(usuariosUnicos) 
-        setButtonChat(usuariosUnicosArray);
-        */
       }
     };
 
     socketIo.on("message", messageListener);
     return () => {
-      socketIo.off("message");
+      socketIo.off("message", messageListener);
     };
-  }, [filteredMessages, receiver, allMessages, selectedCompany]);
+  }, [allUsers, sender, receiver]);
 
   //ENVIA LOS MENSAJES
   const handleSendMessage = useCallback(
@@ -181,7 +170,7 @@ const Page = ({ params: { id } }) => {
 
       setMessageText("");
     },
-    [allMessages, messageText, sender, receiver]
+    [messageText, sender, receiver, companyId, id]
   );
 
   if (!company) return "loading...";
@@ -228,23 +217,20 @@ const Page = ({ params: { id } }) => {
         <div className="max-h-[400px] overflow-y-auto">
           <div className="grid grid-cols-12 gap-2">
             <div className="col-span-2">
-              {buttonChat.map((item) => {
-                return (
-                  <button
-                    key={item}
-                    className={`w-full px-2 py-1 mb-2 text-sm text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      selectedCompany === item
-                        ? "bg-blue-500"
-                        : "bg-gray-600 hover:bg-gray-800"
-                    }`}
-                    onClick={() => handleSelectCompany(item)}
-                  >
-                    {item}
-                  </button>
-                );
-              })}
+              {buttonChat.map((item) => (
+                <button
+                  key={item}
+                  className={`w-full px-2 py-1 mb-2 text-sm text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    selectedCompany === item
+                      ? "bg-blue-500"
+                      : "bg-gray-600 hover:bg-gray-800"
+                  }`}
+                  onClick={() => handleSelectCompany(item)}
+                >
+                  {item}
+                </button>
+              ))}
             </div>
-            {/*<div className="col-span-1">Logo sender</div>*/}
             <div className="col-span-10 max-h-[300px] overflow-y-auto">
               {filteredMessages.map((message, index) => {
                 const isSender = message.sender.id === userId;
@@ -276,16 +262,13 @@ const Page = ({ params: { id } }) => {
                 );
               })}
             </div>
-            {/*<div className="col-span-1">Logo receiver</div>*/}
           </div>
           <form className="flex mt-4" onSubmit={handleSendMessage}>
             <input
               type="text"
               className="flex-1 px-4 py-2 mr-2 border rounded focus:outline-none"
               value={messageText}
-              onChange={(event) => {
-                setMessageText(event.target.value);
-              }}
+              onChange={(event) => setMessageText(event.target.value)}
               placeholder="Type your message..."
             />
             <button
