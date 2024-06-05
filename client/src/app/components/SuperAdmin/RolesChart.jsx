@@ -16,7 +16,7 @@ const UserRolesChart = () => {
   const [bankAccountsData, setBankAccountsData] = useState([]);
   const [bankAccountsStatusData, setBankAccountsStatusData] = useState([]);
   const [financeProductsData, setFinanceProductsData] = useState([]);
-  const dataProvider = useDataProvider();
+  const dataProvider = typeof window !== 'undefined' ? useDataProvider() : null;
 
   useEffect(() => {
     const fetchData = async () => {
