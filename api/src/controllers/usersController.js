@@ -120,9 +120,28 @@ const updateUserProfile = async (id, newData) => {
   return cleanUsers(foundUser);
 };
 
+
+const deleteUserById = async (id) => {
+  const userToDelete = await Users.findByPk(id);
+  if (!userToDelete) {
+    const error = new Error(`User with id ${id} not found.`);
+    error.status = 404;
+    throw error;
+  }
+  await userToDelete.destroy();
+  return { id };
+}
+
+const createUser = async (userData) => {
+  const newUser = await Users.create(userData);
+  return newUser;
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   getUserByEmail,
   updateUserProfile,
+  deleteUserById,
+  createUser
 };
