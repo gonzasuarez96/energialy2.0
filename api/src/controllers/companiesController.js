@@ -354,10 +354,22 @@ const updateCompany = async (id, body) => {
   return cleanCompanies(updatedCompany);
 };
 
+const deleteCompany = async (id) => {
+  const foundCompany = await Companies.findByPk(id);
+  if (!foundCompany) {
+    const error = new Error(`Company with id ${id} not found.`);
+    error.status = 404;
+    throw error;
+  }
+  await foundCompany.destroy();
+};
+
+
 module.exports = {
   getAllCompanies,
   filterCompaniesByName,
   getCompanyById,
   createCompany,
   updateCompany,
+  deleteCompany,
 };
