@@ -2,7 +2,7 @@
 
 import { Admin, Resource, ListGuesser, EditGuesser, CreateGuesser} from "react-admin";
 import dataProvider from "./ApiProviderUsers";
-// import UserRolesChart from "./RolesChart";
+import UserRolesChart from "./RolesChart";
 import CustomLayout from './CustomLayout';
 import Register from '../Register'; 
 import RegisterCompany from '../RegisterCompany'
@@ -20,7 +20,7 @@ const AdminApp = () => {
     <Admin dataProvider={dataProvider} 
     layout={CustomLayout}
     >
-      {/* <Resource name="Dashboard" list={UserRolesChart} /> */}
+      <Resource name="Dashboard" list={UserRolesChart} />
       <Resource name="users" list={ListGuesser} edit={EditGuesser} create={Register} recordRepresentation="name"/>
       <Resource name="companies" list={ListGuesser} edit={EditGuesser} create={RegisterCompany}/>
       <Resource name="tenders" list={ListGuesser} edit={EditGuesser} />
