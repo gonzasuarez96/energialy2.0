@@ -9,7 +9,6 @@ const COLORS = {
   plus: '#FFBB28',
 };
 const UserRolesChart = () => {
-  const dataProvider = useDataProvider();
   const [userData, setUserData] = useState([]);
   const [companyData, setCompanyData] = useState([]);
   const [tendersData, setTendersData] = useState([]);
@@ -17,6 +16,7 @@ const UserRolesChart = () => {
   const [bankAccountsData, setBankAccountsData] = useState([]);
   const [bankAccountsStatusData, setBankAccountsStatusData] = useState([]);
   const [financeProductsData, setFinanceProductsData] = useState([]);
+  const dataProvider = useDataProvider();
 
   useEffect(() => {
     const fetchData = async () => {
