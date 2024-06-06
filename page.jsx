@@ -1,47 +1,47 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import Popup from "../directory/[id]/components/popup";
-import Messages from "./Messages";
-
+import Image from "next/image";
+import CollapsedBar from "./components/collapsedBar";
+import io from "socket.io-client";
 import {
   axiosGetAllMessages,
   axiosGetAllUsers,
+  axiosGetDetailCompany,
   axiosPostMessage,
 } from "@/app/Func/axios";
-
 import {
   getCompanyId,
   getCompanyName,
   getUserId,
 } from "@/app/Func/sessionStorage";
+import Popup from "./components/popup";
+//import { all } from "axios";
+import Messages from "./components/Messages";
 
-import io from "socket.io-client";
 const socketIo = io("http://localhost:3001");
 
-const Chat = ({ id, company }) => {
+const Page = ({ params: { id } }) => {
   //id: Compañía seleccionada en el perfil
+  const [company, setCompany] = useState(null); //Carga todas las compañias
   const [allUsers, setAllUsers] = useState([]); //Carga todos los usuarios
   const [allMessages, setAllMessages] = useState([]); //Mantiene todos los mensajes
   const [messageText, setMessageText] = useState(""); //Texto del mensaje a enviar
-  const [showPopup, setShowPopup] = useState(false); //Muestra/esconde caja chat
 
   //FILTRADO EN CHAT
+  const [showPopup, setShowPopup] = useState(false); //Muestra/esconde caja chat
   const [buttonChat, setButtonChat] = useState([]); //Botones para seleccionar empresas en el chat
   const [filteredMessages, setFilteredMessages] = useState([]); //Mensajes filtrados en chat
   const [selectedCompany, setSelectedCompany] = useState(null); //Compañía seleccionada para mostrar en chat
 
-  const [receiver, setReceiver] = useState(null); //Quien recibe
-  const [sender, setSender] = useState(null); //Quien envia
+  const [receiver, setReceiver] = useState(null);
+  const [sender, setSender] = useState(null);
 
-  //Rescato del sessionStorage - son los datos del sender
   const companyId = getCompanyId(); //Id de compañía logueada -
   const userId = getUserId(); //Id de usuario logueado
   const myName = getCompanyName(); //Nombre de la compañía logueada->sirve para filtro de chat
 
   let usuariosUnicos = new Set();
 
-  //Envio de usuarios a server para su asignacion
-  //Se envia el id de la compañía
   useEffect(() => {
     // Emitir evento de autenticación para guardar el socket
     socketIo.emit("authenticate", { companyId });
@@ -56,56 +56,57 @@ const Chat = ({ id, company }) => {
   useEffect(() => {
     axiosGetAllUsers(setAllUsers);
     axiosGetAllMessages(setAllMessages);
+    if (id) {
+      axiosGetDetailCompany(id, setCompany);
+    }
   }, []);
 
-  //Carga sender y receiver
+  //CARGA SENDER Y RECEIVER
   useEffect(() => {
     if (allUsers.length > 0 && id) {
       const foundReceiver = allUsers.find((user) => user.company.id === id);
       const foundSender = allUsers.find(
         (user) => user.company.id === companyId
       );
-
       setReceiver(foundReceiver);
       setSender(foundSender);
-      //Seteo inicial de compañía seleccionada para filtrar en chat
       if (foundReceiver) {
         setSelectedCompany(foundReceiver.company.name);
       }
     }
+    // Set initial selected company for filtering chat
   }, [allUsers, id, companyId]);
 
-  //Filtra chat por compañía seleccionada
+  //FILTRA EL CHAT POR COMPAÑIA SELECCIONADA
   useEffect(() => {
+    console.log("allMessages", allMessages);
     if (selectedCompany) {
       const filtered = allMessages.filter((message) => {
         const senderCompany = message.sender.company
           ? message.sender.company.name
           : message.sender.Company.name;
-
         const receiverCompany = message.receiver.company
           ? message.receiver.company.name
           : message.receiver.Company.name;
-
+        console.log("senderCompany", senderCompany);
+        console.log("receiverCompany", receiverCompany);
         return (
           (senderCompany === selectedCompany && receiverCompany === myName) ||
           (senderCompany === myName && receiverCompany === selectedCompany)
         );
       });
-
-      const newReceiver = allUsers.find(
-        (user) => user.company.name === selectedCompany
-      );
-
+      const newReceiver = allUsers.find((user) => {
+        return user.company.name === selectedCompany;
+      });
       setFilteredMessages(filtered);
+      console.log("Mensajes filtrados", filtered);
       setReceiver(newReceiver);
     } else {
       setFilteredMessages(allMessages);
     }
   }, [allMessages, selectedCompany, myName, allUsers]);
 
-  //Agrega las compañías a los botones de seleccion del chat
-  //excepto al usuario
+  //AGREGA LAS COMPAÑIAS A LOS BOTONES DE SELECCION DEL CHAT EXEPTO AL USUARIO
   useEffect(() => {
     if (allUsers.length > 0) {
       allUsers.forEach((item) => {
@@ -118,19 +119,21 @@ const Chat = ({ id, company }) => {
     }
   }, [allUsers, myName]);
 
-  //Recibe los mensajes
+  //RECIBE LOS MENSAJES
   useEffect(() => {
     if (!socketIo) return;
+
     const messageListener = (message) => {
       const { _message, _sender, _receiver } = message;
+
+      //OJO CUANDO RECIBO EL MENSAJE PARA MI->YO SOY EL RECEIVER
       const foundReceiver = allUsers.find(
         (user) => user.company.id === _sender
       );
-      //OJO CUANDO RECIBO EL MENSAJE PARA MI->YO SOY EL RECEIVER
       const foundSender = allUsers.find(
         (user) => user.company.id === _receiver
       );
-      
+
       if (foundSender && foundReceiver) {
         const newMessage = {
           text: _message,
@@ -141,53 +144,69 @@ const Chat = ({ id, company }) => {
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     };
-    
+
     socketIo.on("message", messageListener);
-    
     return () => {
       socketIo.off("message", messageListener);
     };
   }, [allMessages, allUsers, sender, receiver]);
 
-  //Envia los mensajes
+  //ENVIA LOS MENSAJES
   const handleSendMessage = useCallback(
     (event) => {
       event.preventDefault();
-    
       if (!socketIo || !messageText.trim()) return;
+
       const newMessage = {
         text: messageText,
         sender,
         receiver,
         createdAt: new Date().toISOString(),
       };
-      
       setAllMessages((prevMessages) => [...prevMessages, newMessage]);
-      
+
       socketIo.emit("sendMessage", {
         _message: messageText,
         _sender: companyId,
-        _receiver: receiver.company.id,
+        _receiver: id, //Modificar aqui para enviar al destinatario
       });
-      
+
       axiosPostMessage({
         text: messageText,
         senderId: sender.id,
         receiverId: receiver.id,
       });
-      
+
       setMessageText("");
     },
     [messageText, sender, receiver, companyId, id]
   );
 
-  //Establece compañía seleccionada en boton del chat
+  if (!company) return "loading...";
+
+  //ESTABLECE COMPAÑIA SELECCIONADA EN BOTON DEL CHAT
   const handleSelectCompany = (companyName) => {
     setSelectedCompany(companyName);
   };
 
   return (
-    <>
+    <div className="md:max-w-[70%] m-auto">
+      <div className="flex justify-center mt-10">
+        <div className="relative w-full h-1/2">
+          <Image
+            className="object-cover max-h-[60%]"
+            src={company.bannerPicture}
+            alt="Company banner picture"
+            layout="fill"
+          />
+        </div>
+      </div>
+
+      <div className="mt-20">
+        <CollapsedBar title="Compañía" company={company} intState={false} />
+        <CollapsedBar title="Licitaciones" company={company} intState={true} />
+      </div>
+
       <button
         className="flex items-center justify-center px-4 py-2 text-white bg-green-500 rounded-full hover:bg-green-600"
         onClick={() => setShowPopup(true)}
@@ -201,6 +220,7 @@ const Chat = ({ id, company }) => {
         </div>
         <span className="text-center">Inicia un Chat con {company.name}</span>
       </button>
+
       <Popup show={showPopup} onClose={() => setShowPopup(false)}>
         <h2>Chat</h2>
         <div className="max-h-[400px] overflow-y-auto">
@@ -239,7 +259,8 @@ const Chat = ({ id, company }) => {
           </form>
         </div>
       </Popup>
-    </>
+    </div>
   );
 };
-export default Chat;
+
+export default Page;
