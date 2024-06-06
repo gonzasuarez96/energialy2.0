@@ -78,10 +78,17 @@ const Page = ({ params: { id } }) => {
 
   //FILTRA EL CHAT POR COMPAÑIA SELECCIONADA
   useEffect(() => {
+    console.log("allMessages", allMessages);
     if (selectedCompany) {
       const filtered = allMessages.filter((message) => {
-        const senderCompany = message.sender?.Company?.name;
-        const receiverCompany = message.receiver?.Company?.name;
+        const senderCompany = message.sender.company
+          ? message.sender.company.name
+          : message.sender.Company.name;
+        const receiverCompany = message.receiver.company
+          ? message.receiver.company.name
+          : message.receiver.Company.name;
+        console.log("senderCompany", senderCompany);
+        console.log("receiverCompany", receiverCompany);
         return (
           (senderCompany === selectedCompany && receiverCompany === myName) ||
           (senderCompany === myName && receiverCompany === selectedCompany)
@@ -91,6 +98,7 @@ const Page = ({ params: { id } }) => {
         return user.company.name === selectedCompany;
       });
       setFilteredMessages(filtered);
+      console.log("Mensajes filtrados", filtered);
       setReceiver(newReceiver);
     } else {
       setFilteredMessages(allMessages);
