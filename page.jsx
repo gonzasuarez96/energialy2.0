@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import CollapsedBar from "./components/collapsedBar";
 import { axiosGetDetailCompany } from "@/app/Func/axios";
-import Chat from "@/app/components/Chat";
+import Chat from "./chat";
 
 const Page = ({ params: { id } }) => {
   const [company, setCompany] = useState(null);
