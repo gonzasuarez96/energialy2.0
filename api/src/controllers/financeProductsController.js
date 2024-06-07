@@ -67,30 +67,36 @@ const getFinanceProductById = async (id) => {
 
 const createFinanceProduct = async (body) => {
   const { productName, bankAccountId } = body;
-  if (!productName || !bankAccountId) {
-    const error = new Error('Missing required attributes.');
-    error.status = 400;
-    throw error;
-  }
-  const foundBankAccount = await BankAccounts.findByPk(bankAccountId, {
-    include: { model: FinanceProducts },
-  });
-  if (foundBankAccount.status !== 'open') {
-    const error = new Error('Bank Account is not open');
-    error.status = 400;
-    throw error;
-  }
-  const financeProducts = foundBankAccount.FinanceProducts;
-  if (productName === 'CC en pesos $' || productName === 'CC en dólares u$s' || productName === 'Home Banking') {
-    const financeProductExist = financeProducts.some((financeProduct) => financeProduct.productName === productName);
-    if (financeProductExist) {
-      const error = new Error(`This bank account already have a ${productName}`);
+  let foundBankAccount;
+
+  if (bankAccountId !== undefined) {
+    foundBankAccount = await BankAccounts.findByPk(bankAccountId, {
+      include: { model: FinanceProducts },
+    });
+
+    if (!foundBankAccount || foundBankAccount.status !== 'open') {
+      const error = new Error('Invalid or closed bank account.');
       error.status = 400;
       throw error;
     }
+
+    const financeProducts = foundBankAccount.FinanceProducts;
+    if (productName === 'CC en pesos $' || productName === 'CC en dólares u$s' || productName === 'Home Banking') {
+      const financeProductExist = financeProducts.some((financeProduct) => financeProduct.productName === productName);
+      if (financeProductExist) {
+        const error = new Error(`This bank account already has a ${productName}`);
+        error.status = 400;
+        throw error;
+      }
+    }
   }
+
   const newFinanceProduct = await FinanceProducts.create(body);
-  await newFinanceProduct.setBankAccount(foundBankAccount);
+
+  if (foundBankAccount) {
+    await newFinanceProduct.setBankAccount(foundBankAccount);
+  }
+
   const foundNewFinanceProduct = await FinanceProducts.findByPk(newFinanceProduct.id, {
     include: {
       model: BankAccounts,
@@ -101,9 +107,11 @@ const createFinanceProduct = async (body) => {
       },
     },
   });
+
   const receiver = 'energialy@bancodecomercio.com.ar';
-  const companyName = foundNewFinanceProduct.BankAccount.Company.name;
+  const companyName = foundNewFinanceProduct.BankAccount ? foundNewFinanceProduct.BankAccount.Company.name : 'Unknown';
   await sendBankEmailNewFinanceProduct(receiver, companyName);
+
   return cleanFinanceProducts(foundNewFinanceProduct);
 };
 

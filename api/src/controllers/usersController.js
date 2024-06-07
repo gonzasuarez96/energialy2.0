@@ -1,4 +1,4 @@
-const { Users, Companies } = require('../db');
+const { Users, Companies, Messages } = require('../db');
 
 const cleanUsers = (users) => {
   if (Array.isArray(users)) {
@@ -42,18 +42,18 @@ const getAllUsers = async () => {
         model: Companies,
         attributes: ['id', 'name', 'subscription'],
       }, 
-      // {
-      //   model: Messages,
-      //   as: 'sentMessages',
-      //   foreignKey: 'senderId',
-      //   attributes: ['id', 'text'],
-      // },
-      // {
-      //   model: Messages,
-      //   as: 'receivedMessages',
-      //   foreignKey: 'receiverId',
-      //   attributes: ['id', 'text'],
-      // },
+      {
+        model: Messages,
+        as: 'sentMessages',
+        foreignKey: 'senderId',
+        attributes: ['id', 'text'],
+      },
+      {
+        model: Messages,
+        as: 'receivedMessages',
+        foreignKey: 'receiverId',
+        attributes: ['id', 'text'],
+      },
     ],
   });
   return cleanUsers(allUsers);
@@ -82,18 +82,18 @@ const getUserByEmail = async (email) => {
         model: Companies,
         attributes: ['id', 'name', 'profilePicture', 'bannerPicture', 'subscription'],
       },
-      // {
-      //   model: Messages,
-      //   as: 'sentMessages',
-      //   foreignKey: 'senderId',
-      //   attributes: ['id', 'text'],
-      // },
-      // {
-      //   model: Messages,
-      //   as: 'receivedMessages',
-      //   foreignKey: 'receiverId',
-      //   attributes: ['id', 'text'],
-      // },
+      {
+        model: Messages,
+        as: 'sentMessages',
+        foreignKey: 'senderId',
+        attributes: ['id', 'text'],
+      },
+      {
+        model: Messages,
+        as: 'receivedMessages',
+        foreignKey: 'receiverId',
+        attributes: ['id', 'text'],
+      },
     ]
   });
   if (!foundUser) {
@@ -120,9 +120,28 @@ const updateUserProfile = async (id, newData) => {
   return cleanUsers(foundUser);
 };
 
+
+const deleteUserById = async (id) => {
+  const userToDelete = await Users.findByPk(id);
+  if (!userToDelete) {
+    const error = new Error(`User with id ${id} not found.`);
+    error.status = 404;
+    throw error;
+  }
+  await userToDelete.destroy();
+  return { id };
+}
+
+const createUser = async (userData) => {
+  const newUser = await Users.create(userData);
+  return newUser;
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   getUserByEmail,
   updateUserProfile,
+  deleteUserById,
+  createUser
 };

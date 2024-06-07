@@ -3,7 +3,8 @@ const {
   filterCompaniesByName,
   getCompanyById,
   createCompany,
-  updateCompany
+  updateCompany,
+  deleteCompany,
 } = require('../controllers/companiesController');
 
 const getCompaniesHandler = async (req, res) => {
@@ -47,9 +48,20 @@ const updateCompanyHandler = async (req, res) => {
   }
 };
 
+const deleteCompanyHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await deleteCompany(id);
+    res.status(204).end();
+  } catch (error) {
+    res.status(error.status || 500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getCompaniesHandler,
   getCompanyByIdHandler,
   createCompanyHandler,
-  updateCompanyHandler
+  updateCompanyHandler,
+  deleteCompanyHandler,
 };

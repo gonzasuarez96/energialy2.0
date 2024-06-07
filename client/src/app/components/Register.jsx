@@ -111,7 +111,7 @@ export default function Register() {
 
     if (!passwordRegex.test(password)) {
       setPasswordError(
-        "La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula, y un carácter especial (:/?*.)."
+        "La contraseña debe tener al menos 6 caracteres, una mayúscula, una minúscula, y un carácter especial (?*.)."
       );
     } else {
       setPasswordError("");

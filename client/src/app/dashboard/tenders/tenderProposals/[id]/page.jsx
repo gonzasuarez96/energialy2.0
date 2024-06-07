@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import { handleChangeStatus } from "@/app/Func/controllers";
 
 function page({params}) {
-  console.log(params)
+  console.log("y que es esto?",params)
   const { data:tender, isLoading, isError } = useGetTenderByIdQuery(params.id);
-  console.log(tender)
+  console.log("Consulta la propuesta por el ID",tender)
+
   const endpoint = 'proposals'
   const router = useRouter()
   const backPage = () => {
@@ -29,7 +30,7 @@ function page({params}) {
           <p>
             Presupuesto: <span className="font-bold">U$S: {tender.budget}</span>
           </p>
-          <h4 className="text-center mb-3">Propuestas</h4>
+          <h4 className="text-center mb-3">Propuestas Recibidas</h4>
           <div>
             {tender.proposals?.map((proposal) => (
               <div className="p-4 border rounded-md">
@@ -43,7 +44,7 @@ function page({params}) {
                     <span className="font-bold"> {proposal.totalAmount}</span>
                   </p>
                   <p>
-                    Duración de la Execución:{" "}
+                    Duración del Servicio:{" "}
                     <span className="font-bold">
                       {proposal.projectDuration}
                     </span>
@@ -52,7 +53,7 @@ function page({params}) {
                     Estado:{" "}
                     <span className="font-bold">
                       {proposal.status === "sent"
-                        ? "Recivida"
+                        ? "Recibida"
                         : proposal.status === "accepted"
                         ? "Aceptada"
                         : "Declinada"}
