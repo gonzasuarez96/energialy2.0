@@ -74,7 +74,6 @@ export default function Login() {
 
   const handleLogin = async () => {
     const validations = loginValidator();
-    console.log(validations);
     if (!validations) {
       return;
     }
