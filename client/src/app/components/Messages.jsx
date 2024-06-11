@@ -26,20 +26,20 @@ const Messages = ({ filteredMessages, userId }) => {
             className={`mb-2 ${isSender ? "text-right" : "text-left"}`}
           >
             <div
-              className={`p-3 rounded-lg ${
+              className={`text-sm p-3 rounded-lg ${
                 isSender ? "bg-gray-200" : "bg-purple-200"
               }`}
             >
-              <p>
+              <p className="mb-0">
                 <strong>{isSender ? "Tú" : "Usuario"}: </strong>
                 {message.sender.fullName ||
                   `${message.sender.firstName} ${message.sender.lastName}`}
               </p>
-              <p>
+              <p className="mb-0">
                 <strong>Mensaje: </strong>
                 {message.text}
               </p>
-              <p>
+              <p className="mb-0">
                 <strong>Fecha: </strong>
                 {message.createdAt}
               </p>
