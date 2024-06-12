@@ -82,6 +82,16 @@ const Chat = ({ id, company }) => {
   //Filtra chat por compañía seleccionada
   useEffect(() => {
     if (selectedCompany) {
+      if (selectedCompany.slice(-2) === "🔔") {
+        const oldSelectedCompany = selectedCompany;
+        setSelectedCompany(selectedCompany.slice(0, -2));
+
+        const indice = buttonChat.indexOf(oldSelectedCompany);
+        const newButtonChat = buttonChat;
+        newButtonChat[indice] = oldSelectedCompany.slice(0, -2);
+        setButtonChat(newButtonChat);
+      }
+
       const filtered = allMessages.filter((message) => {
         const senderCompany = message.sender.company
           ? message.sender.company.name
@@ -128,6 +138,7 @@ const Chat = ({ id, company }) => {
       const foundReceiver = allUsers.find(
         (user) => user.company.id === _sender
       );
+
       //OJO CUANDO RECIBO EL MENSAJE PARA MI->YO SOY EL RECEIVER
       const foundSender = allUsers.find(
         (user) => user.company.id === _receiver
@@ -142,9 +153,23 @@ const Chat = ({ id, company }) => {
         };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
       }
+
+      const foundCompanyName = foundReceiver.company.name;
+      if (selectedCompany !== foundCompanyName) {
+        const button = buttonChat.find((button) => button === foundCompanyName);
+        const button2 = button.concat("🔔");
+        const newButtonChat = buttonChat.filter(
+          (element) => element !== foundCompanyName
+        );
+        newButtonChat.unshift(button2);
+        setButtonChat(newButtonChat);
+      }
     };
 
     socketIo.on("message", messageListener);
+
+    //Aqui agregar icono de mensaje nuevo
+    //
 
     return () => {
       socketIo.off("message", messageListener);
