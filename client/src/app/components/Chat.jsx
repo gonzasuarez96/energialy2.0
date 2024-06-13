@@ -242,81 +242,79 @@ const Chat = ({ id, company }) => {
       {company ? (
         <Popup show={showPopup} onClose={() => setShowPopup(false)}>
           <h2>Chat</h2>
-          <div className="max-h-[400px] overflow-y-auto">
-            <div className="grid grid-cols-12 gap-2">
-              <div className="col-span-2">
-                {buttonChat.map((item) => (
-                  <button
-                    key={item}
-                    className={`w-full px-2 py-1 mb-2 text-sm text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      selectedCompany === item
-                        ? "bg-blue-500"
-                        : "bg-gray-600 hover:bg-gray-800"
-                    }`}
-                    onClick={() => handleSelectCompany(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-              <Messages filteredMessages={filteredMessages} userId={userId} />
+
+          <div className="grid grid-cols-12 gap-2">
+            <div className="flex flex-col h-64 col-span-2 overflow-y-auto">
+              {buttonChat.map((item) => (
+                <button
+                  key={item}
+                  className={`w-full px-2 py-1 mb-2 text-sm text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    selectedCompany === item
+                      ? "bg-blue-500"
+                      : "bg-gray-600 hover:bg-gray-800"
+                  }`}
+                  onClick={() => handleSelectCompany(item)}
+                >
+                  {item}
+                </button>
+              ))}
             </div>
-            <form className="flex mt-4" onSubmit={handleSendMessage}>
-              <input
-                type="text"
-                className="flex-1 px-4 py-2 mr-2 border rounded focus:outline-none"
-                value={messageText}
-                onChange={(event) => setMessageText(event.target.value)}
-                placeholder="Type your message..."
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 text-black bg-blue-400 rounded hover:bg-blue-600"
-              >
-                Send
-              </button>
-            </form>
+            <Messages filteredMessages={filteredMessages} userId={userId} />
           </div>
+          <form className="flex mt-4" onSubmit={handleSendMessage}>
+            <input
+              type="text"
+              className="flex-1 px-4 py-2 mr-2 border rounded focus:outline-none"
+              value={messageText}
+              onChange={(event) => setMessageText(event.target.value)}
+              placeholder="Type your message..."
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 text-black bg-blue-400 rounded hover:bg-blue-600"
+            >
+              Send
+            </button>
+          </form>
         </Popup>
       ) : (
         <div>
           <h2 className="font-bold text-center text-md">Chat</h2>
-          <div className="max-h-[400px]">
-            <div className="grid grid-cols-12 gap-2">
-              <div className="col-span-2 overflow-y-auto text-sm">
-                {buttonChat.map((item) => (
-                  <button
-                    key={item}
-                    className={`w-full px-2 py-1 mb-2 text-sm text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      selectedCompany === item
-                        ? "bg-blue-500"
-                        : "bg-gray-600 hover:bg-gray-800"
-                    }`}
-                    onClick={() => handleSelectCompany(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-              <Messages filteredMessages={filteredMessages} userId={userId} />
-            </div>
 
-            <form className="flex mt-4" onSubmit={handleSendMessage}>
-              <input
-                type="text"
-                className="flex-1 px-4 py-2 mr-2 border rounded focus:outline-none"
-                value={messageText}
-                onChange={(event) => setMessageText(event.target.value)}
-                placeholder="Type your message..."
-              />
-              <button
-                type="submit"
-                className="px-4 py-2 text-black bg-blue-400 rounded hover:bg-blue-600"
-              >
-                Send
-              </button>
-            </form>
+          <div className="grid grid-cols-12 gap-2">
+            <div className="h-64 col-span-2 overflow-y-auto text-sm">
+              {buttonChat.map((item) => (
+                <button
+                  key={item}
+                  className={`w-full px-2 py-1 mb-2 text-sm text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    selectedCompany === item
+                      ? "bg-blue-500"
+                      : "bg-gray-600 hover:bg-gray-800"
+                  }`}
+                  onClick={() => handleSelectCompany(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+            <Messages filteredMessages={filteredMessages} userId={userId} />
           </div>
+
+          <form className="flex mt-4" onSubmit={handleSendMessage}>
+            <input
+              type="text"
+              className="flex-1 px-4 py-2 mr-2 border rounded focus:outline-none"
+              value={messageText}
+              onChange={(event) => setMessageText(event.target.value)}
+              placeholder="Type your message..."
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 text-black bg-blue-400 rounded hover:bg-blue-600"
+            >
+              Send
+            </button>
+          </form>
         </div>
       )}
     </>
