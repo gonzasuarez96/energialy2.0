@@ -126,7 +126,19 @@ const Chat = ({ id, company }) => {
         }
       });
       const usuariosUnicosArray = Array.from(usuariosUnicos);
-      setButtonChat(usuariosUnicosArray);
+
+      if (company) {
+        const button = usuariosUnicosArray.find(
+          (button) => button === company.name
+        );
+        const newButtonChat = usuariosUnicosArray.filter(
+          (element) => element !== company.name
+        );
+        newButtonChat.unshift(button);
+        setButtonChat(newButtonChat);
+      } else {
+        setButtonChat(usuariosUnicosArray);
+      }
     }
   }, [allUsers, myName]);
 
@@ -167,9 +179,6 @@ const Chat = ({ id, company }) => {
     };
 
     socketIo.on("message", messageListener);
-
-    //Aqui agregar icono de mensaje nuevo
-    //
 
     return () => {
       socketIo.off("message", messageListener);
