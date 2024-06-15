@@ -3,6 +3,7 @@ import { MdAccountBox } from "react-icons/md";
 import {BiSolidMessageRounded} from 'react-icons/bi'
 import {BiSolidBank} from 'react-icons/bi'
 import {FaBriefcase} from 'react-icons/fa'
+import { BiSolidImage } from "react-icons/bi";
 export const menuBar = [
   {
     title: "Dashboard",
@@ -80,6 +81,18 @@ export const menuBar = [
         title: "Productos Financieros",
         url: "/dashboard/bank/financialProducts",
       },
+    ],
+  },
+  {
+    title: "Galerias",
+    auth: ["admin", "superAdmin"],
+    url: "",
+    icon: <BiSolidImage />,
+    submenu: true,
+    //spacing: true,
+    submenuItems: [
+      { title: "Productos/Servicios", url: "/dashboard/ajustesGallery" },
+      // { title: "Homologaciones/Certificaciones", url: "/dashboard/ajustesGallery" },
     ],
   },
 ];

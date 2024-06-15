@@ -9,6 +9,7 @@ import {
   axiosGetAllUsers,
   axiosGetDetailCompany,
   axiosPostMessage,
+  axiosGetGalleryCompanyById,
 } from "@/app/Func/axios";
 import { getCompanyId, getUserId } from "@/app/Func/sessionStorage";
 const socketIo = io("http://localhost:3001");
@@ -20,6 +21,7 @@ function page(props) {
   const [allMessages, setAllMessages] = useState([]);
   const [showChatBox, setShowChatBox] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
+  const [gallery, setGallery] = useState([]);
 
   // * QUIEN RECIBE EL MENSAJE
   const receiver = allUsers.find(function (el) {
@@ -74,6 +76,7 @@ function page(props) {
     axiosGetAllMessages(setAllMessages);
     if (id) {
       axiosGetDetailCompany(id, setCompany);
+      axiosGetGalleryCompanyById(id, setGallery);
     }
   }, []);
 
@@ -104,6 +107,12 @@ function page(props) {
               title={"Licitaciones"}
               company={company}
               intState={true}
+            />
+            <CollapsedBar
+              title={"Productos/Servicios"}
+              gallery={gallery}
+              intState={true}
+              
             />
           </div>
           <h1>HISTORIAL DE CHAT</h1>
