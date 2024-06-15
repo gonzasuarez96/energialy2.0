@@ -1,4 +1,4 @@
-const { Companies, Users, Locations, Categories, Subcategories, Tenders, Proposals, Documents, BankAccounts } = require('../db');
+const { Companies, Users, Locations, Categories, Subcategories, Tenders, Proposals, Documents, BankAccounts} = require('../db');
 const { Op } = require('sequelize');
 
 const cleanCompanies = (companies) => {

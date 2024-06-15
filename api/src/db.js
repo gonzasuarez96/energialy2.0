@@ -24,7 +24,7 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Users, Messages, Companies, Categories, Subcategories, Locations, Tenders, Proposals, Documents, BankAccounts, FinanceProducts } = sequelize.models;
+const { Users, Messages, Companies, Categories, Subcategories, Locations, Tenders, Proposals, Documents, BankAccounts, FinanceProducts, CompanyGallery } = sequelize.models;
 
 Companies.hasMany(Users);
 Users.belongsTo(Companies);
@@ -72,6 +72,9 @@ BankAccounts.belongsTo(Companies);
 
 BankAccounts.hasMany(FinanceProducts);
 FinanceProducts.belongsTo(BankAccounts);
+
+Companies.hasMany(CompanyGallery);
+CompanyGallery.belongsTo(Companies);
 
 module.exports = {
   ...sequelize.models,
