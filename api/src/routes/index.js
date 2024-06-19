@@ -17,7 +17,7 @@ const bankAccountsRouter = require('./resources/bankAccountsRouter');
 const financeProductsRouter = require('./resources/financeProductsRouter');
 const inviteCompaniesRouter = require('./resources/inviteCompaniesRouter');
 const messagesRouter = require('./resources/messagesRouter');
-
+const galleryRouter = require('./resources/CompanyGalleryRouter')
 const router = Router();
 
 // Auth Server
@@ -42,4 +42,5 @@ router.use('/financeProducts', financeProductsRouter);
 
 router.use('/inviteCompanies', inviteCompaniesRouter);
 
+router.use('/gallery', galleryRouter);
 module.exports = router;

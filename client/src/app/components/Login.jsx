@@ -9,7 +9,7 @@ import { setAccessToken, setUserData } from '../redux/features/userSlice';
 import { displayFailedMessage, displaySuccessMessage } from './Toastify';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import Link from 'next/link';
-import { Button} from 'antd';
+import { Button } from 'antd';
 
 export default function Login() {
   const [email, setEmail] = useState('');

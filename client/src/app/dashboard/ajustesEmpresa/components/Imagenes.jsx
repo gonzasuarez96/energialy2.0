@@ -169,7 +169,7 @@ export default function Imagenes() {
           ) : (
             <img src={bannerPicture} style={{ width: "300px" }} />
           )}
-        </div>
+        </div>      
       </div>
       <div className="p-4 flex justify-center">
         <button

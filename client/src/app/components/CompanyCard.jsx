@@ -38,12 +38,12 @@ function CompanyCard(props) {
             </h3>
           </div>
           <div className="w-full flex justify-around p-2">
-            <Link
+            {/* <Link
               href="/"
               className="border-transparent no-underline  text-gray-800  hover:text-secondary-500 inline-flex items-center px-1 border-b-2 text-sm font-medium "
             >
               Ver Licitaciones
-            </Link>
+            </Link> */}
             <Link
               href={`/directory/${props.compId}`}
               className="border-transparent no-underline  text-gray-800  hover:text-secondary-500 inline-flex items-center px-1  border-b-2 text-sm font-medium "

@@ -2,15 +2,16 @@
 import { useState, useEffect } from "react";
 import DetailCompany from "./DetailCompany";
 import TendersCompany from "./TendersCompany";
+import GalleryCompany from "./GalleryCompany";
 
-function CollapsedBar({title, company, intState }) {
+function CollapsedBar({title, company, intState, gallery }) {
      const [isCollapsed, setIsCollapsed] = useState(intState);
      const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
   return (
     <>
-      <div className=" flex flex-col bg-white m-4 rounded-md p-3 justify-between ">
+      <div className=" flex flex-col bg-white m-4 rounded-md p-3 shadow-md justify-between ">
         <div className=" flex justify-between">
           <h3 className="text-sm h-full my-auto">{title}</h3>
           <button
@@ -51,7 +52,7 @@ function CollapsedBar({title, company, intState }) {
           </button>
         </div>
         <div className={`${isCollapsed ? "hidden" : "block"}`}>
-          {title === 'Compañía' ? <DetailCompany company={company} /> : title === 'Licitaciones' ? <TendersCompany company={company}/> : null }
+          {title === 'Compañía' ? <DetailCompany company={company} /> : title === 'Licitaciones' ? <TendersCompany company={company}/> : title === 'Productos/Servicios' ? <GalleryCompany gallery={gallery}/> : null }
           
           
         </div>
