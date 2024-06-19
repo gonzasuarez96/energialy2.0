@@ -84,6 +84,13 @@ export const menuBar = [
     ],
   },
   {
+    title: "Administrador",
+    url: "/administrador",
+    auth: ["superAdmin"],
+    icon: <MdSpaceDashboard />,
+  },
+
+  {
     title: "Galerias",
     auth: ["admin", "superAdmin"],
     url: "",

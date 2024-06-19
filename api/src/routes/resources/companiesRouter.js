@@ -4,7 +4,7 @@ const {
   getCompanyByIdHandler,
   createCompanyHandler,
   updateCompanyHandler,
-  // deleteCompanyHandler
+  deleteCompanyHandler,
 } = require('../../handlers/companiesHandler');
 
 const companiesRouter = Router();
@@ -13,6 +13,6 @@ companiesRouter.get('/', getCompaniesHandler);
 companiesRouter.get('/:id', getCompanyByIdHandler);
 companiesRouter.post('/', createCompanyHandler);
 companiesRouter.put('/:id', updateCompanyHandler);
-// companiesRouter.delete('/:id', deleteCompanyHandler);
+companiesRouter.delete('/:id', deleteCompanyHandler);
 
 module.exports = companiesRouter;

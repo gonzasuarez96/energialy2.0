@@ -73,31 +73,64 @@ export function ProposalModal({open, handleOpen, data}) {
     const [receiverAmount, setReceiverAmount] = useState(0);
 
 
+    // const createProposal = async (proposal) => {
+    //   try {
+    //     const response = await axios.post(
+    //       `${urlProduction}/proposals`,
+    //       proposal
+    //     );
+    //     displaySuccessMessage("Propuesta enviada");
+    //     setProposal({
+    //       totalAmount: 0,
+    //       projectDuration: "",
+    //       description: "",
+    //       tenderId: "",
+    //       companyId: "",
+    //     });
+    //     setTimeout(() => {
+    //       handleOpen()
+    //     }, 2000);
+    //   } catch (error) {
+    //     displayFailedMessage(
+    //       "Error al enviar la propuesta, Por favor complete todos los campos"
+    //     );
+    //   }
+    //   console.log(error);
+    // };
     const createProposal = async (proposal) => {
       try {
         const response = await axios.post(
           `${urlProduction}/proposals`,
           proposal
         );
-        displaySuccessMessage("Propuesta enviada");
-        setProposal({
-          totalAmount: 0,
-          projectDuration: "",
-          description: "",
-          tenderId: "",
-          companyId: "",
-        });
-        setTimeout(() => {
-          handleOpen()
-        }, 2000);
+        
+        // Verificar el estado de la respuesta
+        if (response.status === 201) {
+          displaySuccessMessage("Propuesta enviada");
+          console.log('Propuesta creada con ID:', response.data.id); // Ejemplo de uso de datos de respuesta
+    
+          // Restablecer el formulario
+          setProposal({
+            totalAmount: 0,
+            projectDuration: "",
+            description: "",
+            tenderId: "",
+            companyId: "",
+          });
+    
+          setTimeout(() => {
+            handleOpen();
+          }, 2000);
+        } else {
+          displayFailedMessage("Algo salió mal, por favor inténtelo de nuevo.");
+        }
       } catch (error) {
         displayFailedMessage(
           "Error al enviar la propuesta, Por favor complete todos los campos"
         );
+        console.log(error.response); // Mover el log dentro del catch para mayor claridad
       }
-
     };
-
     const calculateFee = (totalAmount, serviceFeePercentage) => {
       if (
         typeof serviceFeePercentage !== "number" ||
@@ -229,8 +262,8 @@ export function ProposalModal({open, handleOpen, data}) {
                   {"  "}
                   <span className="font-bold text-secondary-600">
                     "Energialy"
-                  </span>{" "}
-                  ServiceFee ( Fee: {serviceFeePercentage}% )
+                  </span>{""}
+                  ServiceFee ( Fee: entre 2,5% y 0.5%)
                 </div>
                 <div className="text-xs">
                   <span className="font-bold">(U$S) {receiverAmount}</span>{" "}
@@ -271,9 +304,9 @@ export function ProposalModal({open, handleOpen, data}) {
               >
                 Enviar
               </button>
-              {/* <Button className="bg-green-600" onClick={handleSave}>
+              {/* <button className="bg-green-600" onClick={handleSave}>
                 Guardar
-              </Button> */}
+              </button> */}
               <button
                 className="bg-secondary-500 px-4 py-2 rounded-md text-white font-bold"
                 onClick={handleOpen}

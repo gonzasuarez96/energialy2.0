@@ -31,6 +31,7 @@ Users.belongsTo(Companies);
 
 Users.hasMany(Messages, { foreignKey: 'senderId', as: 'sentMessages' });
 Users.hasMany(Messages, { foreignKey: 'receiverId', as: 'receivedMessages' });
+
 Messages.belongsTo(Users, { foreignKey: 'senderId', as: 'sender' });
 Messages.belongsTo(Users, { foreignKey: 'receiverId', as: 'receiver' });
 

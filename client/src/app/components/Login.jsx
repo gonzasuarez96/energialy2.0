@@ -9,6 +9,7 @@ import { setAccessToken, setUserData } from '../redux/features/userSlice';
 import { displayFailedMessage, displaySuccessMessage } from './Toastify';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import Link from 'next/link';
+import { Button } from 'antd';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -17,6 +18,8 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  const [loadings, setLoadings] = useState(false);
 
   const router = useRouter();
 
@@ -71,7 +74,6 @@ export default function Login() {
 
   const handleLogin = async () => {
     const validations = loginValidator();
-    console.log(validations);
     if (!validations) {
       return;
     }
@@ -98,9 +100,12 @@ export default function Login() {
 
       // Guardar en localStorage
       sessionStorage.setItem('accessToken', accessToken);
-      if(userDetails.company) {
+      
+      if(userDetails.company){
 
         sessionStorage.setItem('companyId', userDetails.company.id);
+        sessionStorage.setItem('companyName', userDetails.company.name)
+        
       }
       sessionStorage.setItem('userId', userDetails.id);
       sessionStorage.setItem('user', JSON.stringify(userDetails));
@@ -110,7 +115,7 @@ export default function Login() {
 
       window.location.href = '/dashboard';
     } catch (error) {
-      // console.log("Error:", error);
+      console.log("Error:", error);
       if (error.response.data.error == 'Incorrect password.') {
         displayFailedMessage('Contraseña incorrecta');
       } else if (error.response.data.error == 'Email not registered.') {
@@ -130,23 +135,45 @@ export default function Login() {
     window.location.href = '/emailPassword';
   };
 
+  const enterLoading = (index) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+    
+    setTimeout(() => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+    }, 3000);
+  };
+
+  const handleClick = () =>{
+    enterLoading(0)
+    handleLogin()
+  }
+
+
   return (
     <div className="h-[70vh] w-full flex items-center justify-center">
       <div className="bg-white shadow rounded w-[70%]">
-        <h3 className=" mb-0 p-4 bg-gray-100 border-b border-gray-300">Iniciar sesión</h3>
-        <form className="mb-2 pl-4 pr-4 pt-4">
-          <div className="mb-3 items-center">
+        <h3 className="p-4 mb-0 bg-gray-100 border-b border-gray-300 ">Iniciar sesión</h3>
+        <form className="pt-4 pl-4 pr-4 mb-2">
+          <div className="items-center mb-3">
             <div className="flex items-center">
-              <label htmlFor="email" className="form-label w-40">
+              <label htmlFor="email" className="w-40 form-label">
                 Correo electrónico
               </label>
               <input type="email" className="form-control" id="email" value={email} onChange={handleEmailChange} onBlur={handleEmailBlur} required />
             </div>
-            {emailError && <div className="text-danger  mb-2">{emailError}</div>}
+            {emailError && <div className="mb-2 text-danger">{emailError}</div>}
           </div>
-          <div className="mb-3 items-center">
+          <div className="items-center mb-3">
             <div className="flex">
-              <label htmlFor="password" className="form-label w-40">
+              <label htmlFor="password" className="w-40 form-label">
                 Contraseña
               </label>
 
@@ -159,25 +186,32 @@ export default function Login() {
                 onBlur={handlePasswordBlur}
                 required
               />
-              <button type="button" className="focus:outline-none pl-1" onClick={() => setShowPassword(!showPassword)}>
+              <button type="button" className="pl-1 focus:outline-none" onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? <RiEyeLine /> : <RiEyeOffLine />}
               </button>
             </div>
-            {passwordError && <div className="text-danger mt- mb-2">{passwordError}</div>}
+            {passwordError && <div className="mb-2 text-danger mt-">{passwordError}</div>}
           </div>
-          <div className="flex justify-center border-t pt-4">
-            <button
-              type="button"
-              className="px-8 py-2 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300"
-              onClick={handleLogin}
+          <div className="flex justify-center pt-4 border-t">
+            <Button
+              onClick={handleClick}
+              size="large"
+              type="link"
+              ghost="true"
+              loading={loadings[0]}
             >
-              Iniciar sesión
-            </button>
+              <span
+             type="button"
+             className="px-12 py-2.5 text-white bg-[#191654] rounded hover:bg-secondary-600 transition duration-300">
+              Iniciar sesión 
+            </span>
+            
+            </Button>
           </div>
-          {error && <div className="flex justify-center text-danger mt-2 mb-2">{error}</div>}
+          {error && <div className="flex justify-center mt-2 mb-2 py-3 text-danger">{error}</div>}
         </form>
-        <div className="text-center p-2">
-          <Link className="text-black" href="/forgot-password">
+        <div className="p-2 text-center">
+          <Link className="text-black " href="/forgot-password">
             ¿Olvidaste tu contraseña?
           </Link>
         </div>

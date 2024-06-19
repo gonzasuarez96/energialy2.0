@@ -4,9 +4,8 @@ import { useRouter } from "next/navigation";
 
 
 function CardUserTender({item}) {
-    console.log(item)
+    
     const totalProposal = item.proposals.length;
-    console.log(totalProposal)
    const id = item.id
    const router = useRouter()
   return (
@@ -34,7 +33,7 @@ function CardUserTender({item}) {
         </button>
       </div>
       <div className="w-full flex flex-col item-center gap-3">
-        <span class="inline-block whitespace-nowrap rounded-[0.27rem] bg-info-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-info-800">
+        <span class="inline-block whitespace-nowrap rounded-[0.27rem] bg-info-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-info-800 text-sky-700">
           Monto: U$S {item.budget}
         </span>
 
@@ -45,7 +44,7 @@ function CardUserTender({item}) {
               : item.location.id === "9a83f3bb-0472-4e7e-bb67-9c8bdf996cd3"
               ? "bg-danger-500 text-danger-700"
               : "bg-info-800 text-info-700"
-          } inline-block whitespace-nowrap rounded-[0.27rem]  px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none `}
+          } bg-sky-700 text-white inline-block whitespace-nowrap rounded-[0.27rem]  px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none `}
         >
           Lugar: {item.location.name}
         </span>
