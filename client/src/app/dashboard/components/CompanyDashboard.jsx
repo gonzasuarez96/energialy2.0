@@ -7,7 +7,8 @@ import DashboardTableData from "@/app/components/DashboardTableData";
 import { useGetProposalsQuery } from "@/app/redux/services/ProposalApi";
 import { useGetTendersQuery } from "@/app/redux/services/tendersApi";
 import { getCompanyId } from "@/app/Func/sessionStorage";
-import ChatComponent from "./CompanyDashboardChat";
+//import ChatComponent from "./CompanyDashboardChat";
+import Chat from "@/app/components/Chat";
 
 function CompanyDashboard({ user }) {
   const [userProposals, setUserProposals] = useState([]);
@@ -50,7 +51,8 @@ function CompanyDashboard({ user }) {
               <DashboardTextCard title={"Ingresos Pendientes"} content={"-"} />
               <DashboardTextCard title={"Inversiones"} content={"-"} />
             </div>
-            <ChatComponent user={user} />
+            {/*<ChatComponent user={user} />*/}
+            <Chat />
           </div>
         </div>
         <div className="flex w-full gap-3 p-2 bg-white rounded-md">
