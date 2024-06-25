@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Popup from "../directory/[id]/components/popup";
 import Messages from "./Messages";
 
@@ -37,7 +37,6 @@ const Chat = ({ id, company }) => {
   const companyId = getCompanyId(); //Id de compañía logueada -
   const userId = getUserId(); //Id de usuario logueado
   const myName = getCompanyName(); //Nombre de la compañía logueada->sirve para filtro de chat
-
   let usuariosUnicos = new Set();
 
   //Envio de usuarios a server para su asignacion
@@ -56,6 +55,7 @@ const Chat = ({ id, company }) => {
   useEffect(() => {
     axiosGetAllUsers(setAllUsers);
     axiosGetAllMessages(setAllMessages);
+    !company && setShowPopup(true);
   }, []);
 
   //Carga sender y receiver
@@ -65,19 +65,33 @@ const Chat = ({ id, company }) => {
       const foundSender = allUsers.find(
         (user) => user.company.id === companyId
       );
-
       setReceiver(foundReceiver);
       setSender(foundSender);
       //Seteo inicial de compañía seleccionada para filtrar en chat
       if (foundReceiver) {
         setSelectedCompany(foundReceiver.company.name);
       }
+    } else if (allUsers.length > 0 && !id) {
+      const foundSender = allUsers.find(
+        (user) => user.company.id === companyId
+      );
+      setSender(foundSender);
     }
   }, [allUsers, id, companyId]);
 
   //Filtra chat por compañía seleccionada
   useEffect(() => {
     if (selectedCompany) {
+      if (selectedCompany.slice(-2) === "🔔") {
+        const oldSelectedCompany = selectedCompany;
+        setSelectedCompany(selectedCompany.slice(0, -2));
+
+        const indice = buttonChat.indexOf(oldSelectedCompany);
+        const newButtonChat = buttonChat;
+        newButtonChat[indice] = oldSelectedCompany.slice(0, -2);
+        setButtonChat(newButtonChat);
+      }
+
       const filtered = allMessages.filter((message) => {
         const senderCompany = message.sender.company
           ? message.sender.company.name
@@ -99,8 +113,6 @@ const Chat = ({ id, company }) => {
 
       setFilteredMessages(filtered);
       setReceiver(newReceiver);
-    } else {
-      setFilteredMessages(allMessages);
     }
   }, [allMessages, selectedCompany, myName, allUsers]);
 
@@ -114,7 +126,19 @@ const Chat = ({ id, company }) => {
         }
       });
       const usuariosUnicosArray = Array.from(usuariosUnicos);
-      setButtonChat(usuariosUnicosArray);
+
+      if (company) {
+        const button = usuariosUnicosArray.find(
+          (button) => button === company.name
+        );
+        const newButtonChat = usuariosUnicosArray.filter(
+          (element) => element !== company.name
+        );
+        newButtonChat.unshift(button);
+        setButtonChat(newButtonChat);
+      } else {
+        setButtonChat(usuariosUnicosArray);
+      }
     }
   }, [allUsers, myName]);
 
@@ -126,11 +150,12 @@ const Chat = ({ id, company }) => {
       const foundReceiver = allUsers.find(
         (user) => user.company.id === _sender
       );
+
       //OJO CUANDO RECIBO EL MENSAJE PARA MI->YO SOY EL RECEIVER
       const foundSender = allUsers.find(
         (user) => user.company.id === _receiver
       );
-      
+
       if (foundSender && foundReceiver) {
         const newMessage = {
           text: _message,
@@ -140,10 +165,21 @@ const Chat = ({ id, company }) => {
         };
         setAllMessages((prevMessages) => [...prevMessages, newMessage]);
       }
+
+      const foundCompanyName = foundReceiver.company.name;
+      if (selectedCompany !== foundCompanyName) {
+        const button = buttonChat.find((button) => button === foundCompanyName);
+        const button2 = button.concat("🔔");
+        const newButtonChat = buttonChat.filter(
+          (element) => element !== foundCompanyName
+        );
+        newButtonChat.unshift(button2);
+        setButtonChat(newButtonChat);
+      }
     };
-    
+
     socketIo.on("message", messageListener);
-    
+
     return () => {
       socketIo.off("message", messageListener);
     };
@@ -153,7 +189,7 @@ const Chat = ({ id, company }) => {
   const handleSendMessage = useCallback(
     (event) => {
       event.preventDefault();
-    
+
       if (!socketIo || !messageText.trim()) return;
       const newMessage = {
         text: messageText,
@@ -161,21 +197,21 @@ const Chat = ({ id, company }) => {
         receiver,
         createdAt: new Date().toISOString(),
       };
-      
+
       setAllMessages((prevMessages) => [...prevMessages, newMessage]);
-      
+
       socketIo.emit("sendMessage", {
         _message: messageText,
         _sender: companyId,
         _receiver: receiver.company.id,
       });
-      
+
       axiosPostMessage({
         text: messageText,
         senderId: sender.id,
         receiverId: receiver.id,
       });
-      
+
       setMessageText("");
     },
     [messageText, sender, receiver, companyId, id]
@@ -188,24 +224,27 @@ const Chat = ({ id, company }) => {
 
   return (
     <>
-      <button
-        className="flex items-center justify-center px-4 py-2 text-white bg-green-500 rounded-full hover:bg-green-600"
-        onClick={() => setShowPopup(true)}
-      >
-        <div className="flex items-center justify-center w-16 h-16 mr-2 overflow-hidden rounded-full">
-          <img
-            className="object-cover w-full h-full"
-            src={company.profilePicture}
-            alt="Profile"
-          />
-        </div>
-        <span className="text-center">Inicia un Chat con {company.name}</span>
-      </button>
-      <Popup show={showPopup} onClose={() => setShowPopup(false)}>
-        <h2>Chat</h2>
-        <div className="max-h-[400px] overflow-y-auto">
+      {company && (
+        <button
+          className="flex items-center justify-center px-4 py-2 text-white bg-green-500 rounded-full hover:bg-green-600"
+          onClick={() => setShowPopup(true)}
+        >
+          <div className="flex items-center justify-center w-16 h-16 mr-2 overflow-hidden rounded-full">
+            <img
+              className="object-cover w-full h-full"
+              src={company.profilePicture}
+              alt="Profile"
+            />
+          </div>
+          <span className="text-center">Inicia un Chat con {company.name}</span>
+        </button>
+      )}
+      {company ? (
+        <Popup show={showPopup} onClose={() => setShowPopup(false)}>
+          <h2>Chat</h2>
+
           <div className="grid grid-cols-12 gap-2">
-            <div className="col-span-2">
+            <div className="flex flex-col h-64 col-span-2 overflow-y-auto">
               {buttonChat.map((item) => (
                 <button
                   key={item}
@@ -237,8 +276,47 @@ const Chat = ({ id, company }) => {
               Send
             </button>
           </form>
+        </Popup>
+      ) : (
+        <div>
+          <h2 className="font-bold text-center text-md">Chat</h2>
+
+          <div className="grid grid-cols-12 gap-2">
+            <div className="h-64 col-span-2 overflow-y-auto text-sm">
+              {buttonChat.map((item) => (
+                <button
+                  key={item}
+                  className={`w-full px-2 py-1 mb-2 text-sm text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                    selectedCompany === item
+                      ? "bg-blue-500"
+                      : "bg-gray-600 hover:bg-gray-800"
+                  }`}
+                  onClick={() => handleSelectCompany(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+            <Messages filteredMessages={filteredMessages} userId={userId} />
+          </div>
+
+          <form className="flex mt-4" onSubmit={handleSendMessage}>
+            <input
+              type="text"
+              className="flex-1 px-4 py-2 mr-2 border rounded focus:outline-none"
+              value={messageText}
+              onChange={(event) => setMessageText(event.target.value)}
+              placeholder="Type your message..."
+            />
+            <button
+              type="submit"
+              className="px-4 py-2 text-black bg-blue-400 rounded hover:bg-blue-600"
+            >
+              Send
+            </button>
+          </form>
         </div>
-      </Popup>
+      )}
     </>
   );
 };

@@ -2,15 +2,19 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import CollapsedBar from "./components/collapsedBar";
-import { axiosGetDetailCompany } from "@/app/Func/axios";
+import {
+  axiosGetDetailCompany,
+  axiosGetGalleryCompanyById,
+} from "@/app/Func/axios";
 import Chat from "@/app/components/Chat";
-
 const Page = ({ params: { id } }) => {
-  const [company, setCompany] = useState(null);
+  const [company, setCompany] = useState({});
+  const [gallery, setGallery] = useState([]); 
 
   useEffect(() => {
     if (id) {
       axiosGetDetailCompany(id, setCompany);
+      axiosGetGalleryCompanyById(id, setGallery);
     }
   }, [id]);
 
@@ -32,6 +36,12 @@ const Page = ({ params: { id } }) => {
       <div className="mt-20">
         <CollapsedBar title="Compañía" company={company} intState={false} />
         <CollapsedBar title="Licitaciones" company={company} intState={true} />
+            <CollapsedBar
+              title={"Productos/Servicios"}
+              gallery={gallery}
+              intState={true}
+              
+            />
       </div>
 
       <Chat id={id} company={company} />
