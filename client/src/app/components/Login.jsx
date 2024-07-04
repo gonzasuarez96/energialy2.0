@@ -10,6 +10,7 @@ import { displayFailedMessage, displaySuccessMessage } from './Toastify';
 import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 import Link from 'next/link';
 import { Button } from 'antd';
+import { urlProduction } from "../data/dataGeneric";
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -86,10 +87,10 @@ export default function Login() {
 
     try {
       console.log('URL:', process.env.NEXT_PUBLIC_BASE_URL);
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth`, user);
+      const response = await axios.post(`${urlProduction}/auth`, user);
       const accessToken = response.data.accessToken;
       // Después del inicio de sesión exitoso, obtén los detalles del usuario
-      const userDetailsResponse = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/users?email=${email}`);
+      const userDetailsResponse = await axios.get(`${urlProduction}/users?email=${email}`);
       const userDetails = userDetailsResponse.data;
       // console.log("Datos del usuario:", userDetails);
 
